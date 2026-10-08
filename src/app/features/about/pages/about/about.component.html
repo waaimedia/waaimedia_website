@@ -1,0 +1,43 @@
+<section class="about-intro">
+  <div class="container about-intro__grid">
+    <figure class="about-intro__media">
+      <img ngSrc="/images/about-us.png" fill alt="WAAI MEDIA team collaborating" priority />
+    </figure>
+    <div class="about-intro__content">
+      <h1>{{ i18n.translations().aboutTitle }}</h1>
+      <p>{{ i18n.translations().aboutPageDescription }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="about-difference" aria-labelledby="about-difference-title">
+  <div class="container">
+    <h2 id="about-difference-title">
+      {{ i18n.translations().aboutDifferenceLead }}
+      <span>{{ i18n.translations().aboutDifferenceHighlight }}</span>
+    </h2>
+    <p>{{ i18n.translations().aboutDifferenceDescription }}</p>
+  </div>
+</section>
+
+<section class="about-pillars" aria-label="WAAI MEDIA principles">
+  <div class="container about-pillars__grid">
+    <article class="about-pillar">
+     <img src="/images/icons/vision.svg" alt="Vision">
+      <h2>{{ i18n.translations().aboutVisionTitle }}</h2>
+      <p>{{ i18n.translations().aboutVisionDescription }}</p>
+    </article>
+    <article class="about-pillar">
+      <img src="/images/icons/mission.svg" alt="Mission">
+      <h2>{{ i18n.translations().aboutMissionTitle }}</h2>
+      <p>{{ i18n.translations().aboutMissionDescription }}</p>
+    </article>
+    <article class="about-pillar">
+      <img src="/images/icons/values.svg" alt="Values">
+      <h2>{{ i18n.translations().aboutValuesTitle }}</h2>
+      <p>{{ i18n.translations().aboutValuesDescription }}</p>
+    </article>
+  </div>
+</section>
+
+<app-home-team-section />

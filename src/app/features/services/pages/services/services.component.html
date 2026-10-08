@@ -1,0 +1,16 @@
+<main class="services-page container">
+  <section class="services-hero" aria-labelledby="services-title">
+    <h1 id="services-title">{{ i18n.translations().servicesTitle }}</h1>
+    <p>{{ i18n.translations().servicesPageDescription }}</p>
+  </section>
+
+  <section class="services-grid" aria-label="Our services">
+    @for (service of services; track service.title) {
+      <article class="service-card">
+        <img [src]="service.icon" alt="" aria-hidden="true" />
+        <h2>{{ service.title }}</h2>
+        <p>{{ service.description }}</p>
+      </article>
+    }
+  </section>
+</main>

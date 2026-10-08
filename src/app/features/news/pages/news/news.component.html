@@ -1,0 +1,26 @@
+<main class="news-page container">
+  <section class="news" aria-labelledby="news-title">
+    <header class="news__header">
+      <h1 id="news-title">{{ i18n.translations().newsHeading }}</h1>
+      <p>{{ i18n.translations().newsHeroDescription }}</p>
+    </header>
+
+    <div class="news__grid">
+      @for (item of newsItems; track $index) {
+        <article class="news-card" [routerLink]="[ newsSlug($index)]" role="link" tabindex="0">
+          <div class="news-card__media">
+            <img [src]="item.image" [alt]="item.title">
+            <span class="news-card__share" aria-hidden="true">
+              <img src="/images/icons/share.svg" alt="share icon">
+            </span>
+          </div>
+          <div class="news-card__content">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+            <a [routerLink]="[ newsSlug($index)]">{{ i18n.translations().newsReadMore }} <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+</main>

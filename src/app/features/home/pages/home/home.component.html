@@ -1,0 +1,32 @@
+<app-home-video-section />
+<app-home-hero-slider />
+<app-home-about-section />
+<app-home-stats-section />
+<app-home-services-section />
+<app-home-portfolio-section />
+
+@defer (on viewport; hydrate on viewport) {
+  <app-home-trusted-brands />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--brands" aria-hidden="true"></div>
+}
+
+@defer (on viewport; hydrate on viewport) {
+  <app-home-events-section />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--events" aria-hidden="true"></div>
+}
+
+<app-home-blogs-section />
+
+@defer (on viewport; hydrate on viewport) {
+  <app-home-team-section />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--team" aria-hidden="true"></div>
+}
+
+@defer (on viewport; hydrate on viewport) {
+  <app-home-contact-section />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--contact" aria-hidden="true"></div>
+}

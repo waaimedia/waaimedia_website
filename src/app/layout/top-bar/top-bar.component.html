@@ -1,0 +1,35 @@
+<div class="top-bar">
+  <div class="top-bar__inner container">
+    <p class="top-bar__date">
+      <time [attr.datetime]="isoDate">{{ dateLabel() }}</time>
+    </p>
+    @if (socialLinks.length > 0) {
+      <nav class="top-bar__social" [attr.aria-label]="i18n.translations().socialLinks">
+        @for (social of socialLinks; track social.platform) {
+          @if (social.href; as href) {
+            <a
+              [href]="href"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="i18n.translations()[social.labelKey]"
+            >
+              <app-social-icon [platform]="social.platform" />
+            </a>
+          } @else {
+            <span
+              class="top-bar__social-unavailable"
+              role="img"
+              [attr.aria-label]="
+                i18n.translations()[social.labelKey] +
+                ': ' +
+                i18n.translations().socialProfileUnavailable
+              "
+            >
+              <app-social-icon [platform]="social.platform" />
+            </span>
+          }
+        }
+      </nav>
+    }
+  </div>
+</div>

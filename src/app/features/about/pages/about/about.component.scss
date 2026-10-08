@@ -1,0 +1,131 @@
+.about-intro {
+  padding-block: 4rem;
+}
+
+.about-intro__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.25rem, 4vw, 4rem);
+  align-items: center;
+}
+
+.about-intro__media {
+  position: relative;
+  aspect-ratio: 1.98;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.about-intro__media img {
+  object-fit: cover;
+}
+
+.about-intro__content h1,
+.about-difference h2,
+.about-pillar h2 {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.about-intro__content h1 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.85rem, 2.4vw, 2.5rem);
+}
+
+.about-intro__content p,
+.about-difference p,
+.about-pillar p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.about-intro__content p {
+  max-width: 37rem;
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+}
+
+.about-difference {
+  padding-block: 0 3rem;
+  text-align: center;
+}
+
+.about-difference h2 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 2.35vw, 2.5rem);
+}
+
+.about-difference h2 span {
+  color: var(--color-primary);
+}
+
+.about-difference p {
+  max-width: 72rem;
+  margin-inline: auto;
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+}
+
+.about-pillars {
+  padding-block: 0;
+}
+
+.about-pillars__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 2.5rem;
+}
+
+.about-pillar {
+  position: relative;
+  min-height: 12.15rem;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  background: #fff4f6;
+  border: 1px solid #f6b9c3;
+  border-radius: 0.5rem;
+}
+
+.about-pillar img {
+  position: absolute;
+  inset-block-start: 1.5rem;
+  inset-inline-end: 1.5rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+
+.about-pillar h2 {
+  margin: 0 2.5rem 1.35rem 0;
+  font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+}
+
+.about-pillar p {
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+}
+
+@media (max-width: 767.98px) {
+  .about-intro {
+    padding-block: 3rem;
+  }
+
+  .about-intro__grid,
+  .about-pillars__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-intro__grid {
+    gap: 1.5rem;
+  }
+
+  .about-difference {
+    padding-block-end: 2rem;
+  }
+
+  .about-pillars__grid {
+    gap: 1.5rem;
+  }
+}

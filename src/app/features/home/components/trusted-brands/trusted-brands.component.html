@@ -1,0 +1,15 @@
+<section class="brands" aria-roledescription="carousel" aria-label="Trusted brands">
+  <div class="container-fluid">
+    <h2>{{ i18n.translations().trustedTitle }}</h2>
+    <div #brandsSwiper class="swiper brands-carousel">
+      <div class="swiper-wrapper">
+        @for (brand of brands; track brand.id) {
+          <article class="swiper-slide brand-card">
+            <div class="brand-slot" [attr.aria-label]="brand.title[i18n.locale()]" role="img"></div>
+            <p>{{ brand.title[i18n.locale()] }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </div>
+</section>

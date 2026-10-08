@@ -1,0 +1,29 @@
+@use '../../../styles/variables' as token;
+
+.whatsapp-action {
+  position: fixed;
+  z-index: token.$z-index-floating-action;
+  inset-block-end: clamp(1rem, 3vw, 1.75rem);
+  inset-inline-end: clamp(1rem, 3vw, 1.75rem);
+  display: block;
+  width: clamp(2.75rem, 3vw, 3rem);
+}
+
+.whatsapp-action--docked {
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: auto;
+  inset-inline-end: 0;
+  transform: translateY(-50%);
+}
+
+.whatsapp-action img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.whatsapp-action:focus-visible {
+  outline: 3px solid var(--color-background);
+  outline-offset: 4px;
+}

@@ -1,0 +1,13 @@
+<section class="home-stats">
+  <div class="container home-stats__grid">
+    @for (stat of stats; track stat.id) {
+      <div class="home-stats__item">
+        <div class="home-stats__value">
+          <span>{{ formattedValue(stat) }}</span>
+          <span class="home-stats__plus">+</span>
+        </div>
+        <span class="home-stats__label">{{ stat.label[i18n.locale()] }}</span>
+      </div>
+    }
+  </div>
+</section>

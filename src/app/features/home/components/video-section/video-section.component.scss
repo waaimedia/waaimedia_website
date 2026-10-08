@@ -1,0 +1,39 @@
+.home-video,
+.home-video__media,
+.home-video__fallback {
+  width: 100%;
+}
+
+.home-video {
+  overflow: hidden;
+  background: #000;
+}
+
+.home-video__media,
+.home-video__fallback {
+  display: block;
+  aspect-ratio: 3.45;
+  max-height: 10rem;
+}
+
+.home-video__media {
+  object-fit: cover;
+}
+
+.home-video__fallback {
+  display: grid;
+  place-items: center;
+}
+
+.home-video__fallback img {
+  width: clamp(4.5rem, 7vw, 6.5rem);
+  height: auto;
+}
+
+@media (max-width: 575.98px) {
+  .home-video__media,
+  .home-video__fallback {
+    aspect-ratio: 2.9;
+    min-height: 6.5rem;
+  }
+}

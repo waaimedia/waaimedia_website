@@ -1,0 +1,57 @@
+<header class="site-header">
+  <div class="site-header__inner container">
+    <a class="site-header__brand" [routerLink]="homeUrl()" aria-label="WAAI MEDIA">
+      <img [ngSrc]="brandLogoSrc" width="100" height="87" priority alt="WAAI MEDIA" />
+    </a>
+
+    <div class="site-header__nav-panel" [class.is-open]="menuOpen()">
+      <nav
+        id="primary-navigation"
+        class="site-header__navigation"
+        [attr.aria-label]="i18n.translations().menu"
+      >
+        @for (link of navigation(); track link.path) {
+          <a
+            [routerLink]="link.url"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: link.path === '' }"
+            (click)="closeMenu()"
+          >
+            {{ i18n.translations()[link.key] }}
+          </a>
+        }
+      </nav>
+    </div>
+    <div class="site-header__actions">
+      <button
+        class="site-header__language"
+        type="button"
+        [attr.aria-label]="switchLanguageLabel()"
+        (click)="switchLanguage()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 5h10M8 3v2c0 5-2 8-5 10m2-7c1 2 3 4 5 5" />
+          <path d="m18 12-3 8m3-8 3 8m-5-3h4" />
+        </svg>
+      </button>
+      <button
+        class="site-header__menu-toggle"
+        type="button"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="primary-navigation"
+        [attr.aria-label]="
+          menuOpen() ? i18n.translations().closeMenu : i18n.translations().openMenu
+        "
+        (click)="toggleMenu()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          @if (menuOpen()) {
+            <path d="m6 6 12 12M18 6 6 18" />
+          } @else {
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          }
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,25 @@
+<section class="hero-slider" aria-roledescription="carousel" aria-label="WAAI MEDIA highlights">
+  <div #heroSwiper class="swiper hero-slider__swiper">
+    <div class="swiper-wrapper">
+      @for (slide of slides; track slide.id) {
+        <article class="swiper-slide hero-slider__slide">
+          @if (slide.imageUrl) {
+            <img [src]="slide.imageUrl" [alt]="slide.title[i18n.locale()]" />
+          } @else {
+            <div class="hero-slider__fallback" aria-hidden="true"></div>
+          }
+          <div class="hero-slider__veil"></div>
+          <div class="hero-slider__content container">
+            <h1>{{ slide.title[i18n.locale()] }}</h1>
+            <p>{{ slide.description[i18n.locale()] }}</p>
+            <a class="hero-slider__cta" [routerLink]="'/' + i18n.locale() + slide.ctaUrl">{{
+              slide.ctaLabel[i18n.locale()]
+            }}</a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+
+  <div #pagination class="hero-slider__pagination" aria-label="Highlight slides"></div>
+</section>

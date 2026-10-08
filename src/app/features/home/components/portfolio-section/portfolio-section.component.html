@@ -1,0 +1,24 @@
+<section class="home-section home-portfolio">
+  <div class="container">
+    <header class="home-heading">
+      <h2>{{ i18n.translations().portfolioTitle }}</h2>
+      <p>{{ i18n.translations().portfolioDescription }}</p>
+    </header>
+    <div class="portfolio-grid">
+      @for (item of items; track item.id) {
+        <article>
+          <div
+            class="work-media"
+            aria-hidden="true"
+            [style.background-image]="item.imageUrl ? 'url(' + item.imageUrl + ')' : null"
+          ></div>
+          <small>{{ item.category?.[i18n.locale()] }}</small>
+          <h3>{{ item.title[i18n.locale()] }}</h3>
+        </article>
+      }
+    </div>
+    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/portfolio'"
+      >{{ i18n.translations().viewAll }} →</a
+    >
+  </div>
+</section>

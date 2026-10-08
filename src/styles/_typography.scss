@@ -1,0 +1,18 @@
+@use './variables' as *;
+
+html {
+  font-family: $font-family-en;
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+// Bootstrap sets its system stack directly on body, so apply the site font to
+// the same element to keep it from overriding the font selected on html.
+html body {
+  font-family: $font-family-en;
+}
+
+html[lang='ar'],
+html[lang='ar'] body {
+  font-family: $font-family-arabic;
+}

@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+.home-section {
+  scroll-margin-block-start: 1rem;
+}
+
+.home-defer-placeholder {
+  width: 100%;
+}
+
+.home-defer-placeholder--brands {
+  min-height: 22rem;
+}
+
+.home-defer-placeholder--events {
+  min-height: 36rem;
+}
+
+.home-defer-placeholder--team {
+  min-height: 28rem;
+}
+
+.home-defer-placeholder--contact {
+  min-height: 42rem;
+}
+
+@media (max-width: 767.98px) {
+  .home-defer-placeholder--brands {
+    min-height: 18rem;
+  }
+
+  .home-defer-placeholder--events {
+    min-height: 32rem;
+  }
+
+  .home-defer-placeholder--team {
+    min-height: 24rem;
+  }
+
+  .home-defer-placeholder--contact {
+    min-height: 38rem;
+  }
+}

@@ -1,0 +1,19 @@
+:host {
+  display: inline-flex;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+.social-icon__filled,
+.social-icon__dot {
+  fill: currentColor;
+  stroke: none;
+}

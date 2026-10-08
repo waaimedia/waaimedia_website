@@ -1,0 +1,25 @@
+<section class="home-section home-services">
+  <div class="container">
+    <header class="home-heading">
+      <h2>{{ i18n.translations().servicesTitle }}</h2>
+      <p>{{ i18n.translations().servicesDescription }}</p>
+    </header>
+    <div class="services-grid">
+      @for (service of services; track service.id) {
+        <article class="service-card">
+          <span
+            class="service-card__icon"
+            [class]="'service-card__icon ' + service.tone"
+            aria-hidden="true"
+            >✦</span
+          >
+          <h3>{{ service.title[i18n.locale()] }}</h3>
+          <p>{{ service.description?.[i18n.locale()] }}</p>
+        </article>
+      }
+    </div>
+    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/services'"
+      >{{ i18n.translations().viewAll }} services →</a
+    >
+  </div>
+</section>

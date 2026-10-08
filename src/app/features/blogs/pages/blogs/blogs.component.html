@@ -1,0 +1,42 @@
+<main class="blogs-page container">
+  <section class="blogs" aria-labelledby="blogs-title">
+    <header class="blogs__header">
+      <h1 id="blogs-title">{{ i18n.translations().blogHeading }}</h1>
+      <p>{{ i18n.translations().blogHeroDescription }}</p>
+    </header>
+
+    <div class="blogs__tabs" role="tablist" [attr.aria-label]="i18n.translations().blogHeading">
+      @for (tab of tabs; track tab) {
+        <button
+          type="button"
+          role="tab"
+          [class.is-active]="activeTab() === tab"
+          [attr.aria-selected]="activeTab() === tab"
+          (click)="setActiveTab(tab)">
+          {{ tabLabel(tab) }}
+        </button>
+      }
+    </div>
+
+    <div class="blogs__grid">
+      @for (item of filteredBlogItems(); track item.title) {
+        <article class="blog-card" [routerLink]="[ blogSlug($index)]" role="link" tabindex="0">
+          <div class="blog-card__media">
+            <img [src]="item.image" [alt]="item.title">
+            <span class="blog-card__share" aria-hidden="true">
+              <img src="/images/icons/share.svg" alt="share icon">
+            </span>
+          </div>
+          <div class="blog-card__content">
+            <p class="blog-card__category">{{ tabLabel(item.category) }}</p>
+            <h2>{{ item.title }}</h2>
+            <p class="blog-card__description">{{ item.description }}</p>
+            <a [routerLink]="[ blogSlug($index)]">
+              {{ i18n.translations().blogReadMore }} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+</main>

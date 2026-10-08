@@ -1,0 +1,78 @@
+@use 'sass:map';
+@use './variables' as *;
+
+:root {
+  --color-primary: #{$color-primary};
+  --color-accent: #{$color-accent};
+  --color-dark: #{$palette-dark};
+  --color-darkest: #{$palette-darkest};
+  --color-text: #{$color-text};
+  --color-text-muted: #{$color-text-muted};
+  --color-background: #{$color-background};
+  --color-surface: #{$color-surface};
+  --color-border-subtle: #{rgba($palette-muted, 0.2)};
+  --color-whatsapp: #{$color-whatsapp};
+}
+
+html {
+  min-width: 320px;
+  color: $color-text;
+  background-color: $color-background;
+}
+
+html[dir='rtl'] {
+  direction: rtl;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: $color-text;
+  background-color: $color-background;
+}
+
+// One shared content boundary for every full-width site band. This deliberately
+// uses Bootstrap's `.container` class so TopBar, Header, brand strip, footer,
+// and routed content all share the same responsive gutters and max widths.
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-inline: 0.75rem;
+}
+
+@each $breakpoint, $container-max-width in $container-max-widths {
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
+    .container {
+      max-width: $container-max-width;
+    }
+  }
+}
+
+a {
+  color: $color-primary;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.5em;
+  font-weight: 600;
+  line-height: 1.2;
+}

@@ -1,0 +1,12 @@
+@if (href; as whatsappUrl) {
+  <a
+    class="whatsapp-action"
+    [class.whatsapp-action--docked]="docked()"
+    [href]="whatsappUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+    [attr.aria-label]="i18n.translations().whatsappLabel"
+  >
+    <img src="/images/icons/whatsapp.svg" alt="" aria-hidden="true" />
+  </a>
+}
