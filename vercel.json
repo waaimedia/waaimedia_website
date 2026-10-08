@@ -1,10 +1,14 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/media-news-company/browser",
+  "functions": {
+    "api/ssr.mjs": {
+      "includeFiles": "dist/media-news-company/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/ssr?path=$1"
     }
   ]
 }
