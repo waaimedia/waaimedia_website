@@ -1,7 +1,9 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/media-news-company/browser",
   "rewrites": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
