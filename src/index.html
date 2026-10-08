@@ -28,7 +28,18 @@
       data-beasties-skip
     />
   </head>
-  <body>
+<body>
+  <script>
+    (() => {
+      const scrollToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      const pushState = history.pushState.bind(history);
+
+      history.pushState = (...args) => {
+        pushState(...args);
+        requestAnimationFrame(scrollToTop);
+      };
+    })();
+  </script>
     <app-root></app-root>
   </body>
 </html>
