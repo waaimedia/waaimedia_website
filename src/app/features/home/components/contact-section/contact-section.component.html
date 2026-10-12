@@ -22,7 +22,7 @@
       <section class="contact__map" [attr.aria-label]="i18n.translations().contactFindUs">
         <h3>{{ i18n.translations().contactFindUs }}</h3>
         <iframe
-          title="WAAI MEDIA location"
+          [title]="i18n.translations().brandName + ' location'"
           [src]="mapUrl"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"

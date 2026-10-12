@@ -1,6 +1,6 @@
 # WAAI MEDIA
 
-Angular 22 standalone public website foundation using SCSS, Bootstrap 5, bilingual routing, server-side rendering, and hydration. Public pages contain temporary navigation placeholders only; page design and backend integrations are not implemented yet.
+Angular 22 standalone public website foundation using SCSS, Bootstrap 5, bilingual routing, and client-side rendering (CSR). Public pages contain temporary navigation placeholders only; page design and backend integrations are not implemented yet.
 
 ## Requirements
 
@@ -24,9 +24,9 @@ npm test
 
 Production builds replace `src/environments/environment.ts` with `src/environments/environment.production.ts`. Both files currently use placeholder `apiUrl` and `siteUrl` values. Configure both before connecting an API or deploying.
 
-The app server is built by `npm run build` and can be started with `npm run serve:ssr:media-news-company`. Node.js must meet Angular CLI's supported version requirements.
+`npm run build` produces a static CSR bundle in `dist/media-news-company/browser`. Deploy that directory to static hosting. The Vercel configuration routes deep links to `index.html`, allowing Angular Router to resolve them in the browser.
 
-`/` redirects to `/en`; `/en` and `/ar` set the document language and direction. All routes currently use server rendering. Static routes can opt into prerendering later, while CMS-managed routes remain server-rendered.
+`/` redirects to `/en`; `/en` and `/ar` set the document language and direction. Routes render in the browser after the JavaScript bundle loads.
 
 Static UI strings belong in `src/app/core/i18n/translations.ts`; CMS content will come from the future API and should not be added to those dictionaries.
 
@@ -36,6 +36,4 @@ The approved logo belongs in `public/assets/brand/waai-media-logo.svg`; no logo 
 
 Global SCSS entry point: `src/styles.scss`. Figma palette tokens are organized in `src/styles/_variables.scss`. Bootstrap's LTR and RTL stylesheets are selected from the current URL locale.
 
-SSR host validation is allowlisted in `angular.json` for localhost and the placeholder `example.com` hosts. Replace the placeholder hosts with the deployment hostnames before production deployment.
-
-The `core`, `shared`, `features`, and `layout` directories remain the application boundaries. SSR and hydration are enabled, but page designs, content APIs, and the admin dashboard are intentionally deferred.
+The `core`, `shared`, `features`, and `layout` directories remain the application boundaries. CSR is enabled; page designs, content APIs, and the admin dashboard are intentionally deferred.

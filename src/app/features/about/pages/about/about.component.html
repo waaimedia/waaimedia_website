@@ -1,7 +1,12 @@
 <section class="about-intro">
   <div class="container about-intro__grid">
     <figure class="about-intro__media">
-      <img ngSrc="/images/about-us.png" fill alt="WAAI MEDIA team collaborating" priority />
+      <img
+        ngSrc="/images/about-us.png"
+        fill
+        [alt]="i18n.translations().brandName + ' team collaborating'"
+        priority
+      />
     </figure>
     <div class="about-intro__content">
       <h1>{{ i18n.translations().aboutTitle }}</h1>
@@ -20,7 +25,7 @@
   </div>
 </section>
 
-<section class="about-pillars" aria-label="WAAI MEDIA principles">
+<section class="about-pillars" [attr.aria-label]="i18n.translations().brandName + ' principles'">
   <div class="container about-pillars__grid">
     <article class="about-pillar">
      <img src="/images/icons/vision.svg" alt="Vision">

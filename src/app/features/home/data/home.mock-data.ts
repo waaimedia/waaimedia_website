@@ -11,10 +11,10 @@ const both = (en: string, ar: string) => ({ en, ar });
 export const HOME_HERO_SLIDES: readonly HomeHeroSlide[] = [
   {
     id: 'media-expo',
-    title: both('Waai Media Highlights', 'أبرز محطات WAAI MEDIA'),
+    title: both('Waai Media Highlights', 'أبرز محطات وعي ميديا'),
     description: both(
       'Waai Media proudly participated in Futon Media Expo in Turkey, strengthening its regional presence and building partnerships with top media.',
-      'شاركت WAAI MEDIA بفخر في معرض فوتون ميديا في تركيا، لتعزيز حضورها الإقليمي وبناء شراكات مع أبرز الجهات الإعلامية.',
+      'شاركت وعي ميديا بفخر في معرض فوتون ميديا في تركيا، لتعزيز حضورها الإقليمي وبناء شراكات مع أبرز الجهات الإعلامية.',
     ),
     imageUrl: null,
     ctaLabel: both('Explore', 'اكتشف'),

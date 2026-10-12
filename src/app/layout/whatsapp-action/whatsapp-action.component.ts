@@ -8,7 +8,6 @@ import { WHATSAPP_NUMBER } from '../public-site.config';
   styleUrl: './whatsapp-action.component.scss',
 })
 export class WhatsAppActionComponent {
-  readonly docked = input(false);
   protected readonly i18n = inject(LocaleService);
   protected readonly href = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : null;
 }

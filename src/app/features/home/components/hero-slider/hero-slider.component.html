@@ -1,4 +1,8 @@
-<section class="hero-slider" aria-roledescription="carousel" aria-label="WAAI MEDIA highlights">
+<section
+  class="hero-slider"
+  aria-roledescription="carousel"
+  [attr.aria-label]="i18n.translations().brandName + ' highlights'"
+>
   <div #heroSwiper class="swiper hero-slider__swiper">
     <div class="swiper-wrapper">
       @for (slide of slides; track slide.id) {

@@ -45,44 +45,9 @@ export class FooterComponent {
   protected readonly brandLogoSrc = INVERSE_LOGO_SRC;
   protected readonly socialLinks = SOCIAL_LINKS;
   protected readonly isMobile = signal(false);
-  protected readonly isWhatsappDocked = signal(false);
   protected readonly expandedGroups = signal<ReadonlySet<string>>(new Set());
 
-  constructor() {
-    afterNextRender(() => {
-      const view = this.document.defaultView;
-      if (!view) {
-        return;
-      }
-
-      const mediaQuery = view.matchMedia('(max-width: 767.98px)');
-
-      const update = (): void => this.isMobile.set(mediaQuery.matches);
-      update();
-      mediaQuery.addEventListener('change', update);
-      this.destroyRef.onDestroy(() => mediaQuery.removeEventListener('change', update));
-
-      const updateWhatsappPosition = (): void => {
-        const footerTop = this.document.documentElement
-          .querySelector('app-footer')
-          ?.getBoundingClientRect().top;
-        if (footerTop === undefined) {
-          return;
-        }
-
-        const actionOffset = Math.min(Math.max(view.innerWidth * 0.03, 16), 28);
-        this.isWhatsappDocked.set(footerTop <= view.innerHeight - actionOffset - 24);
-      };
-
-      updateWhatsappPosition();
-      view.addEventListener('scroll', updateWhatsappPosition, { passive: true });
-      view.addEventListener('resize', updateWhatsappPosition);
-      this.destroyRef.onDestroy(() => {
-        view.removeEventListener('scroll', updateWhatsappPosition);
-        view.removeEventListener('resize', updateWhatsappPosition);
-      });
-    });
-  }
+  constructor() {}
   protected readonly menuLinks = computed(() =>
     FOOTER_MENU.map((link) => ({
       ...link,

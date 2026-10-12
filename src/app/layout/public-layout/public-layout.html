@@ -5,3 +5,13 @@
   <router-outlet />
 </main>
 <app-footer />
+
+@if (backgroundMusic.enabled && backgroundMusic.url) {
+  <audio
+    #backgroundMusicPlayer
+    [src]="backgroundMusic.url"
+    [loop]="backgroundMusic.loop"
+    preload="auto"
+    hidden
+  ></audio>
+}

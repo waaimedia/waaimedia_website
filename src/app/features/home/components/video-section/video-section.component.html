@@ -1,4 +1,4 @@
-<section class="home-video" aria-label="WAAI MEDIA video">
+<section class="home-video" [attr.aria-label]="i18n.translations().brandName + ' video'">
   @if (videoUrl) {
     <video
       class="home-video__media"
@@ -12,7 +12,7 @@
     ></video>
   } @else {
     <div class="home-video__fallback">
-      <img [ngSrc]="logoSrc" width="100" height="87" alt="WAAI MEDIA" priority />
+      <img [ngSrc]="logoSrc" width="100" height="87" [alt]="i18n.translations().brandName" priority />
     </div>
   }
 </section>

@@ -1,7 +1,17 @@
 <header class="site-header">
   <div class="site-header__inner container">
-    <a class="site-header__brand" [routerLink]="homeUrl()" aria-label="WAAI MEDIA">
-      <img [ngSrc]="brandLogoSrc" width="100" height="87" priority alt="WAAI MEDIA" />
+    <a
+      class="site-header__brand"
+      [routerLink]="homeUrl()"
+      [attr.aria-label]="i18n.translations().brandName"
+    >
+      <img
+        [ngSrc]="brandLogoSrc"
+        width="100"
+        height="87"
+        priority
+        [alt]="i18n.translations().brandName"
+      />
     </a>
 
     <div class="site-header__nav-panel" [class.is-open]="menuOpen()">
