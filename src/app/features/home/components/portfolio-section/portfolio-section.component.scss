@@ -41,13 +41,22 @@
   font-weight: 500;
 }
 .home-view-all {
-  display: block;
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
   margin-top: clamp(3rem, 4.5vw, 4.5rem);
-  text-align: center;
   color: var(--color-accent);
   font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
+}
+.home-view-all__icon {
+  width: 1.25rem;
+  height: auto;
+}
+.home-view-all__icon--rtl {
+  transform: scaleX(-1);
 }
 @media (max-width: 575.98px) {
   .portfolio-grid {

@@ -7,16 +7,16 @@
   text-align: center;
 
   h1 {
-    color: #2e1520;
-    font-size: 25px;
+    color: #27111A;
+    font-size: 30px;
     font-weight: 600;
     line-height: 1.2;
     margin: 0 0 10px;
   }
 
   p {
-    color: #795967;
-    font-size: 16px;
+    color: #634B57;
+    font-size: 20px;
     line-height: 1.45;
     margin: 0;
   }
@@ -30,8 +30,8 @@
 
 .service-card {
   align-items: center;
-  background: #fff4f7;
-  border: 1px solid #ffafbd;
+  background: #FBEFF4; 
+  border: 1px solid #DF3F5366;
   border-radius: 6px;
   box-sizing: border-box;
   display: flex;
@@ -41,24 +41,24 @@
   text-align: center;
 
   img {
-    height: 34px;
+    height: 48px;
     margin-bottom: 13px;
     object-fit: contain;
-    width: 34px;
+    width: 48px;
   }
 
   h2 {
-    color: #351b27;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.35;
+    color: #27111A;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
     margin: 0 0 10px;
   }
 
   p {
-    color: #795967;
-    font-size: 13px;
-    line-height: 1.35;
+    color: #634B57;
+    font-size: 16px;
+    line-height: 24px;
     margin: 0;
   }
 }

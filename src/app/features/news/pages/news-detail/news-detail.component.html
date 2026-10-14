@@ -2,7 +2,11 @@
   <article class="news-detail px-md-5 mx-md-5">
     <div class="news-detail__media">
       <img [src]="news.image" [alt]="news.title">
-      <span class="news-detail__share" aria-hidden="true">
+      <span
+        class="news-detail__share"
+        [class.news-detail__share--rtl]="i18n.locale() === 'ar'"
+        aria-hidden="true"
+      >
         <img src="/images/icons/share.svg" alt="share icon">
       </span>
     </div>

@@ -59,7 +59,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'Tailored strategy built around business goals and a clear market position.',
       'استراتيجية مخصصة حول أهداف عملك وموقعك في السوق.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/strategy.svg',
     tone: 'sun',
   },
   {
@@ -69,7 +69,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'Content and community management that grows your brand presence.',
       'محتوى وإدارة مجتمع تعزز حضور علامتك.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/users-cog.svg',
     tone: 'chat',
   },
   {
@@ -79,7 +79,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'Creative visuals, video and copy that make your voice recognizable.',
       'مرئيات وفيديو ونصوص تجعل صوت علامتك واضحًا.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/file-check.svg',
     tone: 'play',
   },
   {
@@ -89,7 +89,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'Data-led paid campaigns designed to turn attention into action.',
       'حملات مدفوعة مبنية على البيانات لتحويل الاهتمام إلى نتائج.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/target.svg',
     tone: 'target',
   },
   {
@@ -99,7 +99,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'A cohesive visual identity people remember and trust.',
       'هوية بصرية متماسكة يتذكرها الناس ويثقون بها.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/identity.svg',
     tone: 'grid',
   },
   {
@@ -109,7 +109,7 @@ export const HOME_SERVICES: readonly HomeCard[] = [
       'Responsive digital experiences built to support growth.',
       'تجارب رقمية متجاوبة تدعم النمو.',
     ),
-    imageUrl: null,
+    imageUrl: '/images/icons/code-xml.svg',
     tone: 'code',
   },
 ];

@@ -72,6 +72,11 @@
     right: 14px;
     top: 14px;
     width: 31px;
+
+    &--rtl {
+      left: 14px;
+      right: auto;
+    }
   }
 
   &__content {
@@ -95,6 +100,7 @@
   }
 
   a {
+    align-items: center;
     color: #0087b6;
     display: inline-flex;
     font-size: 15px;
@@ -105,6 +111,15 @@
     &:hover,
     &:focus-visible {
       color: #e43e54;
+    }
+  }
+
+  &__read-more-icon {
+    height: auto;
+    width: 1.25rem;
+
+    &--rtl {
+      transform: scaleX(-1);
     }
   }
 }

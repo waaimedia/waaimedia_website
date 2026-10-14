@@ -23,7 +23,11 @@
         <article class="blog-card" [routerLink]="[ blogSlug($index)]" role="link" tabindex="0">
           <div class="blog-card__media">
             <img [src]="item.image" [alt]="item.title">
-            <span class="blog-card__share" aria-hidden="true">
+            <span
+              class="blog-card__share"
+              [class.blog-card__share--rtl]="i18n.locale() === 'ar'"
+              aria-hidden="true"
+            >
               <img src="/images/icons/share.svg" alt="share icon">
             </span>
           </div>
@@ -32,7 +36,14 @@
             <h2>{{ item.title }}</h2>
             <p class="blog-card__description">{{ item.description }}</p>
             <a [routerLink]="[ blogSlug($index)]">
-              {{ i18n.translations().blogReadMore }} <span aria-hidden="true">→</span>
+              {{ i18n.translations().blogReadMore }}
+              <img
+                class="blog-card__read-more-icon"
+                [class.blog-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
+                src="/images/icons/arrow-learn-more.svg"
+                alt=""
+                aria-hidden="true"
+              />
             </a>
           </div>
         </article>

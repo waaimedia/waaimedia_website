@@ -17,8 +17,15 @@
         </article>
       }
     </div>
-    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/portfolio'"
-      >{{ i18n.translations().viewAll }} →</a
-    >
+    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/portfolio'">
+      {{ i18n.translations().viewAll }}
+      <img
+        class="home-view-all__icon"
+        [class.home-view-all__icon--rtl]="i18n.locale() === 'ar'"
+        src="/images/icons/arrow-learn-more.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </a>
   </div>
 </section>

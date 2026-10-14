@@ -31,13 +31,11 @@
   border-radius: 0.75rem;
 }
 .service-card__icon {
-  display: grid;
+  display: block;
   width: clamp(2.5rem, 3vw, 3.25rem);
   height: clamp(2.5rem, 3vw, 3.25rem);
-  place-items: center;
   margin: auto;
-  color: var(--color-primary);
-  font-size: clamp(2rem, 2.5vw, 2.8rem);
+  object-fit: contain;
 }
 .service-card h3 {
   margin: 1.55rem 0 1.15rem;
@@ -51,13 +49,22 @@
   line-height: 1.45;
 }
 .home-view-all {
-  display: block;
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
   margin-top: clamp(2.5rem, 4vw, 4.25rem);
-  text-align: center;
   color: var(--color-accent);
   font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
+}
+.home-view-all__icon {
+  width: 1.25rem;
+  height: auto;
+}
+.home-view-all__icon--rtl {
+  transform: scaleX(-1);
 }
 @media (max-width: 575.98px) {
   .services-grid {

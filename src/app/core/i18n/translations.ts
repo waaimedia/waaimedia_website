@@ -20,6 +20,8 @@ const english = {
   closeMenu: 'Close navigation menu',
   skipToContent: 'Skip to content',
   today: 'Today',
+  date: 'Date',
+  place: 'Place',
   footerMenu: 'Menu',
   footerPortfolio: 'Portfolio',
   footerDescription:
@@ -84,7 +86,7 @@ const english = {
   eventsCalendarPageDescription:
     'Explore our upcoming events, activations, exhibitions, and marketing experiences.',
   aboutDescription:
-    'We are a full service marketing agency driven by strategy, powered by creativity, and obsessed with results.',
+    'We are a full service marketing agency driven by strategy, powered by creativity, and obsessed with results. From branding, content creation, and social media management to performance advertising,',
   aboutPageDescription:
     'We are a full service marketing agency driven by strategy, powered by creativity, and obsessed with results. From branding, content creation, and social media management to performance advertising, media production, and event activation, we deliver end to end solutions that move brands forward.',
   aboutDifferenceLead: 'What Makes Us',
@@ -130,8 +132,8 @@ const arabic: Record<StaticTranslationKey, string> = {
   ...english,
   aboutPageDescription:
     'نحن وكالة تسويق متكاملة تقودها الاستراتيجية ويدعمها الإبداع وتركز على النتائج. من بناء الهوية وصناعة المحتوى وإدارة وسائل التواصل إلى الإعلانات الموجهة وإنتاج الوسائط وتفعيل الفعاليات، نقدم حلولًا متكاملة تدفع العلامات التجارية إلى الأمام.',
-  aboutDifferenceLead: 'ما الذي يجعلنا',
-  aboutDifferenceHighlight: 'مختلفين',
+  aboutDifferenceLead: 'ما ',
+  aboutDifferenceHighlight: 'يميّزنا',
   aboutDifferenceDescription:
     'فريق متنوع بخبرة حقيقية في مجالات تسويق متعددة. نصمم استراتيجيات مناسبة لكل عميل، وليست حلولًا موحّدة للجميع. نوازن بين الإبداع والتسويق المبني على البيانات، مع متابعة وتقارير مستمرة لتعظيم النتائج.',
   aboutVisionTitle: 'رؤيتنا',
@@ -178,7 +180,7 @@ const arabic: Record<StaticTranslationKey, string> = {
   eventsCalendarTitle: 'تقويم الفعاليات',
   eventsCalendarPageDescription: 'اكتشف فعالياتنا ومعارضنا وأنشطتنا وتجاربنا التسويقية القادمة.',
   aboutDescription:
-    'نحن وكالة تسويق متكاملة تقودها الاستراتيجية ويدعمها الإبداع وتركز على النتائج.',
+    'نحن وكالة تسويق متكاملة، نعمل برؤية استراتيجية، ونُبدع بقوة الخيال، ونقيس نجاحنا بالنتائج. نقدّم حلولًا شاملة تمتد من بناء الهوية البصرية، وصناعة المحتوى، وإدارة منصات التواصل الاجتماعي، إلى الإعلانات المدفوعة.',
   learnMore: 'اعرف المزيد',
   servicesDescription: 'حلول تسويق رقمي متكاملة مصممة لاحتياجات عملك',
   portfolioTitle: 'معرض أعمالنا',
@@ -188,7 +190,7 @@ const arabic: Record<StaticTranslationKey, string> = {
   blogsTitle: 'مدوّنتنا',
   blogsDescription: 'اكتشف أحدث الرؤى التسويقية والاستراتيجيات الإبداعية',
   teamTitle: 'فريقنا',
-  teamDescription: 'تعرف إلى الفريق المتخصص خلف وعي ميديا',
+  teamDescription: 'تعرّف على نخبة المتخصصين والمهنيين وراء Waai Media، الذين يقفون بشغف وخبرة خلف كل إنجاز',
   contactTitle: 'تواصل معنا',
   contactDescription: 'مستعدون لنمو عملك؟ دعنا نناقش احتياجاتك التسويقية.',
   contactAddress: 'العنوان',
@@ -219,6 +221,8 @@ const arabic: Record<StaticTranslationKey, string> = {
   closeMenu: 'إغلاق قائمة التنقل',
   skipToContent: 'انتقل إلى المحتوى',
   today: 'اليوم',
+  date: 'التاريخ',
+  place: 'المكان',
   footerMenu: 'القائمة',
   footerPortfolio: 'معرض الأعمال',
   footerDescription: 'وكالة تسويق متكاملة برؤية واضحة وإبداع ملهم والتزام بتحقيق أثر ملموس.',

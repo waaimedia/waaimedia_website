@@ -7,19 +7,23 @@
     <div class="services-grid">
       @for (service of services; track service.id) {
         <article class="service-card">
-          <span
-            class="service-card__icon"
-            [class]="'service-card__icon ' + service.tone"
-            aria-hidden="true"
-            >✦</span
-          >
+          @if (service.imageUrl) {
+            <img class="service-card__icon" [src]="service.imageUrl" alt="" aria-hidden="true" />
+          }
           <h3>{{ service.title[i18n.locale()] }}</h3>
           <p>{{ service.description?.[i18n.locale()] }}</p>
         </article>
       }
     </div>
-    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/services'"
-      >{{ i18n.translations().viewAll }} services →</a
-    >
+    <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/services'">
+      {{ i18n.translations().viewAll }} {{ i18n.translations().services }}
+      <img
+        class="home-view-all__icon"
+        [class.home-view-all__icon--rtl]="i18n.locale() === 'ar'"
+        src="/images/icons/arrow-learn-more.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </a>
   </div>
 </section>

@@ -10,14 +10,27 @@
         <article class="news-card" [routerLink]="[ newsSlug($index)]" role="link" tabindex="0">
           <div class="news-card__media">
             <img [src]="item.image" [alt]="item.title">
-            <span class="news-card__share" aria-hidden="true">
+            <span
+              class="news-card__share"
+              [class.news-card__share--rtl]="i18n.locale() === 'ar'"
+              aria-hidden="true"
+            >
               <img src="/images/icons/share.svg" alt="share icon">
             </span>
           </div>
           <div class="news-card__content">
             <h2>{{ item.title }}</h2>
             <p>{{ item.description }}</p>
-            <a [routerLink]="[ newsSlug($index)]">{{ i18n.translations().newsReadMore }} <span aria-hidden="true">→</span></a>
+            <a [routerLink]="[ newsSlug($index)]">
+              {{ i18n.translations().newsReadMore }}
+              <img
+                class="news-card__read-more-icon"
+                [class.news-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
+                src="/images/icons/arrow-learn-more.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </a>
           </div>
         </article>
       }

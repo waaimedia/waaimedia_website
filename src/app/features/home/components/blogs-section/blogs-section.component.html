@@ -2,7 +2,16 @@
   <div class="container">
     <header>
       <h2>{{ i18n.translations().blogsTitle }}</h2>
-      <a [routerLink]="'/' + i18n.locale() + '/blogs'">{{ i18n.translations().viewAll }} →</a>
+      <a class="blogs-view-all" [routerLink]="'/' + i18n.locale() + '/blogs'">
+        {{ i18n.translations().viewAll }}
+        <img
+          class="blogs-view-all__icon"
+          [class.blogs-view-all__icon--rtl]="i18n.locale() === 'ar'"
+          src="/images/icons/arrow-learn-more.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </a>
       <p>{{ i18n.translations().blogsDescription }}</p>
     </header>
     <div class="blog-grid">
@@ -16,7 +25,16 @@
           <small>{{ item.category?.[i18n.locale()] }}</small>
           <h3>{{ item.title[i18n.locale()] }}</h3>
           <p>{{ item.description?.[i18n.locale()] }}</p>
-          <a [routerLink]="'/' + i18n.locale() + '/blogs'">{{ i18n.translations().readMore }} →</a>
+          <a class="blog-card__read-more" [routerLink]="'/' + i18n.locale() + '/blogs'">
+            {{ i18n.translations().readMore }}
+            <img
+              class="blog-card__read-more-icon"
+              [class.blog-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
+              src="/images/icons/arrow-learn-more.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </a>
         </article>
       }
     </div>

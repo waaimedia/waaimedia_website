@@ -25,6 +25,18 @@
   font-weight: 500;
   text-decoration: none;
 }
+.home-about__link {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+.home-about__link-icon {
+  width: 1.25rem;
+  height: auto;
+}
+.home-about__link-icon--rtl {
+  transform: scaleX(-1);
+}
 .home-media {
   position: relative;
   aspect-ratio: 1.98;

@@ -8,8 +8,8 @@
     @for (service of services; track service.title) {
       <article class="service-card">
         <img [src]="service.icon" alt="" aria-hidden="true" />
-        <h2>{{ service.title }}</h2>
-        <p>{{ service.description }}</p>
+        <h2>{{ i18n.locale() === 'ar' ? service.titleAr : service.title }}</h2>
+        <p>{{ i18n.locale() === 'ar' ? service.descriptionAr : service.description }}</p>
       </article>
     }
   </section>

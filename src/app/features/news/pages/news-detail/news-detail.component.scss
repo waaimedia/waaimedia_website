@@ -33,6 +33,11 @@
     right: 24px;
     top: 24px;
     width: 32px;
+
+    &--rtl {
+      left: 24px;
+      right: auto;
+    }
   }
 
   &__content {
@@ -81,6 +86,11 @@
   .news-detail__share {
     right: 14px;
     top: 14px;
+  }
+
+  .news-detail__share--rtl {
+    left: 14px;
+    right: auto;
   }
 
   .news-detail__content {

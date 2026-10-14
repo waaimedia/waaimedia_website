@@ -23,8 +23,8 @@
             <div class="event-card__content">
               <small>{{ item.category?.[i18n.locale()] }}</small>
               <h3>{{ item.title[i18n.locale()] }}</h3>
-              <p>Date: {{ eventDates[item.id] }}</p>
-              <p>Place: {{ item.description?.[i18n.locale()] }}</p>
+              <p>{{ i18n.translations().date }}: {{ eventDates[item.id] }}</p>
+              <p>{{ i18n.translations().place }}: {{ item.description?.[i18n.locale()] }}</p>
             </div>
           </article>
         }

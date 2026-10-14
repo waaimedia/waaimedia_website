@@ -6,7 +6,16 @@
     <div class="home-about__content">
       <h2>{{ i18n.translations().aboutTitle }}</h2>
       <p>{{ i18n.translations().aboutDescription }}</p>
-      <a [routerLink]="'/' + i18n.locale() + '/about'">{{ i18n.translations().learnMore }} →</a>
+      <a class="home-about__link" [routerLink]="'/' + i18n.locale() + '/about'">
+        {{ i18n.translations().learnMore }}
+        <img
+          class="home-about__link-icon"
+          [class.home-about__link-icon--rtl]="i18n.locale() === 'ar'"
+          src="/images/icons/arrow-learn-more.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </a>
     </div>
   </div>
 </section>
