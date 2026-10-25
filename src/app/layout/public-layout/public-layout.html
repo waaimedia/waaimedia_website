@@ -6,11 +6,11 @@
 </main>
 <app-footer />
 
-@if (backgroundMusic.enabled && backgroundMusic.url) {
+@if (backgroundMusic.settings().is_enabled && backgroundMusic.settings().audio_url; as audioUrl) {
   <audio
     #backgroundMusicPlayer
-    [src]="backgroundMusic.url"
-    [loop]="backgroundMusic.loop"
+    [src]="audioUrl"
+    [loop]="backgroundMusic.settings().is_loop"
     preload="auto"
     hidden
   ></audio>
