@@ -68,6 +68,13 @@ export const PUBLIC_ROUTES: Routes = [
             (m) => m.EventsCalendarComponent,
           ),
       },
+      {
+        path: 'events/:slug',
+        loadComponent: () =>
+          import('../../features/events-calendar/pages/event-detail/event-detail.component').then(
+            (m) => m.EventDetailComponent,
+          ),
+      },
     ],
   },
 ];

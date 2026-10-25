@@ -7,15 +7,19 @@ import {
   inject,
   OnDestroy,
   PLATFORM_ID,
+  signal,
   ViewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import Swiper from 'swiper';
 import { A11y, Keyboard, Navigation } from 'swiper/modules';
+import { CalendarEvent, EventsService } from '../../../../core/api/events.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
-import { HOME_EVENTS } from '../../data/home.mock-data';
 
 @Component({
   selector: 'app-home-events-section',
+  imports: [RouterLink],
   templateUrl: './events-section.component.html',
   styleUrl: './events-section.component.scss',
 })
@@ -25,15 +29,11 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('nextButton') private readonly nextButton?: ElementRef<HTMLButtonElement>;
 
   protected readonly i18n = inject(LocaleService);
-  protected readonly items = HOME_EVENTS;
-  protected readonly eventDates: Record<string, string> = {
-    expo: 'March 2025',
-    campaign: 'November 2025',
-    awards: 'December 2025',
-  };
-
+  protected readonly events = signal<CalendarEvent[]>([]);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly eventsService = inject(EventsService);
   private slider?: Swiper;
+  private eventsRequest?: Subscription;
 
   constructor() {
     effect(() => {
@@ -42,6 +42,7 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
       this.slider.changeLanguageDirection(direction);
       this.slider.update();
     });
+    effect(() => this.loadEvents());
   }
 
   ngAfterViewInit(): void {
@@ -73,6 +74,35 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.eventsRequest?.unsubscribe();
     this.slider?.destroy(true, true);
+  }
+
+  protected eventUrl(slug: string): string {
+    return `/${this.i18n.locale()}/events/${slug}`;
+  }
+
+  protected formatDate(event: CalendarEvent): string {
+    if (!event.event_date) return '';
+    const date = new Date(`${event.event_date}T${event.event_time || '00:00:00'}`);
+    if (Number.isNaN(date.getTime())) return event.event_date;
+
+    return new Intl.DateTimeFormat(this.i18n.locale() === 'ar' ? 'ar-EG' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  private loadEvents(): void {
+    const locale = this.i18n.locale();
+    this.eventsRequest?.unsubscribe();
+    this.eventsRequest = this.eventsService.list(locale, { timeline: 'upcoming', perPage: 3 }).subscribe({
+      next: ({ data }) => {
+        this.events.set(data);
+        setTimeout(() => this.slider?.update());
+      },
+      error: () => this.events.set([]),
+    });
   }
 }

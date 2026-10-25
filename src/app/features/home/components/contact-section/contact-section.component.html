@@ -14,7 +14,7 @@
             </span>
             <div>
               <h3>{{ i18n.translations()[item.labelKey] }}</h3>
-              <p>{{ i18n.translations()[item.valueKey] }}</p>
+              <p>{{ valueFor(item) }}</p>
             </div>
           </article>
         }
@@ -23,7 +23,7 @@
         <h3>{{ i18n.translations().contactFindUs }}</h3>
         <iframe
           [title]="i18n.translations().brandName + ' location'"
-          [src]="mapUrl"
+          [src]="mapUrl()"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>

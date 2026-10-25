@@ -1,0 +1,25 @@
+<main class="event-detail container">
+  <a class="event-detail__back" [routerLink]="eventsUrl()">← {{ i18n.translations().eventsCalendar }}</a>
+
+  @if (event(); as item) {
+    <article>
+      @if (item.cover_image_url) {
+        <img class="event-detail__image" [src]="item.cover_image_url" [alt]="item.name" />
+      }
+      <div class="event-detail__content">
+        @if (item.category) { <p class="event-detail__category">{{ item.category }}</p> }
+        <h1>{{ item.name }}</h1>
+        @if (item.event_date) { <p class="event-detail__meta">{{ i18n.translations().date }}: {{ formatDate(item) }} @if (item.event_time) { · {{ item.event_time }} }</p> }
+        @if (item.place) { <p class="event-detail__meta">{{ i18n.translations().place }}: {{ item.place }}</p> }
+        @if (item.description) { <p class="event-detail__description">{{ item.description }}</p> }
+        @if (item.url) {
+          <a class="event-detail__cta" [href]="item.url" target="_blank" rel="noopener noreferrer">
+            {{ i18n.translations().learnMore }}
+          </a>
+        }
+      </div>
+    </article>
+  } @else if (unavailable()) {
+    <p class="event-detail__unavailable">This event is no longer available.</p>
+  }
+</main>

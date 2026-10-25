@@ -107,6 +107,15 @@ h3 {
   font-size: clamp(1.15rem, 1.45vw, 1.45rem);
   font-weight: 500;
 }
+h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+h3 a:hover,
+h3 a:focus-visible {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
 p {
   margin: 0.25rem 0 0;
   color: #949494;

@@ -13,18 +13,18 @@
     </div>
     <div #eventsSwiper class="swiper events-carousel">
       <div class="swiper-wrapper">
-        @for (item of items; track item.id) {
+        @for (event of events(); track event.id) {
           <article class="swiper-slide event-card">
             <div
               class="event-media"
               aria-hidden="true"
-              [style.background-image]="item.imageUrl ? 'url(' + item.imageUrl + ')' : null"
+              [style.background-image]="event.cover_image_url ? 'url(' + event.cover_image_url + ')' : null"
             ></div>
             <div class="event-card__content">
-              <small>{{ item.category?.[i18n.locale()] }}</small>
-              <h3>{{ item.title[i18n.locale()] }}</h3>
-              <p>{{ i18n.translations().date }}: {{ eventDates[item.id] }}</p>
-              <p>{{ i18n.translations().place }}: {{ item.description?.[i18n.locale()] }}</p>
+              @if (event.category) { <small>{{ event.category }}</small> }
+              <h3><a [routerLink]="eventUrl(event.slug)">{{ event.name }}</a></h3>
+              @if (event.event_date) { <p>{{ i18n.translations().date }}: {{ formatDate(event) }}</p> }
+              @if (event.place) { <p>{{ i18n.translations().place }}: {{ event.place }}</p> }
             </div>
           </article>
         }

@@ -9,9 +9,9 @@
         <img [ngSrc]="brandLogoSrc" width="100" height="87" [alt]="i18n.translations().brandName" />
       </a>
       <p class="site-footer__description">{{ i18n.translations().footerDescription }}</p>
-      @if (socialLinks.length > 0) {
+      @if (socialLinks().length > 0) {
         <nav class="site-footer__social" [attr.aria-label]="i18n.translations().socialLinks">
-          @for (social of socialLinks; track social.platform) {
+          @for (social of socialLinks(); track social.platform) {
             @if (social.href; as href) {
               <a
                 [href]="href"
@@ -48,12 +48,12 @@
         {{ i18n.translations().contactInfo }}
       </summary>
       <div class="site-footer__group-links">
-        <p>{{ i18n.translations().footerContactAddress }}</p>
-        <a [href]="'tel:' + i18n.translations().footerContactPhone">
-          {{ i18n.translations().footerContactPhone }}
+        <p>{{ contactAddress() }}</p>
+        <a [href]="'tel:' + contactPhone()">
+          {{ contactPhone() }}
         </a>
-        <a [href]="'mailto:' + i18n.translations().footerContactEmail">
-          {{ i18n.translations().footerContactEmail }}
+        <a [href]="'mailto:' + contactEmail()">
+          {{ contactEmail() }}
         </a>
       </div>
     </details>

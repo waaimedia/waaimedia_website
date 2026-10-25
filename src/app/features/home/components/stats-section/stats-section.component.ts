@@ -4,10 +4,13 @@ import {
   Component,
   ElementRef,
   inject,
+  OnInit,
   OnDestroy,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { catchError, of, timeout } from 'rxjs';
+import { Counter, CountersService } from '../../../../core/api/counters.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { HOME_STATS } from '../../data/home.mock-data';
 import { HomeStat } from '../../models/home.models';
@@ -16,18 +19,40 @@ import { HomeStat } from '../../models/home.models';
   templateUrl: './stats-section.component.html',
   styleUrl: './stats-section.component.scss',
 })
-export class StatsSectionComponent implements AfterViewInit, OnDestroy {
+export class StatsSectionComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly i18n = inject(LocaleService);
-  protected readonly stats = HOME_STATS;
+  protected stats: readonly HomeStat[] = HOME_STATS;
   protected readonly displayedValues = signal<Record<string, number>>(
     Object.fromEntries(this.stats.map((stat) => [stat.id, 0])),
   );
 
+  private readonly counters = inject(CountersService);
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private observer: IntersectionObserver | null = null;
   private animationFrame: number | null = null;
   private hasStarted = false;
+
+  ngOnInit(): void {
+    this.counters
+      .getAll()
+      .pipe(
+        timeout(10_000),
+        catchError(() => of(null)),
+      )
+      .subscribe((response) => {
+        if (!response) return;
+
+        this.stats = this.withApiValues(response.data);
+        this.displayedValues.set(Object.fromEntries(this.stats.map((stat) => [stat.id, 0])));
+
+        if (this.hasStarted) {
+          if (this.animationFrame !== null) window.cancelAnimationFrame(this.animationFrame);
+          this.hasStarted = false;
+          this.startAnimation();
+        }
+      });
+  }
 
   ngAfterViewInit(): void {
     if (!this.isBrowser) return;
@@ -94,6 +119,24 @@ export class StatsSectionComponent implements AfterViewInit, OnDestroy {
 
   private targetValue(stat: HomeStat): number {
     return Number.parseInt(stat.value.replace(/\D/g, ''), 10);
+  }
+
+  private withApiValues(counters: readonly Counter[]): readonly HomeStat[] {
+    const valuesByKey = new Map(counters.map((counter) => [counter.key, counter.value]));
+    const apiKeyByStatId: Record<string, Counter['key']> = {
+      clients: 'clients_served',
+      campaigns: 'campaigns_launched',
+      content: 'social_content_published',
+      influencers: 'industries_covered',
+      events: 'marketing_experts',
+    };
+
+    return HOME_STATS.map((stat) => {
+      const value = valuesByKey.get(apiKeyByStatId[stat.id]);
+      return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
+        ? { ...stat, value: String(value) }
+        : stat;
+    });
   }
 
   private prefersReducedMotion(): boolean {

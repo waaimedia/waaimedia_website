@@ -4,6 +4,6 @@ export const environment: {
   siteUrl: string;
 } = {
   production: true,
-  apiUrl: 'https://api.example.com',
+  apiUrl: 'https://api.waaimedia.com',
   siteUrl: 'https://www.example.com',
 };

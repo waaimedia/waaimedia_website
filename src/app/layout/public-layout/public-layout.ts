@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ContactInfoService } from '../../core/api/contact-info.service';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
@@ -22,11 +23,16 @@ export class PublicLayout implements AfterViewInit, OnDestroy {
   protected readonly i18n = inject(LocaleService);
   protected readonly backgroundMusic = BACKGROUND_MUSIC;
 
+  private readonly contactInfo = inject(ContactInfoService);
   @ViewChild('backgroundMusicPlayer')
   private backgroundMusicPlayer?: ElementRef<HTMLAudioElement>;
 
   private readonly platformId = inject(PLATFORM_ID);
   private removeInteractionListener?: () => void;
+
+  constructor() {
+    this.contactInfo.load();
+  }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId) || !this.backgroundMusic.enabled || !this.backgroundMusic.url) {
