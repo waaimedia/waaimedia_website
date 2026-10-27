@@ -63,11 +63,16 @@ header p {
   cursor: default;
   opacity: 0.4;
 }
+.team__arrow.swiper-button-lock {
+  visibility: hidden;
+  pointer-events: none;
+}
 .team__swiper {
   width: 100%;
   padding: 0.35rem 0.2rem;
 }
 .team .swiper-slide {
+  width: clamp(7.5rem, 13vw, 10.5rem);
   height: auto;
   text-align: center;
 }
@@ -85,22 +90,63 @@ header p {
   font-size: clamp(1.5rem, 2.2vw, 2.25rem);
   font-weight: 700;
 }
-.avatar-one { background-image: linear-gradient(135deg, #e8e3cf, #a9c48b); }
-.avatar-two { background-image: linear-gradient(135deg, #b5dcef, #f8fbfd); }
-.avatar-three { background-image: linear-gradient(135deg, #674238, #d8b08e); }
-.avatar-four { background-image: linear-gradient(135deg, #b53455, #f6dfbd); }
-.avatar-five { background-image: linear-gradient(135deg, #152e2c, #8ca790); }
-.avatar-six { background-image: linear-gradient(135deg, #632e40, #e9abbe); }
+.avatar--placeholder { background-image: linear-gradient(135deg, #674238, #d8b08e); }
 .team h3 {
   margin: 1rem 0 0.25rem;
   color: #27111A;
   font-size: clamp(0.9rem, 1.15vw, 1.2rem);
   font-weight: 500;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 .team article p {
   margin: 0;
   color: #634B57;
   font-size: clamp(0.8rem, 1vw, 1rem);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.team__loading {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+}
+.team__placeholder {
+  display: grid;
+  width: clamp(7.5rem, 13vw, 10.5rem);
+  gap: 0.65rem;
+  justify-items: center;
+}
+.team__placeholder span,
+.team__placeholder i {
+  display: block;
+  background: linear-gradient(90deg, #eee8ea 25%, #f8f4f5 37%, #eee8ea 63%);
+  background-size: 400% 100%;
+  animation: team-placeholder 1.4s ease infinite;
+}
+.team__placeholder span {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.team__placeholder i {
+  width: 72%;
+  height: 0.85rem;
+  border-radius: 99px;
+}
+.team__placeholder i:last-child {
+  width: 52%;
+  height: 0.7rem;
+}
+@keyframes team-placeholder {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team__placeholder span,
+  .team__placeholder i { animation: none; }
 }
 @media (max-width: 575.98px) {
   .team__carousel {
@@ -110,6 +156,13 @@ header p {
   }
   .team h3 {
     margin-top: 0.75rem;
+  }
+  .team .swiper-slide,
+  .team__placeholder {
+    width: min(38vw, 9.5rem);
+  }
+  .team__placeholder:nth-child(3) {
+    display: none;
   }
 }
 

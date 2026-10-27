@@ -1,38 +1,53 @@
-<section class="home-section team">
-  <div class="container">
-    <header>
-      <h2>{{ i18n.translations().teamTitle }}</h2>
-      <p>{{ i18n.translations().teamDescription }}</p>
-    </header>
-    <div class="team__carousel">
-      <button #previousButton class="team__arrow team__arrow--previous" type="button" aria-label="Previous team members">
-        <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
-      </button>
+@if (status() !== 'unavailable' && (status() === 'loading' || members().length)) {
+  <section class="home-section team" [attr.aria-busy]="status() === 'loading'">
+    <div class="container">
+      <header>
+        <h2>{{ i18n.translations().teamTitle }}</h2>
+        <p>{{ i18n.translations().teamDescription }}</p>
+      </header>
 
-      <div #teamSwiper class="swiper team__swiper">
-        <div class="swiper-wrapper">
-          @for (member of members; track member.id) {
-            <article class="swiper-slide">
-              <div
-                class="avatar"
-                [class]="member.tone"
-                [style.background-image]="member.imageUrl ? 'url(' + member.imageUrl + ')' : null"
-                aria-hidden="true"
-              >
-                @if (!member.imageUrl) {
-                  {{ member.name[i18n.locale()].slice(0, 1) }}
-                }
-              </div>
-              <h3>{{ member.name[i18n.locale()] }}</h3>
-              <p>{{ member.role[i18n.locale()] }}</p>
-            </article>
+      @if (status() === 'loading') {
+        <div class="team__loading" aria-hidden="true">
+          @for (placeholder of [1, 2, 3]; track placeholder) {
+            <div class="team__placeholder">
+              <span></span>
+              <i></i>
+              <i></i>
+            </div>
           }
         </div>
-      </div>
+      } @else {
+        <div class="team__carousel" aria-label="Team members carousel">
+          <button #previousButton class="team__arrow team__arrow--previous" type="button" aria-label="Previous team members">
+            <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
+          </button>
 
-      <button #nextButton class="team__arrow team__arrow--next" type="button" aria-label="Next team members">
-        <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
-      </button>
+          <div #teamSwiper class="swiper team__swiper">
+            <div class="swiper-wrapper">
+              @for (member of members(); track member.id) {
+                <article class="swiper-slide">
+                  <div
+                    class="avatar"
+                    [class.avatar--placeholder]="!member.photo_url"
+                    [style.background-image]="member.photo_url ? 'url(' + member.photo_url + ')' : null"
+                    aria-hidden="true"
+                  >
+                    @if (!member.photo_url) {
+                      {{ initials(member.name) }}
+                    }
+                  </div>
+                  <h3>{{ member.name }}</h3>
+                  <p>{{ member.position }}</p>
+                </article>
+              }
+            </div>
+          </div>
+
+          <button #nextButton class="team__arrow team__arrow--next" type="button" aria-label="Next team members">
+            <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
+          </button>
+        </div>
+      }
     </div>
-  </div>
-</section>
+  </section>
+}
