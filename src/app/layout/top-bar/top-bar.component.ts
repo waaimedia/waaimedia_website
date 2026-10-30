@@ -2,7 +2,7 @@ import { isPlatformServer } from '@angular/common';
 import { Component, computed, inject, PLATFORM_ID } from '@angular/core';
 import { makeStateKey, TransferState } from '@angular/core';
 import { LocaleService } from '../../core/i18n/locale.service';
-import { SOCIAL_LINKS } from '../public-site.config';
+import { SocialLinkConfig, SOCIAL_LINKS } from '../public-site.config';
 import { SocialIconComponent } from '../../shared/social-icon/social-icon.component';
 
 const SERVER_DATE_KEY = makeStateKey<string>('waai-public-layout-date');
@@ -30,6 +30,10 @@ export class TopBarComponent {
       timeZone: 'UTC',
     }).format(new Date(`${this.isoDate}T12:00:00.000Z`)),
   );
+
+  protected socialLabel(social: SocialLinkConfig): string {
+    return this.i18n.translations()[social.labelKey];
+  }
 
   private readStableDate(): string {
     const isServer = isPlatformServer(this.platformId);

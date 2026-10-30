@@ -10,19 +10,40 @@
           }
         </div>
       } @else {
-        <div class="brands__list">
-          @for (brand of brands(); track brand.id) {
-            <article class="brand-card">
-              <div class="brand-slot">
-                @if (brand.logo_url) {
-                  <img [src]="brand.logo_url" [alt]="brand.name" loading="lazy" />
-                } @else {
-                  <span aria-hidden="true">{{ initials(brand.name) }}</span>
+        <div class="brands__ticker" [class.brands__ticker--static]="brands().length === 1" aria-roledescription="carousel">
+          <div class="brands__ticker-track" [class.brands__ticker-track--animated]="brands().length > 1">
+            <div class="brands__ticker-group">
+              @for (brand of brands(); track brand.id) {
+                <article class="brand-card">
+                  <div class="brand-slot" [class.brand-slot--image]="brand.logo_url">
+                    @if (brand.logo_url) {
+                      <img [src]="brand.logo_url" [alt]="brand.name" loading="lazy" />
+                    } @else {
+                      <span aria-hidden="true">{{ initials(brand.name) }}</span>
+                    }
+                  </div>
+                  <p>{{ brand.name }}</p>
+                </article>
+              }
+            </div>
+
+            @if (brands().length > 1) {
+              <div class="brands__ticker-group" aria-hidden="true">
+                @for (brand of brands(); track brand.id) {
+                  <article class="brand-card">
+                    <div class="brand-slot">
+                      @if (brand.logo_url) {
+                        <img [src]="brand.logo_url" alt="" loading="lazy" />
+                      } @else {
+                        <span>{{ initials(brand.name) }}</span>
+                      }
+                    </div>
+                    <p>{{ brand.name }}</p>
+                  </article>
                 }
               </div>
-              <p>{{ brand.name }}</p>
-            </article>
-          }
+            }
+          </div>
         </div>
       }
     </div>

@@ -29,10 +29,12 @@
     height: 32px;
     justify-content: center;
     line-height: 1;
+    padding: 0;
     position: absolute;
     right: 24px;
     top: 24px;
     width: 32px;
+    cursor: pointer;
 
     &--rtl {
       left: 24px;
@@ -72,6 +74,24 @@
     line-height: 1.5;
     margin: 0;
   }
+
+  &__body {
+    margin-top: 1.5rem;
+    color: #725865;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  &__empty {
+    margin: 3rem 0;
+    color: #795967;
+    text-align: center;
+  }
+}
+
+:host ::ng-deep .news-detail__body img {
+  max-width: 100%;
+  height: auto;
 }
 
 @media (max-width: 620px) {

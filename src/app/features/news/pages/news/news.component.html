@@ -5,35 +5,43 @@
       <p>{{ i18n.translations().newsHeroDescription }}</p>
     </header>
 
-    <div class="news__grid">
-      @for (item of newsItems; track $index) {
-        <article class="news-card" [routerLink]="[ newsSlug($index)]" role="link" tabindex="0">
-          <div class="news-card__media">
-            <img [src]="item.image" [alt]="item.title">
-            <span
-              class="news-card__share"
-              [class.news-card__share--rtl]="i18n.locale() === 'ar'"
-              aria-hidden="true"
-            >
-              <img src="/images/icons/share.svg" alt="share icon">
-            </span>
-          </div>
-          <div class="news-card__content">
-            <h2>{{ item.title }}</h2>
-            <p>{{ item.description }}</p>
-            <a [routerLink]="[ newsSlug($index)]">
-              {{ i18n.translations().newsReadMore }}
-              <img
-                class="news-card__read-more-icon"
-                [class.news-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
-                src="/images/icons/arrow-learn-more.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-        </article>
-      }
-    </div>
+    @if (newsItems().length) {
+      <div class="news__grid">
+        @for (item of newsItems(); track item.id) {
+          <article class="news-card" [routerLink]="[item.slug || item.id]" role="link" tabindex="0">
+            <div class="news-card__media">
+              @if (item.featured_image_url) {
+                <img [src]="item.featured_image_url" [alt]="item.title">
+              }
+              <button
+                type="button"
+                class="news-card__share"
+                [class.news-card__share--rtl]="i18n.locale() === 'ar'"
+                aria-label="Copy article link"
+                (click)="copyArticleLink(item, $event)"
+              >
+                <img src="/images/icons/share.svg" alt="">
+              </button>
+            </div>
+            <div class="news-card__content">
+              <h2>{{ item.title }}</h2>
+              @if (item.short_description) { <p>{{ item.short_description }}</p> }
+              <a [routerLink]="[item.slug || item.id]">
+                {{ i18n.translations().newsReadMore }}
+                <img
+                  class="news-card__read-more-icon"
+                  [class.news-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
+                  src="/images/icons/arrow-learn-more.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    } @else if (!loading()) {
+      <p class="news__empty">{{ unavailable() ? 'Unable to load news right now.' : 'No news articles have been published yet.' }}</p>
+    }
   </section>
 </main>

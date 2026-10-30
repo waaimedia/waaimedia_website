@@ -1,7 +1,7 @@
 :host {
   --brand-card-width: 201px;
   --brand-card-height: 96px;
-  --brand-image-width: 200px;
+  --brand-image-width: 201px;
   --brand-image-height: 96px;
 }
 
@@ -18,9 +18,9 @@
   letter-spacing: -0.035em;
 }
 .brand-card {
-  inline-size: min(100%, var(--brand-card-width));
+  inline-size: var(--brand-card-width);
+  flex: 0 0 var(--brand-card-width);
   height: auto;
-  margin-inline: auto;
   text-align: center;
 }
 .brand-slot {
@@ -28,6 +28,7 @@
   inline-size: 100%;
   block-size: var(--brand-card-height);
   place-items: center;
+  justify-content: center;
   background: #fff;
   border-radius: 1.65rem 0 1.65rem 0;
   box-shadow: 0 0.25rem 1.5rem rgb(81 26 43 / 5%);
@@ -41,6 +42,18 @@
   max-block-size: 100%;
   object-fit: contain;
   object-position: center;
+}
+.brand-slot--image {
+  background: transparent;
+  box-shadow: none;
+}
+.brand-slot--image img {
+  inline-size: var(--brand-card-width);
+  block-size: var(--brand-card-height);
+  max-inline-size: none;
+  max-block-size: none;
+  border-radius: 1.65rem 0 1.65rem 0;
+  object-fit: cover;
 }
 .brand-slot span {
   display: flex;
@@ -60,13 +73,40 @@
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
-.brands__list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: clamp(1.25rem, 2vw, 2rem);
+.brands__ticker {
+  width: 100%;
+  overflow: hidden;
   margin-inline: auto;
+  padding: 0.25rem 0.1rem 0.5rem;
+}
+.brands__ticker-track {
+  display: flex;
+  width: 200%;
+  will-change: transform;
+}
+.brands__ticker-track--animated {
+  animation: brands-ticker 22s linear infinite;
+}
+:host-context([dir='rtl']) .brands__ticker-track--animated {
+  animation-direction: reverse;
+}
+.brands__ticker-group {
+  display: flex;
+  flex: 0 0 50%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding-inline: clamp(0.5rem, 2vw, 2rem);
+}
+.brands__ticker--static .brands__ticker-track {
+  width: 100%;
+}
+.brands__ticker--static .brands__ticker-group {
+  flex-basis: 100%;
+  justify-content: center;
+}
+@keyframes brands-ticker {
+  to { transform: translateX(-50%); }
 }
 .brands__loading {
   display: flex;
@@ -113,11 +153,18 @@
   .brands__placeholder i {
     animation: none;
   }
+  .brands__ticker-track--animated {
+    animation: none;
+  }
 }
 
 @media (max-width: 767.98px) {
   .brands {
     padding-block: 3rem;
+  }
+  .brands__ticker-group {
+    gap: 1.25rem;
+    padding-inline: 0.75rem;
   }
   .brands__placeholder:nth-child(n + 4) {
     display: none;

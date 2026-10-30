@@ -83,17 +83,21 @@
 }
 
 :host ::ng-deep .hero-slider__bullet {
-  width: 0.65rem;
+  width: 0.75rem;
   height: 0.65rem;
   padding: 0;
-  background: rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 80%);
   border: 0;
   border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(50 23 34 / 15%);
   cursor: pointer;
+  transition: width 180ms ease, background-color 180ms ease;
 }
 
 :host ::ng-deep .hero-slider__bullet.is-active {
+  width: 1.75rem;
   background: var(--color-primary);
+  border-radius: 99px;
 }
 
 :host ::ng-deep .hero-slider__bullet:focus-visible,

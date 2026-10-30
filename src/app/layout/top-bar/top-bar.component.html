@@ -11,7 +11,7 @@
               [href]="href"
               target="_blank"
               rel="noopener noreferrer"
-              [attr.aria-label]="i18n.translations()[social.labelKey]"
+              [attr.aria-label]="socialLabel(social)"
             >
               <app-social-icon [platform]="social.platform" />
             </a>
@@ -20,7 +20,7 @@
               class="top-bar__social-unavailable"
               role="img"
               [attr.aria-label]="
-                i18n.translations()[social.labelKey] +
+                socialLabel(social) +
                 ': ' +
                 i18n.translations().socialProfileUnavailable
               "

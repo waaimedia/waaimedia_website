@@ -23,5 +23,4 @@ export class TrustedBrandsComponent {
   protected initials(name: string): string {
     return name.trim().slice(0, 1).toUpperCase();
   }
-
 }

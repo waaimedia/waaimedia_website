@@ -1,13 +1,10 @@
-import { Component, effect, inject } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
-
-interface NewsItem {
-  title: string;
-  description: string;
-  image: string;
-}
 
 @Component({
   selector: 'app-news',
@@ -15,48 +12,17 @@ interface NewsItem {
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss',
 })
-export class NewsComponent {
+export class NewsComponent implements OnDestroy {
   protected readonly i18n = inject(LocaleService);
-  private readonly seo = inject(SeoService);
+  protected readonly newsItems = signal<readonly NewsArticle[]>([]);
+  protected readonly loading = signal(true);
+  protected readonly unavailable = signal(false);
 
-  protected readonly newsItems: NewsItem[] = [
-    {
-      title: 'Waai Media Highlights',
-      description:
-        'Waai Media proudly participated in Futon Media Expo in Turkey, strengthening its regional presence.',
-      image: '/images/card-img.jpg',
-    },
-    {
-      title: 'Digital Marketing Summit – Dubai 2025',
-      description:
-        'Leading brands and agencies gathered at the Digital Marketing Summit in Dubai to explore the future of marketing.',
-      image: '/images/card-img.jpg',
-    },
-    {
-      title: 'Global Influencer Marketing Forum – Barcelona',
-      description:
-        'The Global Influencer Marketing Forum in Barcelona brought together creators, agencies, and digital leaders.',
-      image: '/images/card-img.jpg',
-    },
-    {
-      title: 'Waai Media Highlights',
-      description:
-        'Waai Media proudly participated in Futon Media Expo in Turkey, strengthening its regional presence.',
-      image: '/images/card-img.jpg',
-    },
-    {
-      title: 'Digital Marketing Summit – Dubai 2025',
-      description:
-        'Leading brands and agencies gathered at the Digital Marketing Summit in Dubai to explore the future of marketing.',
-      image: '/images/card-img.jpg',
-    },
-    {
-      title: 'Global Influencer Marketing Forum – Barcelona',
-      description:
-        'The Global Influencer Marketing Forum in Barcelona brought together creators, agencies, and digital leaders.',
-      image: '/images/card-img.jpg',
-    },
-  ];
+  private readonly seo = inject(SeoService);
+  private readonly newsService = inject(NewsService);
+  private readonly document = inject(DOCUMENT);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private request?: Subscription;
 
   constructor() {
     effect(() => {
@@ -69,18 +35,59 @@ export class NewsComponent {
         locale,
         canonicalPath: `/${locale}/news`,
         alternatePaths: { en: '/en/news', ar: '/ar/news' },
-        imageUrl: '/images/news/waai-media-highlights.jpg',
       });
+    });
+    effect(() => this.loadNews(this.i18n.locale()));
+  }
+
+  ngOnDestroy(): void {
+    this.request?.unsubscribe();
+  }
+
+  protected copyArticleLink(article: NewsArticle, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.isBrowser) return;
+
+    const identifier = article.slug || article.id;
+    const url = new URL(`/${this.i18n.locale()}/news/${encodeURIComponent(identifier)}`, this.document.location.origin).toString();
+    this.copyText(url);
+  }
+
+  private loadNews(locale: 'en' | 'ar'): void {
+    this.request?.unsubscribe();
+    this.loading.set(true);
+    this.unavailable.set(false);
+
+    this.request = this.newsService.list(locale, { perPage: 100 }).subscribe({
+      next: ({ data }) => {
+        this.newsItems.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.newsItems.set([]);
+        this.loading.set(false);
+        this.unavailable.set(true);
+      },
     });
   }
 
-  protected newsSlug(index: number): string {
-    return (
-      [
-      'waai-media-highlights',
-      'digital-marketing-summit-dubai-2025',
-      'global-influencer-marketing-forum-barcelona',
-      ][index % 3] ?? 'waai-media-highlights'
-    );
+  private copyText(value: string): void {
+    if (navigator.clipboard?.writeText) {
+      void navigator.clipboard.writeText(value).catch(() => this.copyWithSelection(value));
+      return;
+    }
+    this.copyWithSelection(value);
+  }
+
+  private copyWithSelection(value: string): void {
+    const input = this.document.createElement('textarea');
+    input.value = value;
+    input.style.position = 'fixed';
+    input.style.opacity = '0';
+    this.document.body.append(input);
+    input.select();
+    this.document.execCommand('copy');
+    input.remove();
   }
 }

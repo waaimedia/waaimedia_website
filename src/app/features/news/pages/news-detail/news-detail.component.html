@@ -1,21 +1,30 @@
 <main class="news-detail-page container">
-  <article class="news-detail px-md-5 mx-md-5">
-    <div class="news-detail__media">
-      <img [src]="news.image" [alt]="news.title">
-      <span
-        class="news-detail__share"
-        [class.news-detail__share--rtl]="i18n.locale() === 'ar'"
-        aria-hidden="true"
-      >
-        <img src="/images/icons/share.svg" alt="share icon">
-      </span>
-    </div>
+  @if (news(); as item) {
+    <article class="news-detail px-md-5 mx-md-5">
+      <div class="news-detail__media">
+        @if (item.featured_image_url) {
+          <img [src]="item.featured_image_url" [alt]="item.title">
+        }
+        <button
+          type="button"
+          class="news-detail__share"
+          [class.news-detail__share--rtl]="i18n.locale() === 'ar'"
+          aria-label="Copy article link"
+          (click)="copyArticleLink(item)"
+        >
+          <img src="/images/icons/share.svg" alt="">
+        </button>
+      </div>
 
-    <div class="news-detail__content">
-      <h1>{{ news.title }}</h1>
-      <p class="news-detail__author">{{ news.author }}</p>
-      <p class="news-detail__date">{{ news.date }}</p>
-      <p class="news-detail__summary">{{ news.summary }}</p>
-    </div>
-  </article>
+      <div class="news-detail__content">
+        <h1>{{ item.title }}</h1>
+        @if (item.author_name) { <p class="news-detail__author">{{ item.author_name }}</p> }
+        @if (item.published_at) { <p class="news-detail__date">{{ formatDate(item) }}</p> }
+        @if (item.short_description) { <p class="news-detail__summary">{{ item.short_description }}</p> }
+        @if (item.content) { <div class="news-detail__body" [innerHTML]="item.content"></div> }
+      </div>
+    </article>
+  } @else if (unavailable()) {
+    <p class="news-detail__empty">Unable to load this news article.</p>
+  }
 </main>

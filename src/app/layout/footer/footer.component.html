@@ -21,18 +21,6 @@
               >
                 <app-social-icon [platform]="social.platform" />
               </a>
-            } @else {
-              <span
-                class="site-footer__social-unavailable"
-                role="img"
-                [attr.aria-label]="
-                  i18n.translations()[social.labelKey] +
-                  ': ' +
-                  i18n.translations().socialProfileUnavailable
-                "
-              >
-                <app-social-icon [platform]="social.platform" />
-              </span>
             }
           }
         </nav>

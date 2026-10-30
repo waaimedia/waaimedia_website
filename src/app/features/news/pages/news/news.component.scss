@@ -28,6 +28,11 @@
   gap: 48px 28px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.news__empty {
+  margin: 3rem 0;
+  color: #795967;
+  text-align: center;
+}
 
 .news-card {
   min-width: 0;
@@ -68,10 +73,12 @@
     height: 31px;
     justify-content: center;
     line-height: 1;
+    padding: 0;
     position: absolute;
     right: 14px;
     top: 14px;
     width: 31px;
+    cursor: pointer;
 
     &--rtl {
       left: 14px;

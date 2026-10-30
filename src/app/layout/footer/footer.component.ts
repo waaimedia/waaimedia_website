@@ -48,7 +48,7 @@ export class FooterComponent {
     const contactInfo = this.contactInfoService.contactInfo();
     return SOCIAL_LINKS.map((link) => ({
       ...link,
-      href: contactInfo?.[link.platform] ?? link.href,
+      href: contactInfo?.[link.platform]?.trim() || link.href,
     }));
   });
   protected readonly contactAddress = computed(
@@ -63,7 +63,9 @@ export class FooterComponent {
   protected readonly isMobile = signal(false);
   protected readonly expandedGroups = signal<ReadonlySet<string>>(new Set());
 
-  constructor() {}
+  constructor() {
+    this.contactInfoService.load();
+  }
   protected readonly menuLinks = computed(() =>
     FOOTER_MENU.map((link) => ({
       ...link,

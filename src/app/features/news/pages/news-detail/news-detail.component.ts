@@ -1,42 +1,10 @@
-import { Component, effect, inject } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
-
-interface NewsDetail {
-  title: string;
-  author: string;
-  date: string;
-  summary: string;
-  image: string;
-}
-
-const NEWS_DETAILS: Record<string, NewsDetail> = {
-  'waai-media-highlights': {
-    title: 'Waai Media Highlights',
-    author: 'Writer Name',
-    date: 'Mon September 8, 2025',
-    summary:
-      'Waai Media proudly participated in Futon Media Expo in Turkey, strengthening its regional presence and building partnerships with top media innovators across Europe and the Middle East.',
-    image: '/images/card-img.jpg',
-  },
-  'digital-marketing-summit-dubai-2025': {
-    title: 'Digital Marketing Summit – Dubai 2025',
-    author: 'Writer Name',
-    date: 'Mon September 8, 2025',
-    summary:
-      'Leading brands and agencies gathered at the Digital Marketing Summit in Dubai to explore the future of marketing and the opportunities shaping the industry.',
-    image: '/images/card-img.jpg',
-  },
-  'global-influencer-marketing-forum-barcelona': {
-    title: 'Global Influencer Marketing Forum – Barcelona',
-    author: 'Writer Name',
-    date: 'Mon September 8, 2025',
-    summary:
-      'The Global Influencer Marketing Forum in Barcelona brought together creators, agencies, and digital leaders to exchange ideas and build meaningful partnerships.',
-    image: '/images/card-img.jpg',
-  },
-};
 
 @Component({
   selector: 'app-news-detail',
@@ -44,31 +12,90 @@ const NEWS_DETAILS: Record<string, NewsDetail> = {
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.scss',
 })
-export class NewsDetailComponent {
+export class NewsDetailComponent implements OnDestroy {
   protected readonly i18n = inject(LocaleService);
-  private readonly seo = inject(SeoService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly slug = this.route.snapshot.paramMap.get('slug') ?? '';
+  protected readonly news = signal<NewsArticle | null>(null);
+  protected readonly unavailable = signal(false);
 
-  protected readonly news =
-    NEWS_DETAILS[this.slug] ?? NEWS_DETAILS['waai-media-highlights'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly newsService = inject(NewsService);
+  private readonly seo = inject(SeoService);
+  private readonly document = inject(DOCUMENT);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly identifier = signal('');
+  private request?: Subscription;
+  private readonly routeSubscription = this.route.paramMap.subscribe((params) =>
+    this.identifier.set(params.get('slug') ?? ''),
+  );
 
   constructor() {
-    effect(() => {
-      const locale = this.i18n.locale();
-      const translations = this.i18n.translations();
+    effect(() => this.loadNews(this.i18n.locale(), this.identifier()));
+  }
 
-      this.seo.update({
-        title: `${this.news.title} | ${translations.brandName}`,
-        description: this.news.summary,
-        locale,
-        canonicalPath: `/${locale}/news/${this.slug}`,
-        alternatePaths: {
-          en: `/en/news/${this.slug}`,
-          ar: `/ar/news/${this.slug}`,
-        },
-        imageUrl: this.news.image,
-      });
+  ngOnDestroy(): void {
+    this.request?.unsubscribe();
+    this.routeSubscription.unsubscribe();
+  }
+
+  protected formatDate(article: NewsArticle): string {
+    if (!article.published_at) return '';
+    const date = new Date(article.published_at);
+    if (Number.isNaN(date.getTime())) return article.published_at;
+
+    return new Intl.DateTimeFormat(this.i18n.locale() === 'ar' ? 'ar-EG' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  protected copyArticleLink(article: NewsArticle): void {
+    if (!this.isBrowser) return;
+
+    const identifier = article.slug || article.id;
+    const url = new URL(`/${this.i18n.locale()}/news/${encodeURIComponent(identifier)}`, this.document.location.origin).toString();
+    if (navigator.clipboard?.writeText) {
+      void navigator.clipboard.writeText(url).catch(() => this.copyWithSelection(url));
+      return;
+    }
+    this.copyWithSelection(url);
+  }
+
+  private loadNews(locale: 'en' | 'ar', identifier: string): void {
+    if (!identifier) return;
+    this.request?.unsubscribe();
+    this.unavailable.set(false);
+
+    this.request = this.newsService.getByIdentifier(locale, identifier).subscribe({
+      next: ({ data }) => {
+        this.news.set(data);
+        this.seo.update({
+          title: `${data.title} | ${this.i18n.translations().brandName}`,
+          description: data.short_description || this.i18n.translations().newsPageDescription,
+          locale,
+          canonicalPath: `/${locale}/news/${data.slug || data.id}`,
+          alternatePaths: {
+            en: `/en/news/${data.slug || data.id}`,
+            ar: `/ar/news/${data.slug || data.id}`,
+          },
+          imageUrl: data.featured_image_url || undefined,
+        });
+      },
+      error: () => {
+        this.news.set(null);
+        this.unavailable.set(true);
+      },
     });
+  }
+
+  private copyWithSelection(value: string): void {
+    const input = this.document.createElement('textarea');
+    input.value = value;
+    input.style.position = 'fixed';
+    input.style.opacity = '0';
+    this.document.body.append(input);
+    input.select();
+    this.document.execCommand('copy');
+    input.remove();
   }
 }

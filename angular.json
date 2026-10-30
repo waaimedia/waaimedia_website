@@ -39,7 +39,10 @@
                 "output": "assets/bootstrap"
               }
             ],
-            "styles": ["src/styles.scss", "node_modules/swiper/swiper.css"],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/swiper/swiper.css"
+            ],
             "outputMode": "static"
           },
           "configurations": {
