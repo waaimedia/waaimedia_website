@@ -17,11 +17,33 @@
                 type="button"
                 class="news-card__share"
                 [class.news-card__share--rtl]="i18n.locale() === 'ar'"
-                aria-label="Copy article link"
-                (click)="copyArticleLink(item, $event)"
+                aria-label="Share article"
+                [attr.aria-expanded]="openShareId() === item.id"
+                (click)="toggleShareMenu(item, $event)"
               >
                 <img src="/images/icons/share.svg" alt="">
               </button>
+              @if (openShareId() === item.id) {
+                <div class="news-card__share-menu" [class.news-card__share-menu--rtl]="i18n.locale() === 'ar'">
+                  @for (option of shareOptions(item); track option.label) {
+                    <a
+                      [href]="option.href"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      [attr.aria-label]="'Share on ' + option.label"
+                      [attr.title]="option.label"
+                      (click)="$event.stopPropagation()"
+                    >
+                      @if (option.icon === 'whatsapp') {
+                        <img src="/images/icons/whatsapp.svg" alt="">
+                      } @else {
+                        <app-social-icon [platform]="option.icon" />
+                      }
+                    </a>
+                  }
+                  <button type="button" aria-label="Copy link" title="Copy link" (click)="copyArticleLink(item, $event)">⧉</button>
+                </div>
+              }
             </div>
             <div class="news-card__content">
               <h2>{{ item.title }}</h2>

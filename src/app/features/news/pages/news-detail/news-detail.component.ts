@@ -5,10 +5,17 @@ import { Subscription } from 'rxjs';
 import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
+import { SocialIconComponent } from '../../../../shared/social-icon/social-icon.component';
+
+interface ShareOption {
+  readonly label: string;
+  readonly href: string;
+  readonly icon: 'facebook' | 'linkedin' | 'whatsapp';
+}
 
 @Component({
   selector: 'app-news-detail',
-  imports: [],
+  imports: [SocialIconComponent],
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.scss',
 })
@@ -16,6 +23,7 @@ export class NewsDetailComponent implements OnDestroy {
   protected readonly i18n = inject(LocaleService);
   protected readonly news = signal<NewsArticle | null>(null);
   protected readonly unavailable = signal(false);
+  protected readonly shareOpen = signal(false);
 
   private readonly route = inject(ActivatedRoute);
   private readonly newsService = inject(NewsService);
@@ -52,13 +60,29 @@ export class NewsDetailComponent implements OnDestroy {
   protected copyArticleLink(article: NewsArticle): void {
     if (!this.isBrowser) return;
 
-    const identifier = article.slug || article.id;
-    const url = new URL(`/${this.i18n.locale()}/news/${encodeURIComponent(identifier)}`, this.document.location.origin).toString();
+    const url = this.articleUrl(article);
     if (navigator.clipboard?.writeText) {
       void navigator.clipboard.writeText(url).catch(() => this.copyWithSelection(url));
-      return;
+    } else {
+      this.copyWithSelection(url);
     }
-    this.copyWithSelection(url);
+    this.shareOpen.set(false);
+  }
+
+  protected toggleShareMenu(): void {
+    this.shareOpen.update((isOpen) => !isOpen);
+  }
+
+  protected shareOptions(article: NewsArticle): readonly ShareOption[] {
+    const url = this.articleUrl(article);
+    const encodedUrl = encodeURIComponent(url);
+    const encodedText = encodeURIComponent(`${article.title} ${url}`);
+
+    return [
+      { label: 'Facebook', icon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
+      { label: 'LinkedIn', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
+      { label: 'WhatsApp', icon: 'whatsapp', href: `https://wa.me/?text=${encodedText}` },
+    ];
   }
 
   private loadNews(locale: 'en' | 'ar', identifier: string): void {
@@ -97,5 +121,12 @@ export class NewsDetailComponent implements OnDestroy {
     input.select();
     this.document.execCommand('copy');
     input.remove();
+  }
+
+  private articleUrl(article: NewsArticle): string {
+    const identifier = article.slug || article.id;
+    const path = `/${this.i18n.locale()}/news/${encodeURIComponent(identifier)}`;
+    const origin = this.document.location?.origin;
+    return origin ? new URL(path, origin).toString() : path;
   }
 }
