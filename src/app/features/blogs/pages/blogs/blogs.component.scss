@@ -59,6 +59,12 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.blogs__empty {
+  color: #795967;
+  margin: 3rem 0;
+  text-align: center;
+}
+
 .blog-card {
   background: #f8fafc;
   border-radius: 8px;

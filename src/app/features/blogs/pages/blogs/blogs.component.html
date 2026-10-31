@@ -18,36 +18,42 @@
       }
     </div>
 
-    <div class="blogs__grid">
-      @for (item of filteredBlogItems(); track item.title) {
-        <article class="blog-card" [routerLink]="[ blogSlug($index)]" role="link" tabindex="0">
-          <div class="blog-card__media">
-            <img [src]="item.image" [alt]="item.title">
-            <span
-              class="blog-card__share"
-              [class.blog-card__share--rtl]="i18n.locale() === 'ar'"
-              aria-hidden="true"
-            >
-              <img src="/images/icons/share.svg" alt="share icon">
-            </span>
-          </div>
-          <div class="blog-card__content">
-            <p class="blog-card__category">{{ tabLabel(item.category) }}</p>
-            <h2>{{ item.title }}</h2>
-            <p class="blog-card__description">{{ item.description }}</p>
-            <a [routerLink]="[ blogSlug($index)]">
-              {{ i18n.translations().blogReadMore }}
-              <img
-                class="blog-card__read-more-icon"
-                [class.blog-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
-                src="/images/icons/arrow-learn-more.svg"
-                alt=""
+    @if (filteredBlogItems().length) {
+      <div class="blogs__grid">
+        @for (item of filteredBlogItems(); track item.id) {
+          <article class="blog-card" [routerLink]="[item.slug || item.id]" role="link" tabindex="0">
+            <div class="blog-card__media">
+              @if (item.featured_image_url) {
+                <img [src]="item.featured_image_url" [alt]="item.title">
+              }
+              <span
+                class="blog-card__share"
+                [class.blog-card__share--rtl]="i18n.locale() === 'ar'"
                 aria-hidden="true"
-              />
-            </a>
-          </div>
-        </article>
-      }
-    </div>
+              >
+                <img src="/images/icons/share.svg" alt="">
+              </span>
+            </div>
+            <div class="blog-card__content">
+              @if (item.category_name) { <p class="blog-card__category">{{ item.category_name }}</p> }
+              <h2>{{ item.title }}</h2>
+              @if (item.short_description) { <p class="blog-card__description">{{ item.short_description }}</p> }
+              <a [routerLink]="[item.slug || item.id]">
+                {{ i18n.translations().blogReadMore }}
+                <img
+                  class="blog-card__read-more-icon"
+                  [class.blog-card__read-more-icon--rtl]="i18n.locale() === 'ar'"
+                  src="/images/icons/arrow-learn-more.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    } @else if (!loading()) {
+      <p class="blogs__empty">{{ unavailable() ? 'Unable to load blogs right now.' : 'No blog posts have been published yet.' }}</p>
+    }
   </section>
 </main>
