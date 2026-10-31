@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { routes } from '../../app.routes';
+import { CategoriesService } from '../../core/api/categories.service';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { HeaderComponent } from './header.component';
 
@@ -8,7 +10,10 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
-      providers: [provideRouter(routes)],
+      providers: [
+        provideRouter(routes),
+        { provide: CategoriesService, useValue: { news: () => of({ data: [] }) } },
+      ],
     }).compileComponents();
   });
 

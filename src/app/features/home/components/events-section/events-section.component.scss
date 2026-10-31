@@ -58,6 +58,12 @@ h2 {
   margin-top: clamp(2.25rem, 3.5vw, 3.5rem);
   overflow: hidden;
 }
+.events-carousel .swiper-wrapper {
+  align-items: stretch;
+}
+.events-carousel .swiper-slide {
+  height: auto;
+}
 .event-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -83,9 +89,21 @@ h2 {
   animation: events-carousel-in-left 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .event-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   overflow: hidden;
   background: #f5f6f7;
   border-radius: 0.5rem;
+  cursor: pointer;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: 0 0.55rem 1.4rem rgb(53 27 39 / 16%);
+    outline: 0;
+    transform: translateY(-3px);
+  }
 }
 .event-media {
   aspect-ratio: 1.34;
@@ -94,6 +112,7 @@ h2 {
   background-size: cover;
 }
 .event-card__content {
+  flex: 1;
   padding: 1.35rem 1.45rem 1.5rem;
 }
 small {
@@ -106,15 +125,6 @@ h3 {
   margin: 0 0 0.9rem;
   font-size: clamp(1.15rem, 1.45vw, 1.45rem);
   font-weight: 500;
-}
-h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-h3 a:hover,
-h3 a:focus-visible {
-  color: var(--color-primary);
-  text-decoration: underline;
 }
 p {
   margin: 0.25rem 0 0;

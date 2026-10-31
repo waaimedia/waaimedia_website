@@ -29,6 +29,13 @@ export const PUBLIC_ROUTES: Routes = [
           ),
       },
       {
+        path: 'portfolio/item/:identifier',
+        loadComponent: () =>
+          import('../../features/portfolio/pages/portfolio-detail/portfolio-detail.component').then(
+            (m) => m.PortfolioDetailComponent,
+          ),
+      },
+      {
         path: 'portfolio/:category/:clientId',
         loadComponent: () =>
           import('../../features/portfolio/pages/portfolio-detail/portfolio-detail.component').then(
@@ -68,6 +75,11 @@ export const PUBLIC_ROUTES: Routes = [
           import('../../features/contact/pages/contact/contact.component').then(
             (m) => m.ContactComponent,
           ),
+      },
+      {
+        path: 'news/category/:category',
+        loadComponent: () =>
+          import('../../features/news/pages/news/news.component').then((m) => m.NewsComponent),
       },
       {
         path: 'news/:slug',

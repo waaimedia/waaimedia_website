@@ -1,14 +1,23 @@
 <main class="news-page container">
   <section class="news" aria-labelledby="news-title">
     <header class="news__header">
-      <h1 id="news-title">{{ i18n.translations().newsHeading }}</h1>
-      <p>{{ i18n.translations().newsHeroDescription }}</p>
+      <h1 id="news-title">
+        {{ isCategoryPage() ? categoryName() : i18n.translations().newsHeading }}
+      </h1>
+      @if (!isCategoryPage()) {
+        <p>{{ i18n.translations().newsHeroDescription }}</p>
+      }
     </header>
 
     @if (newsItems().length) {
       <div class="news__grid">
         @for (item of newsItems(); track item.id) {
-          <article class="news-card" [routerLink]="[item.slug || item.id]" role="link" tabindex="0">
+          <article
+            class="news-card"
+            [routerLink]="['/', i18n.locale(), 'news', item.slug || item.id]"
+            role="link"
+            tabindex="0"
+          >
             <div class="news-card__media">
               @if (item.featured_image_url) {
                 <img [src]="item.featured_image_url" [alt]="item.title">
@@ -48,7 +57,7 @@
             <div class="news-card__content">
               <h2>{{ item.title }}</h2>
               @if (item.short_description) { <p>{{ item.short_description }}</p> }
-              <a [routerLink]="[item.slug || item.id]">
+              <a [routerLink]="['/', i18n.locale(), 'news', item.slug || item.id]">
                 {{ i18n.translations().newsReadMore }}
                 <img
                   class="news-card__read-more-icon"

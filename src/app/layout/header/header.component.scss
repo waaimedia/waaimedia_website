@@ -39,11 +39,12 @@
 .site-header__navigation {
   display: flex;
   align-items: center;
-    gap: clamp(1rem, 2.5vw, 2rem);
+  gap: clamp(1.25rem, 2.3vw, 2rem);
 }
 
 .site-header__navigation a,
-.site-header__language {
+.site-header__language,
+.site-header__news-trigger {
   color: var(--color-text);
   font-size: 1rem;
   text-decoration: none;
@@ -80,6 +81,65 @@
 :host-context([dir='rtl']) .site-header__navigation a::after {
   transform-origin: right center;
 }
+
+.site-header__news-menu {
+  position: relative;
+}
+
+.site-header__news-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.site-header__news-trigger svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: none;
+  stroke: currentColor;
+}
+
+.site-header__news-dropdown {
+  position: absolute;
+  z-index: 10;
+  inset-block-start: calc(100% + 0.45rem);
+  inset-inline-start: -1rem;
+  display: none;
+  min-width: 11rem;
+  padding: 0.45rem;
+  background: var(--color-background);
+  box-shadow: 0 0.75rem 1.5rem color-mix(in srgb, var(--color-darkest) 15%, transparent);
+}
+
+.site-header__news-menu.is-open > .site-header__news-dropdown {
+  display: grid;
+  row-gap: 0.35rem;
+}
+
+.site-header__news-category {
+  position: relative;
+}
+
+.site-header__subcategory-arrow {
+  margin-inline-start: 0.3rem;
+}
+
+.site-header__subcategories {
+  inset-block-start: -0.45rem;
+  inset-inline-start: calc(100% + 0.45rem);
+  display: none;
+}
+
+.site-header__news-category:hover .site-header__subcategories,
+.site-header__news-category:focus-within .site-header__subcategories {
+  display: grid;
+}
+
 
 .site-header__language {
   display: grid;
@@ -171,6 +231,37 @@
   .site-header__navigation a::after {
     display: none;
   }
+
+  .site-header__news-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding-block: 0.75rem;
+    border-block-end: 1px solid var(--color-border-subtle);
+  }
+
+  .site-header__news-dropdown {
+    position: static;
+    display: none;
+    min-width: 0;
+    padding: 0.25rem 0 0.5rem;
+    border-block-end: 1px solid var(--color-border-subtle);
+    box-shadow: none;
+  }
+
+  .site-header__news-menu.is-open .site-header__news-dropdown {
+    display: grid;
+  }
+
+  .site-header__subcategory-arrow {
+    display: none;
+  }
+
+  .site-header__subcategories {
+    position: static;
+    display: grid;
+    box-shadow: none;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

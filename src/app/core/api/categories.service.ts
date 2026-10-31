@@ -22,9 +22,17 @@ export class CategoriesService {
   private readonly endpoint = `${environment.apiUrl.replace(/\/$/, '')}/api/v1/categories`;
 
   portfolio(locale: Locale): Observable<CategoriesResponse> {
+    return this.list(locale, 'portfolio');
+  }
+
+  news(locale: Locale): Observable<CategoriesResponse> {
+    return this.list(locale, 'news');
+  }
+
+  private list(locale: Locale, type: 'portfolio' | 'news'): Observable<CategoriesResponse> {
     return this.http.get<CategoriesResponse>(this.endpoint, {
       headers: new HttpHeaders({ 'Accept-Language': locale }),
-      params: new HttpParams().set('type', 'portfolio'),
+      params: new HttpParams().set('type', type),
     });
   }
 }

@@ -21,14 +21,64 @@
         [attr.aria-label]="i18n.translations().menu"
       >
         @for (link of navigation(); track link.path) {
-          <a
-            [routerLink]="link.url"
-            routerLinkActive="is-active"
-            [routerLinkActiveOptions]="{ exact: link.path === '' }"
-            (click)="closeMenu()"
-          >
-            {{ i18n.translations()[link.key] }}
-          </a>
+          @if (link.path === 'news') {
+            <div class="site-header__news-menu" [class.is-open]="newsMenuOpen()">
+              <button
+                type="button"
+                class="site-header__news-trigger"
+                [class.is-active]="newsMenuOpen()"
+                [attr.aria-expanded]="newsMenuOpen()"
+                aria-controls="news-categories-menu"
+                (click)="toggleNewsMenu($event)"
+              >
+                {{ i18n.translations()[link.key] }}
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path d="m4 6 4 4 4-4" />
+                </svg>
+              </button>
+
+              @if (newsCategories().length) {
+                <div id="news-categories-menu" class="site-header__news-dropdown" role="menu">
+                  @for (category of newsCategories(); track category.id) {
+                    <div class="site-header__news-category" role="none">
+                      <a
+                        role="menuitem"
+                        [routerLink]="['/', i18n.locale(), 'news', 'category', category.slug]"
+                        routerLinkActive="is-active"
+                        (click)="closeMenu()"
+                      >
+                        {{ category.name }}
+                      </a>
+                      @if (category.children?.length) {
+                        <span class="site-header__subcategory-arrow" aria-hidden="true">&rsaquo;</span>
+                        <div class="site-header__news-dropdown site-header__subcategories" role="menu">
+                          @for (subcategory of category.children; track subcategory.id) {
+                            <a
+                              role="menuitem"
+                              [routerLink]="['/', i18n.locale(), 'news', 'category', subcategory.slug]"
+                              routerLinkActive="is-active"
+                              (click)="closeMenu()"
+                            >
+                              {{ subcategory.name }}
+                            </a>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <a
+              [routerLink]="link.url"
+              routerLinkActive="is-active"
+              [routerLinkActiveOptions]="{ exact: link.path === '' }"
+              (click)="closeMenu()"
+            >
+              {{ i18n.translations()[link.key] }}
+            </a>
+          }
         }
       </nav>
     </div>

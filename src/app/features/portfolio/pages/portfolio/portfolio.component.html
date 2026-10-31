@@ -6,71 +6,66 @@
     </header>
 
     <div class="portfolio__tabs" role="tablist" [attr.aria-label]="i18n.translations().portfolioTitle">
-      @for (tab of tabs; track tab.id) {
-        <button
-          type="button"
-          role="tab"
-          [class.is-active]="activeTab() === tab.id"
-          [attr.aria-selected]="activeTab() === tab.id"
-          (click)="setActiveTab(tab.id)"
-        >
-          {{ i18n.locale() === 'ar' ? tab.ar : tab.en }}
+      <button type="button" role="tab" [class.is-active]="activeTab() === 'all'" [attr.aria-selected]="activeTab() === 'all'" (click)="setActiveTab('all')">
+        {{ i18n.locale() === 'ar' ? 'الكل' : 'All' }}
+      </button>
+      @for (category of categories(); track category.id) {
+        <button type="button" role="tab" [class.is-active]="activeTab() === category.slug" [attr.aria-selected]="activeTab() === category.slug" (click)="setActiveTab(category.slug)">
+          {{ category.name }}
         </button>
       }
     </div>
 
-    @if (activeTab() === 'all') {
+    @if (activeTab() === 'all' && portfolioItems().length) {
       <div class="portfolio__grid">
-        @for (item of items(); track item.id) {
-          <article
-            class="portfolio-card"
-            [routerLink]="['/', i18n.locale(), 'portfolio', item.category, item.clientId]"
-            role="link"
-            tabindex="0"
-          >
-            <div class="portfolio-card__media" [class]="'portfolio-card__media portfolio-card__media--' + item.tone">
-              @if (item.imageUrl) {
-                <img [src]="item.imageUrl" [alt]="i18n.locale() === 'ar' ? item.title.ar : item.title.en">
-              } @else {
-                <span aria-hidden="true"></span>
+        @for (item of portfolioItems(); track item.id) {
+          <article class="portfolio-card" [routerLink]="['/', i18n.locale(), 'portfolio', 'item', item.slug]" role="link" tabindex="0">
+            <div class="portfolio-card__media">
+              @if (item.cover_image_url) {
+                <img [src]="item.cover_image_url" [alt]="item.title" loading="lazy">
               }
             </div>
-            <p class="portfolio-card__category">{{ i18n.locale() === 'ar' ? item.categoryLabel.ar : item.categoryLabel.en }}</p>
-            <h2>{{ i18n.locale() === 'ar' ? item.title.ar : item.title.en }}</h2>
+            <p class="portfolio-card__category">{{ item.subcategory?.name || item.category.name }}</p>
+            <h2>{{ item.title }}</h2>
           </article>
         }
       </div>
-    } @else if (clientsStatus() !== 'unavailable') {
-      <div class="portfolio-clients" [attr.aria-busy]="clientsStatus() === 'loading'">
-        @if (clientsStatus() === 'loading') {
-          @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
-            <div class="portfolio-client portfolio-client--loading" aria-hidden="true"><span></span><i></i></div>
-          }
-        } @else {
-          @for (client of clientItems(); track client.id) {
-            <article
-              class="portfolio-client"
-              [routerLink]="['/', i18n.locale(), 'portfolio', activeTab(), client.id]"
-              role="link"
-              tabindex="0"
-            >
-              <div class="portfolio-client__logo">
-                @if (client.logo_url) {
-                  <img [src]="client.logo_url" [alt]="client.name" loading="lazy">
-                } @else {
-                  <span aria-hidden="true">{{ client.name.slice(0, 1) }}</span>
-                }
-              </div>
-              <p>{{ i18n.locale() === 'ar' ? selectedTab().ar : selectedTab().en }}</p>
-              <h2>{{ client.name }}</h2>
-            </article>
-          } @empty {
-            <p class="portfolio-clients__empty">No clients have been added to this category yet.</p>
-          }
+    } @else if (activeTab() !== 'all' && clientItems().length) {
+      <div class="portfolio-clients">
+        @for (client of clientItems(); track client.id) {
+          <article class="portfolio-client" [routerLink]="['/', i18n.locale(), 'portfolio', activeTab(), client.id]" role="link" tabindex="0">
+            <div class="portfolio-client__logo">
+              @if (client.logo_url) {
+                <img [src]="client.logo_url" [alt]="client.name" loading="lazy">
+              } @else {
+                <span aria-hidden="true">{{ client.name.slice(0, 1) }}</span>
+              }
+            </div>
+            <p>{{ selectedTab()?.name }}</p>
+            <h2>{{ client.name }}</h2>
+          </article>
         }
       </div>
-    } @else {
-      <p class="portfolio-clients__empty">Unable to load clients right now.</p>
+    } @else if (!loading()) {
+      <p class="portfolio-clients__empty">
+        {{ unavailable() ? 'Unable to load portfolio items right now.' : 'No portfolio work has been published yet.' }}
+      </p>
+    }
+
+    @if (loading()) {
+      <div class="portfolio-clients portfolio-clients--loading" aria-label="Loading">
+        @for (placeholder of [1, 2, 3]; track placeholder) {
+          <div class="portfolio-client portfolio-client--loading" aria-hidden="true"><span></span><i></i></div>
+        }
+      </div>
+    }
+
+    @if (meta(); as pagination) {
+      @if (pagination.currentPage < pagination.lastPage) {
+        <button type="button" class="portfolio__load-more" (click)="loadNextPage()">
+          {{ i18n.locale() === 'ar' ? 'عرض المزيد' : 'Load more' }}
+        </button>
+      }
     }
   </section>
 </main>

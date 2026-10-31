@@ -1,89 +1,16 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ClientsService } from '../../../../core/api/clients.service';
+import { Subscription } from 'rxjs';
+import {
+  PortfolioCard,
+  PortfolioClientCard,
+  PortfolioService,
+} from '../../../../core/api/portfolio.service';
+import { CategoriesService, PublicCategory } from '../../../../core/api/categories.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
 
-type PortfolioCategory =
-  | 'all'
-  | 'social-media-campaign'
-  | 'media-production'
-  | 'pr'
-  | 'events'
-  | 'opening'
-  | 'web-design';
-
-interface PortfolioItem {
-  readonly id: string;
-  readonly clientId: number;
-  readonly category: Exclude<PortfolioCategory, 'all'>;
-  readonly categoryLabel: { readonly en: string; readonly ar: string };
-  readonly title: { readonly en: string; readonly ar: string };
-  readonly tone: string;
-  readonly imageUrl?: string;
-}
-
-const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
-  {
-    id: 'product-launch',
-    clientId: 4,
-    category: 'social-media-campaign',
-    categoryLabel: { en: 'Social Media campaign', ar: 'حملة تواصل اجتماعي' },
-    title: { en: 'Product launch campaigns with influencers', ar: 'حملات إطلاق المنتجات مع المؤثرين' },
-    tone: 'social',
-  },
-  {
-    id: 'motion-production',
-    clientId: 3,
-    category: 'media-production',
-    categoryLabel: { en: 'Media Production', ar: 'إنتاج إعلامي' },
-    title: { en: 'Motion graphics and commercial promo videos', ar: 'موشن جرافيك وفيديوهات ترويجية' },
-    tone: 'production',
-  },
-  {
-    id: 'activation-booths',
-    clientId: 2,
-    category: 'pr',
-    categoryLabel: { en: 'PR', ar: 'علاقات عامة' },
-    title: { en: 'Live product sampling and activation booths', ar: 'تجارب مباشرة وأجنحة تفعيل للمنتجات' },
-    tone: 'pr',
-  },
-  {
-    id: 'live-events',
-    clientId: 8,
-    category: 'events',
-    categoryLabel: { en: 'Events', ar: 'فعاليات' },
-    title: { en: 'Audience-first event experiences', ar: 'تجارب فعاليات تضع الجمهور أولًا' },
-    tone: 'events',
-    imageUrl: '/images/card-img.jpg',
-  },
-  {
-    id: 'opening-campaign',
-    clientId: 7,
-    category: 'opening',
-    categoryLabel: { en: 'Opening', ar: 'افتتاحات' },
-    title: { en: 'Memorable opening campaigns', ar: 'حملات افتتاح لا تُنسى' },
-    tone: 'opening',
-  },
-  {
-    id: 'web-experiences',
-    clientId: 4,
-    category: 'web-design',
-    categoryLabel: { en: 'Web Design', ar: 'تصميم المواقع' },
-    title: { en: 'Digital experiences built to convert', ar: 'تجارب رقمية مصممة لتحقيق النتائج' },
-    tone: 'web',
-  },
-];
-
-const PORTFOLIO_TABS: readonly { readonly id: PortfolioCategory; readonly en: string; readonly ar: string }[] = [
-  { id: 'all', en: 'All', ar: 'الكل' },
-  { id: 'social-media-campaign', en: 'Social media campaign', ar: 'حملات التواصل الاجتماعي' },
-  { id: 'media-production', en: 'Media production', ar: 'الإنتاج الإعلامي' },
-  { id: 'pr', en: 'PR', ar: 'العلاقات العامة' },
-  { id: 'events', en: 'Events', ar: 'الفعاليات' },
-  { id: 'opening', en: 'Opening', ar: 'الافتتاحات' },
-  { id: 'web-design', en: 'Web Design', ar: 'تصميم المواقع' },
-];
+type PortfolioCategory = 'all' | string;
 
 @Component({
   selector: 'app-portfolio',
@@ -91,39 +18,116 @@ const PORTFOLIO_TABS: readonly { readonly id: PortfolioCategory; readonly en: st
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss',
 })
-export class PortfolioComponent {
+export class PortfolioComponent implements OnDestroy {
   protected readonly i18n = inject(LocaleService);
-  protected readonly tabs = PORTFOLIO_TABS;
   protected readonly activeTab = signal<PortfolioCategory>('all');
-  protected readonly items = computed(() => {
-    const activeTab = this.activeTab();
-    return activeTab === 'all'
-      ? PORTFOLIO_ITEMS
-      : PORTFOLIO_ITEMS.filter((item) => item.category === activeTab);
-  });
+  protected readonly categories = signal<readonly PublicCategory[]>([]);
+  protected readonly portfolioItems = signal<readonly PortfolioCard[]>([]);
+  protected readonly clientItems = signal<readonly PortfolioClientCard[]>([]);
+  protected readonly loading = signal(true);
+  protected readonly unavailable = signal(false);
+  protected readonly meta = signal<{ currentPage: number; lastPage: number } | null>(null);
   protected readonly selectedTab = computed(
-    () => PORTFOLIO_TABS.find((tab) => tab.id === this.activeTab()) ?? PORTFOLIO_TABS[0],
+    () => this.categories().find((category) => category.slug === this.activeTab()) ?? null,
   );
 
   private readonly seo = inject(SeoService);
-  private readonly clientsService = inject(ClientsService);
-  protected readonly clientItems = this.clientsService.clients;
-  protected readonly clientsStatus = this.clientsService.status;
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly portfolioService = inject(PortfolioService);
+  private categoriesRequest?: Subscription;
+  private contentRequest?: Subscription;
 
   constructor() {
-    const locale = this.i18n.locale();
-    const translations = this.i18n.translations();
-    this.seo.update({
-      title: `${translations.portfolioTitle} | ${translations.brandName}`,
-      description: translations.portfolioDescription,
-      locale,
-      canonicalPath: `/${locale}/portfolio`,
-      alternatePaths: { en: '/en/portfolio', ar: '/ar/portfolio' },
+    effect(() => {
+      const locale = this.i18n.locale();
+      const translations = this.i18n.translations();
+      this.seo.update({
+        title: `${translations.portfolioTitle} | ${translations.brandName}`,
+        description: translations.portfolioDescription,
+        locale,
+        canonicalPath: `/${locale}/portfolio`,
+        alternatePaths: { en: '/en/portfolio', ar: '/ar/portfolio' },
+      });
+      this.loadCategories(locale);
     });
-    this.clientsService.load();
+
+    effect(() => {
+      const locale = this.i18n.locale();
+      const activeTab = this.activeTab();
+      const category = this.categories().find((item) => item.slug === activeTab);
+      if (activeTab === 'all' || category) this.loadContent(locale, category);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.categoriesRequest?.unsubscribe();
+    this.contentRequest?.unsubscribe();
   }
 
   protected setActiveTab(tab: PortfolioCategory): void {
+    if (tab === this.activeTab()) return;
     this.activeTab.set(tab);
+  }
+
+  protected loadNextPage(): void {
+    const meta = this.meta();
+    if (!meta || meta.currentPage >= meta.lastPage || this.loading()) return;
+    this.loadContent(this.i18n.locale(), this.selectedTab() ?? undefined, meta.currentPage + 1, true);
+  }
+
+  private loadCategories(locale: 'en' | 'ar'): void {
+    this.categoriesRequest?.unsubscribe();
+    this.categoriesRequest = this.categoriesService.portfolio(locale).subscribe({
+      next: ({ data }) => this.categories.set(data),
+      error: () => this.categories.set([]),
+    });
+  }
+
+  private loadContent(
+    locale: 'en' | 'ar',
+    category?: PublicCategory,
+    page = 1,
+    append = false,
+  ): void {
+    this.contentRequest?.unsubscribe();
+    this.loading.set(true);
+    this.unavailable.set(false);
+    if (!append) this.meta.set(null);
+
+    if (category) {
+      this.contentRequest = this.portfolioService.clients(locale, category.id, { page, perPage: 12 }).subscribe({
+        next: (response) => {
+          this.setPagination(response.meta);
+          this.clientItems.set(append ? [...this.clientItems(), ...response.data] : response.data);
+          this.portfolioItems.set([]);
+          this.loading.set(false);
+        },
+        error: () => this.handleContentError(append),
+      });
+      return;
+    }
+
+    this.contentRequest = this.portfolioService.list(locale, { page, perPage: 12 }).subscribe({
+      next: (response) => {
+        this.setPagination(response.meta);
+        this.portfolioItems.set(append ? [...this.portfolioItems(), ...response.data] : response.data);
+        this.clientItems.set([]);
+        this.loading.set(false);
+      },
+      error: () => this.handleContentError(append),
+    });
+  }
+
+  private setPagination(meta?: { current_page: number; last_page: number }): void {
+    this.meta.set(meta ? { currentPage: meta.current_page, lastPage: meta.last_page } : null);
+  }
+
+  private handleContentError(append: boolean): void {
+    if (!append) {
+      this.portfolioItems.set([]);
+      this.clientItems.set([]);
+    }
+    this.loading.set(false);
+    this.unavailable.set(true);
   }
 }

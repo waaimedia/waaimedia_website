@@ -23,6 +23,16 @@
   }
 }
 
+.news__header:has(p) {
+  text-align: center;
+}
+
+.news__header:not(:has(p)) {
+  max-width: none;
+  margin-inline: 0;
+  text-align: start;
+}
+
 .news__grid {
   display: grid;
   gap: 48px 28px;

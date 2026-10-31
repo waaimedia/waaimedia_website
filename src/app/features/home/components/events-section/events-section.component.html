@@ -14,7 +14,7 @@
     <div #eventsSwiper class="swiper events-carousel">
       <div class="swiper-wrapper">
         @for (event of events(); track event.id) {
-          <article class="swiper-slide event-card">
+          <article class="swiper-slide event-card" [routerLink]="eventUrl(event.slug)" role="link" tabindex="0">
             <div
               class="event-media"
               aria-hidden="true"
@@ -22,7 +22,7 @@
             ></div>
             <div class="event-card__content">
               @if (event.category) { <small>{{ event.category }}</small> }
-              <h3><a [routerLink]="eventUrl(event.slug)">{{ event.name }}</a></h3>
+              <h3>{{ event.name }}</h3>
               @if (event.event_date) { <p>{{ i18n.translations().date }}: {{ formatDate(event) }}</p> }
               @if (event.place) { <p>{{ i18n.translations().place }}: {{ event.place }}</p> }
             </div>

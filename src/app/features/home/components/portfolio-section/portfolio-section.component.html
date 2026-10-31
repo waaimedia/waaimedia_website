@@ -4,19 +4,23 @@
       <h2>{{ i18n.translations().portfolioTitle }}</h2>
       <p>{{ i18n.translations().portfolioDescription }}</p>
     </header>
-    <div class="portfolio-grid">
-      @for (item of items; track item.id) {
-        <article>
-          <div
-            class="work-media"
-            aria-hidden="true"
-            [style.background-image]="item.imageUrl ? 'url(' + item.imageUrl + ')' : null"
-          ></div>
-          <small>{{ item.category?.[i18n.locale()] }}</small>
-          <h3>{{ item.title[i18n.locale()] }}</h3>
-        </article>
-      }
-    </div>
+    @if (items().length) {
+      <div class="portfolio-grid">
+        @for (item of items(); track item.id) {
+          <article [routerLink]="['/', i18n.locale(), 'portfolio', 'item', item.slug]" tabindex="0" role="link">
+            <div class="work-media">
+              @if (item.cover_image_url) {
+                <img [src]="item.cover_image_url" [alt]="item.title" loading="lazy">
+              }
+            </div>
+            <small>{{ item.subcategory?.name || item.category.name }}</small>
+            <h3>{{ item.title }}</h3>
+          </article>
+        }
+      </div>
+    } @else if (unavailable()) {
+      <p class="home-portfolio__empty">{{ i18n.locale() === 'ar' ? 'تعذر تحميل الأعمال الآن.' : 'Unable to load portfolio work right now.' }}</p>
+    }
     <a class="home-view-all" [routerLink]="'/' + i18n.locale() + '/portfolio'">
       {{ i18n.translations().viewAll }}
       <img

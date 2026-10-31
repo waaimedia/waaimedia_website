@@ -1,7 +1,8 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Component, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CategoriesService } from '../../../../core/api/categories.service';
 import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
@@ -25,31 +26,52 @@ export class NewsComponent implements OnDestroy {
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly openShareId = signal<number | null>(null);
+  protected readonly categorySlug = signal<string | null>(null);
+  protected readonly categoryName = signal('');
+  protected readonly isCategoryPage = computed(() => this.categorySlug() !== null);
 
   private readonly seo = inject(SeoService);
   private readonly newsService = inject(NewsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly route = inject(ActivatedRoute);
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private request?: Subscription;
+  private categoriesRequest?: Subscription;
+  private readonly routeSubscription = this.route.paramMap.subscribe((params) =>
+    this.categorySlug.set(params.get('category')),
+  );
 
   constructor() {
     effect(() => {
       const locale = this.i18n.locale();
       const translations = this.i18n.translations();
 
+      const categoryName = this.categoryName();
+      const categorySlug = this.categorySlug();
+
       this.seo.update({
-        title: `${translations.newsTitle} | ${translations.brandName}`,
+        title: `${categoryName || translations.newsTitle} | ${translations.brandName}`,
         description: translations.newsPageDescription,
         locale,
-        canonicalPath: `/${locale}/news`,
-        alternatePaths: { en: '/en/news', ar: '/ar/news' },
+        canonicalPath: categorySlug ? `/${locale}/news/category/${categorySlug}` : `/${locale}/news`,
+        alternatePaths: categorySlug
+          ? { en: `/en/news/category/${categorySlug}`, ar: `/ar/news/category/${categorySlug}` }
+          : { en: '/en/news', ar: '/ar/news' },
       });
     });
-    effect(() => this.loadNews(this.i18n.locale()));
+    effect(() => {
+      const locale = this.i18n.locale();
+      const categorySlug = this.categorySlug();
+      this.loadNews(locale, categorySlug ?? undefined);
+      this.loadCategoryName(locale, categorySlug);
+    });
   }
 
   ngOnDestroy(): void {
     this.request?.unsubscribe();
+    this.categoriesRequest?.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 
   protected copyArticleLink(article: NewsArticle, event: Event): void {
@@ -80,14 +102,18 @@ export class NewsComponent implements OnDestroy {
     ];
   }
 
-  private loadNews(locale: 'en' | 'ar'): void {
+  private loadNews(locale: 'en' | 'ar', category?: string): void {
     this.request?.unsubscribe();
     this.loading.set(true);
     this.unavailable.set(false);
 
-    this.request = this.newsService.list(locale, { perPage: 100 }).subscribe({
+    this.request = this.newsService.list(locale, { perPage: 100, category }).subscribe({
       next: ({ data }) => {
         this.newsItems.set(data);
+        if (category && !this.categoryName()) {
+          const categoryName = data.find((article) => article.category_name)?.category_name;
+          if (categoryName) this.categoryName.set(categoryName);
+        }
         this.loading.set(false);
       },
       error: () => {
@@ -96,6 +122,28 @@ export class NewsComponent implements OnDestroy {
         this.unavailable.set(true);
       },
     });
+  }
+
+  private loadCategoryName(locale: 'en' | 'ar', slug: string | null): void {
+    this.categoriesRequest?.unsubscribe();
+    this.categoryName.set('');
+    if (!slug) return;
+
+    this.categoriesRequest = this.categoriesService.news(locale).subscribe({
+      next: ({ data }) => {
+        const category = data.find((item) => item.slug === slug);
+        this.categoryName.set(category?.name || this.formatCategorySlug(slug));
+      },
+      error: () => this.categoryName.set(this.formatCategorySlug(slug)),
+    });
+  }
+
+  private formatCategorySlug(slug: string): string {
+    return slug
+      .split('-')
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   private copyText(value: string): void {

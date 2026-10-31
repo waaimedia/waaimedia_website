@@ -1,6 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CategoriesService, PublicCategory } from '../../core/api/categories.service';
 import { Locale } from '../../core/i18n/locale';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { TranslationKey } from '../../core/i18n/translations';
@@ -33,11 +35,15 @@ const NAVIGATION_LINKS: readonly NavigationLink[] = [
     '(window:resize)': 'closeMenu()',
   },
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   private readonly router = inject(Router);
+  private readonly categoriesService = inject(CategoriesService);
+  private categoriesRequest?: Subscription;
 
   protected readonly localeService = inject(LocaleService);
   protected readonly menuOpen = signal(false);
+  protected readonly newsMenuOpen = signal(false);
+  protected readonly newsCategories = signal<readonly PublicCategory[]>([]);
   protected readonly i18n = this.localeService;
   protected readonly brandLogoSrc = HEADER_LOGO_SRC;
   protected readonly homeUrl = computed(() => `/${this.localeService.locale()}`);
@@ -48,12 +54,30 @@ export class HeaderComponent {
     })),
   );
 
+  constructor() {
+    effect(() => this.loadNewsCategories(this.localeService.locale()));
+  }
+
+  ngOnDestroy(): void {
+    this.categoriesRequest?.unsubscribe();
+  }
+
   protected toggleMenu(): void {
     this.menuOpen.update((isOpen) => !isOpen);
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+    this.newsMenuOpen.set(false);
+  }
+
+  protected toggleNewsMenu(event: Event): void {
+    event.stopPropagation();
+    if (this.newsMenuOpen()) {
+      this.closeMenu();
+      return;
+    }
+    this.newsMenuOpen.set(true);
   }
 
   protected switchLanguage(): void {
@@ -67,5 +91,13 @@ export class HeaderComponent {
     return this.localeService.locale() === 'en'
       ? this.i18n.translations().switchToArabic
       : this.i18n.translations().switchToEnglish;
+  }
+
+  private loadNewsCategories(locale: Locale): void {
+    this.categoriesRequest?.unsubscribe();
+    this.categoriesRequest = this.categoriesService.news(locale).subscribe({
+      next: ({ data }) => this.newsCategories.set(data),
+      error: () => this.newsCategories.set([]),
+    });
   }
 }
