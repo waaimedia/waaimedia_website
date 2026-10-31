@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
   inject,
   OnInit,
@@ -9,6 +10,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of, timeout } from 'rxjs';
 import { Counter, CountersService } from '../../../../core/api/counters.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
@@ -28,6 +30,7 @@ export class StatsSectionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly counters = inject(CountersService);
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private observer: IntersectionObserver | null = null;
   private animationFrame: number | null = null;
@@ -37,6 +40,7 @@ export class StatsSectionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.counters
       .getAll()
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         timeout(10_000),
         catchError(() => of(null)),
       )

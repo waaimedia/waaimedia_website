@@ -57,8 +57,11 @@ export class PublicLayout implements AfterViewInit, OnDestroy {
   }
 
   private playOnFirstInteraction(player: HTMLAudioElement): void {
+    if (this.removeInteractionListener) return;
+
     const play = (): void => {
       this.removeInteractionListener?.();
+      this.removeInteractionListener = undefined;
       void player.play();
     };
 
