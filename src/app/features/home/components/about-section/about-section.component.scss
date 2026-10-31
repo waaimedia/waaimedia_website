@@ -51,6 +51,12 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  .home-about__content {
+    order: 1;
+  }
+  .home-media--about {
+    order: 2;
+  }
   .home-section {
     padding-block: 3rem;
   }

@@ -101,14 +101,70 @@
     height: 30px;
     justify-content: center;
     line-height: 1;
+    padding: 0;
     position: absolute;
     right: 14px;
     top: 14px;
     width: 30px;
+    cursor: pointer;
 
     &--rtl {
       left: 14px;
       right: auto;
+    }
+  }
+
+  &__share-menu {
+    position: absolute;
+    z-index: 2;
+    top: 3.45rem;
+    right: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    background: #fff;
+    border-radius: 0.45rem;
+    box-shadow: 0 0.5rem 1.25rem rgb(53 27 39 / 22%);
+
+    &--rtl {
+      right: auto;
+      left: 0.875rem;
+    }
+
+    a,
+    button {
+      display: inline-grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      padding: 0.35rem;
+      color: #3c2831;
+      background: transparent;
+      border: 0;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      text-align: start;
+      text-decoration: none;
+      cursor: pointer;
+
+      app-social-icon,
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      img {
+        object-fit: contain;
+      }
+    }
+
+    a:hover,
+    a:focus-visible,
+    button:hover,
+    button:focus-visible {
+      color: #fff;
+      background: #e43e54;
     }
   }
 

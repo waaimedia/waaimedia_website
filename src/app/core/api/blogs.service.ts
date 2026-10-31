@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Locale } from '../i18n/locale';
 
@@ -62,7 +62,10 @@ export class BlogsService {
     const request = this.http.get<BlogListResponse>(`${this.endpoint}/latest`, {
       headers: this.languageHeaders(locale),
       params: new HttpParams().set('limit', String(limit)),
-    }).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+    }).pipe(
+      map((response) => this.localizeListResponse(response, locale)),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
     this.latestCache.set(cacheKey, request);
     return request;
   }
@@ -75,13 +78,45 @@ export class BlogsService {
     return this.http.get<BlogListResponse>(this.endpoint, {
       headers: this.languageHeaders(locale),
       params,
-    });
+    }).pipe(map((response) => this.localizeListResponse(response, locale)));
   }
 
   getByIdentifier(locale: Locale, identifier: string): Observable<BlogResponse> {
     return this.http.get<BlogResponse>(`${this.endpoint}/${encodeURIComponent(identifier)}`, {
       headers: this.languageHeaders(locale),
-    });
+    }).pipe(
+      map((response) => ({
+        ...response,
+        data: this.localizeArticle(response.data, locale),
+      })),
+    );
+  }
+
+  /**
+   * The Blog endpoint returns language-specific fields (`title_en`, `content_ar`, etc.)
+   * instead of the localized aliases returned by the News endpoint. Normalize it here so
+   * every consumer, including the details page, can use the same article fields.
+   */
+  private localizeListResponse(response: BlogListResponse, locale: Locale): BlogListResponse {
+    return {
+      ...response,
+      data: response.data.map((article) => this.localizeArticle(article, locale)),
+    };
+  }
+
+  private localizeArticle(article: BlogArticle, locale: Locale): BlogArticle {
+    const suffix = locale === 'ar' ? 'ar' : 'en';
+    const localized = (field: 'title' | 'author_name' | 'short_description' | 'content' | 'category_name') =>
+      article[`${field}_${suffix}` as keyof BlogArticle] as string | null | undefined;
+
+    return {
+      ...article,
+      title: article.title || localized('title') || '',
+      author_name: article.author_name || localized('author_name') || null,
+      short_description: article.short_description || localized('short_description') || null,
+      content: article.content || localized('content') || null,
+      category_name: article.category_name || localized('category_name') || null,
+    };
   }
 
   private languageHeaders(locale: Locale): HttpHeaders {

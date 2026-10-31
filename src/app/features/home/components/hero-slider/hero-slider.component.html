@@ -3,26 +3,40 @@
   aria-roledescription="carousel"
   [attr.aria-label]="i18n.translations().brandName + ' highlights'"
 >
-  <div #heroSwiper class="swiper hero-slider__swiper">
-    <div class="swiper-wrapper">
-      @for (slide of slides(); track slide.id) {
-        <article class="swiper-slide hero-slider__slide">
-          @if (slide.featured_image_url) {
-            <img [src]="slide.featured_image_url" [alt]="slide.title" />
-          } @else {
-            <div class="hero-slider__fallback" aria-hidden="true"></div>
-          }
-          <div class="hero-slider__veil"></div>
-          <div class="hero-slider__content container">
-            <h1>{{ slide.title }}</h1>
-            @if (slide.short_description) { <p>{{ slide.short_description }}</p> }
-            <a class="hero-slider__cta" [routerLink]="['/', i18n.locale(), 'news', slide.slug || slide.id]">
-              {{ i18n.translations().newsReadMore }}
-            </a>
-          </div>
-        </article>
-      }
-    </div>
+  <div
+    class="hero-slider__viewport"
+    aria-live="polite"
+    (pointerdown)="startDrag($event)"
+    (pointerup)="endDrag($event)"
+    (pointercancel)="cancelDrag()"
+    (click)="preventDragClick($event)"
+  >
+    @if (slides()[activeSlide()]; as slide) {
+      <article
+        class="hero-slider__slide"
+        [class.hero-slider__slide--from-left]="transitionFrom() === 'left'"
+        [class.hero-slider__slide--from-right]="transitionFrom() === 'right'"
+      >
+        @if (slide.featured_image_url) {
+          <img [src]="slide.featured_image_url" [alt]="slide.title" />
+        } @else {
+          <div class="hero-slider__fallback" aria-hidden="true"></div>
+        }
+        <div class="hero-slider__veil"></div>
+        <div class="hero-slider__content container">
+          <h1>{{ slide.title }}</h1>
+          @if (slide.short_description) { <p>{{ slide.short_description }}</p> }
+          <a
+            class="hero-slider__cta"
+            [href]="'/' + i18n.locale() + '/news/' + (slide.slug || slide.id)"
+            (pointerdown)="$event.stopPropagation()"
+            (click)="openArticle(slide, $event)"
+          >
+            {{ i18n.translations().newsReadMore }}
+          </a>
+        </div>
+      </article>
+    }
   </div>
 
   @if (slides().length > 1) {

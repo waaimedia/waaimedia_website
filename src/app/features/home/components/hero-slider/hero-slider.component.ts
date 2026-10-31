@@ -1,126 +1,139 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  ElementRef,
-  inject,
-  OnDestroy,
-  PLATFORM_ID,
-  signal,
-  ViewChild,
-} from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import Swiper from 'swiper';
-import { A11y, Autoplay, Keyboard } from 'swiper/modules';
 import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { Locale } from '../../../../core/i18n/locale';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 
 @Component({
   selector: 'app-home-hero-slider',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './hero-slider.component.html',
   styleUrl: './hero-slider.component.scss',
 })
-export class HeroSliderComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('heroSwiper') private readonly swiperElement?: ElementRef<HTMLElement>;
-
+export class HeroSliderComponent implements OnDestroy {
   protected readonly i18n = inject(LocaleService);
   protected readonly slides = signal<readonly NewsArticle[]>([]);
   protected readonly activeSlide = signal(0);
+  protected readonly transitionFrom = signal<'left' | 'right'>('right');
 
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly newsService = inject(NewsService);
-  private slider?: Swiper;
+  private readonly router = inject(Router);
   private latestRequest?: Subscription;
   private loadedLocale?: Locale;
-  private viewInitialized = false;
-  private syncTimer?: ReturnType<typeof setTimeout>;
+  private autoplayTimer?: ReturnType<typeof setInterval>;
+  private dragStartX: number | null = null;
+  private hasDragged = false;
 
   constructor() {
-    effect(() => {
-      const direction = this.i18n.direction();
-      if (!this.slider) return;
-      this.slider.changeLanguageDirection(direction);
-      this.slider.update();
-    });
     effect(() => {
       const locale = this.i18n.locale();
       if (this.loadedLocale === locale) return;
       this.loadedLocale = locale;
       this.loadLatestNews(locale);
     });
-    effect(() => {
-      if (!this.viewInitialized || !this.slides().length) return;
-      this.scheduleSliderSync();
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.viewInitialized = true;
-    if (this.slides().length) this.scheduleSliderSync();
   }
 
   ngOnDestroy(): void {
-    if (this.syncTimer) clearTimeout(this.syncTimer);
+    this.stopAutoplay();
     this.latestRequest?.unsubscribe();
-    this.slider?.destroy(true, true);
   }
 
   private loadLatestNews(locale: Locale): void {
     this.latestRequest?.unsubscribe();
     this.latestRequest = this.newsService.latest(locale, 3).subscribe({
-      next: ({ data }) => this.slides.set(data.slice(0, 3)),
-      error: () => this.slides.set([]),
-    });
-    console.log("loadLatestNews" , this.slides() );
-    
-  }
-
-  private scheduleSliderSync(): void {
-    if (this.syncTimer) clearTimeout(this.syncTimer);
-    this.syncTimer = setTimeout(() => this.createSlider());
-  }
-
-  private createSlider(): void {
-    if (!this.isBrowser || !this.swiperElement || !this.slides().length) return;
-
-    this.slider?.destroy(true, true);
-    this.activeSlide.set(0);
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.slider = new Swiper(this.swiperElement.nativeElement, {
-      modules: [A11y, Autoplay, Keyboard],
-      loop: this.slides().length > 1,
-      slidesPerView: 1,
-      speed: 650,
-      keyboard: { enabled: true },
-      autoplay: reducedMotion
-        ? false
-        : {
-            delay: 4500,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          },
-      on: {
-        slideChange: (swiper) => this.activeSlide.set(swiper.realIndex),
+      next: ({ data }) => {
+        this.slides.set(data.slice(0, 3));
+        this.activeSlide.set(0);
+        this.transitionFrom.set('right');
+        this.startAutoplay();
       },
-      a11y: {
-        prevSlideMessage: 'Previous highlight',
-        nextSlideMessage: 'Next highlight',
+      error: () => {
+        this.slides.set([]);
+        this.stopAutoplay();
       },
     });
-    this.slider.changeLanguageDirection(this.i18n.direction());
   }
 
   protected goToSlide(index: number): void {
-    if (!this.slider) return;
-    if (this.slider.params.loop) {
-      this.slider.slideToLoop(index);
+    if (index < 0 || index >= this.slides().length) return;
+    this.transitionFrom.set(index >= this.activeSlide() ? 'right' : 'left');
+    this.activeSlide.set(index);
+    this.startAutoplay();
+  }
+
+  protected startDrag(event: PointerEvent): void {
+    if (this.slides().length < 2 || event.button !== 0) return;
+
+    this.dragStartX = event.clientX;
+    this.hasDragged = false;
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    this.stopAutoplay();
+  }
+
+  protected endDrag(event: PointerEvent): void {
+    if (this.dragStartX === null) return;
+
+    const dragDistance = event.clientX - this.dragStartX;
+    this.dragStartX = null;
+    const minimumSwipeDistance = 45;
+
+    if (Math.abs(dragDistance) >= minimumSwipeDistance) {
+      this.hasDragged = true;
+      const isNext = this.i18n.direction() === 'rtl' ? dragDistance > 0 : dragDistance < 0;
+      const slideCount = this.slides().length;
+      this.transitionFrom.set(dragDistance < 0 ? 'right' : 'left');
+      this.activeSlide.update((current) => (current + (isNext ? 1 : -1) + slideCount) % slideCount);
+    }
+
+    this.startAutoplay();
+  }
+
+  protected cancelDrag(): void {
+    this.dragStartX = null;
+    this.startAutoplay();
+  }
+
+  protected preventDragClick(event: MouseEvent): void {
+    if (!this.hasDragged) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.hasDragged = false;
+  }
+
+  protected openArticle(article: NewsArticle, event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.hasDragged) {
+      event.preventDefault();
+      this.hasDragged = false;
       return;
     }
-    this.slider.slideTo(index);
+
+    event.preventDefault();
+    void this.router.navigateByUrl(this.articleUrl(article));
+  }
+
+  private startAutoplay(): void {
+    this.stopAutoplay();
+    if (!this.isBrowser || this.slides().length < 2) return;
+
+    this.autoplayTimer = setInterval(() => {
+      this.transitionFrom.set('right');
+      this.activeSlide.update((current) => (current + 1) % this.slides().length);
+    }, 4500);
+  }
+
+  private stopAutoplay(): void {
+    if (!this.autoplayTimer) return;
+    clearInterval(this.autoplayTimer);
+    this.autoplayTimer = undefined;
+  }
+
+  private articleUrl(article: NewsArticle): string {
+    const identifier = article.slug || article.id;
+    return `/${this.i18n.locale()}/news/${encodeURIComponent(identifier)}`;
   }
 }

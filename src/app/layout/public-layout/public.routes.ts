@@ -50,16 +50,17 @@ export const PUBLIC_ROUTES: Routes = [
           ),
       },
       {
-        path: 'news',
-        loadComponent: () =>
-          import('../../features/news/pages/news/news.component').then((m) => m.NewsComponent),
-      },
-      {
         path: 'news/:slug',
         loadComponent: () =>
           import('../../features/news/pages/news-detail/news-detail.component').then(
             (m) => m.NewsDetailComponent,
           ),
+      },
+      {
+        path: 'news',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('../../features/news/pages/news/news.component').then((m) => m.NewsComponent),
       },
       {
         path: 'events',

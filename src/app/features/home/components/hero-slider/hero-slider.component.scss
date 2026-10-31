@@ -6,6 +6,12 @@
   background: #d7dadd;
 }
 
+.hero-slider__viewport {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
 .hero-slider__fallback,
 .hero-slider__veil {
   position: absolute;
@@ -15,7 +21,15 @@
 .hero-slider__slide {
   position: relative;
   min-height: clamp(14.5rem, 42vw, 39rem);
-  animation: hero-slider-fade 250ms ease-out;
+  will-change: opacity, transform;
+
+  &--from-right {
+    animation: hero-slider-enter-from-right 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &--from-left {
+    animation: hero-slider-enter-from-left 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 
 .hero-slider__slide img {
@@ -106,12 +120,25 @@
   outline-offset: 3px;
 }
 
-@keyframes hero-slider-fade {
+@keyframes hero-slider-enter-from-right {
   from {
-    opacity: 0.7;
+    opacity: 0;
+    transform: translateX(2.25rem);
   }
   to {
     opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-slider-enter-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-2.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
