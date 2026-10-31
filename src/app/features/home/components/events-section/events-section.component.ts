@@ -5,6 +5,7 @@ import {
   effect,
   ElementRef,
   inject,
+  input,
   OnDestroy,
   PLATFORM_ID,
   signal,
@@ -14,7 +15,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Swiper from 'swiper';
 import { A11y, Keyboard, Navigation } from 'swiper/modules';
-import { CalendarEvent, EventsService } from '../../../../core/api/events.service';
+import { CalendarEvent, EventsService, EventTimeline } from '../../../../core/api/events.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 
 @Component({
@@ -30,6 +31,8 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
 
   protected readonly i18n = inject(LocaleService);
   protected readonly events = signal<CalendarEvent[]>([]);
+  readonly perPage = input(3);
+  readonly timeline = input<EventTimeline>('upcoming');
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly eventsService = inject(EventsService);
   private slider?: Swiper;
@@ -42,7 +45,12 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
       this.slider.changeLanguageDirection(direction);
       this.slider.update();
     });
-    effect(() => this.loadEvents());
+    effect(() => {
+      this.i18n.locale();
+      this.perPage();
+      this.timeline();
+      this.loadEvents();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -97,7 +105,10 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   private loadEvents(): void {
     const locale = this.i18n.locale();
     this.eventsRequest?.unsubscribe();
-    this.eventsRequest = this.eventsService.list(locale, { timeline: 'upcoming', perPage: 3 }).subscribe({
+    this.eventsRequest = this.eventsService.list(locale, {
+      timeline: this.timeline(),
+      perPage: this.perPage(),
+    }).subscribe({
       next: ({ data }) => {
         this.events.set(data);
         setTimeout(() => this.slider?.update());

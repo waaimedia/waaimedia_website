@@ -4,12 +4,7 @@
 <app-home-stats-section />
 <app-home-services-section />
 <app-home-portfolio-section />
-
-@defer (on viewport; hydrate on viewport) {
-  <app-home-trusted-brands />
-} @placeholder {
-  <div class="home-defer-placeholder home-defer-placeholder--brands" aria-hidden="true"></div>
-}
+<app-home-trusted-brands />
 
 @defer (on viewport; hydrate on viewport) {
   <app-home-events-section />

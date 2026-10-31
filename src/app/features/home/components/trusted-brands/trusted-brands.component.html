@@ -1,5 +1,5 @@
 @if (status() !== 'unavailable' && (status() === 'loading' || brands().length)) {
-  <section class="brands" [attr.aria-label]="i18n.translations().trustedTitle" [attr.aria-busy]="status() === 'loading'">
+  <section #brandsSection class="brands" [attr.aria-label]="i18n.translations().trustedTitle" [attr.aria-busy]="status() === 'loading'">
     <div class="container-fluid">
       <h2>{{ i18n.translations().trustedTitle }}</h2>
 
@@ -11,7 +11,7 @@
         </div>
       } @else {
         <div class="brands__ticker" [class.brands__ticker--static]="brands().length === 1" aria-roledescription="carousel">
-          <div class="brands__ticker-track" [class.brands__ticker-track--animated]="brands().length > 1">
+          <div class="brands__ticker-track" [class.brands__ticker-track--animated]="brands().length > 1 && tickerActive()">
             <div class="brands__ticker-group">
               @for (brand of brands(); track brand.id) {
                 <article class="brand-card">
