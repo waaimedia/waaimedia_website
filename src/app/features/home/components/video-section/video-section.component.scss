@@ -5,19 +5,19 @@
 }
 
 .home-video {
-  overflow: hidden;
-  background: #000;
+  background: #050505;
 }
 
 .home-video__media,
 .home-video__fallback {
   display: block;
-  aspect-ratio: 3.45;
-  max-height: 10rem;
+  width: 100%;
+  height: min(56.25vw, 170px);
+  margin-inline: auto;
 }
 
 .home-video__media {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .home-video__fallback {
@@ -30,10 +30,3 @@
   height: auto;
 }
 
-@media (max-width: 575.98px) {
-  .home-video__media,
-  .home-video__fallback {
-    aspect-ratio: 2.9;
-    min-height: 6.5rem;
-  }
-}
