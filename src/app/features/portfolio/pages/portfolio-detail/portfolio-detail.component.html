@@ -1,0 +1,47 @@
+<main class="portfolio-detail-page container">
+  <section class="portfolio-detail" aria-labelledby="portfolio-detail-title">
+    <header class="portfolio-detail__header">
+      <h1 id="portfolio-detail-title">{{ i18n.translations().portfolioTitle }}</h1>
+      <p>{{ i18n.translations().portfolioDescription }}</p>
+    </header>
+
+    @if (category(); as selectedCategory) {
+      @if (selectedCategory.children?.length) {
+        <div class="portfolio-detail__tabs" role="tablist" [attr.aria-label]="selectedCategory.name">
+          @for (subcategory of selectedCategory.children; track subcategory.id) {
+            <button
+              type="button"
+              role="tab"
+              [class.is-active]="activeSubcategory() === subcategory.slug"
+              [attr.aria-selected]="activeSubcategory() === subcategory.slug"
+              (click)="setActiveSubcategory(subcategory.slug)"
+            >
+              {{ subcategory.name }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="portfolio-detail__gallery" [attr.aria-label]="selectedCategory.name">
+        @for (item of galleryItems; track item.id) {
+          <article class="portfolio-detail__gallery-item" [class]="'portfolio-detail__gallery-item portfolio-detail__gallery-item--' + item.tone">
+            @if (item.imageUrl) {
+              <img [src]="item.imageUrl" alt="" loading="lazy">
+            }
+            @if (selectedClient(); as client) {
+              <div class="portfolio-detail__client-logo">
+                @if (client.logo_url) {
+                  <img [src]="client.logo_url" [alt]="client.name" loading="lazy">
+                } @else {
+                  <span aria-hidden="true">{{ client.name.slice(0, 1) }}</span>
+                }
+              </div>
+            }
+          </article>
+        }
+      </div>
+    } @else if (unavailable()) {
+      <p class="portfolio-detail__empty">Unable to load this portfolio category.</p>
+    }
+  </section>
+</main>

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { PublicLayout } from './public-layout';
-import { RoutePlaceholder } from '../route-placeholder/route-placeholder';
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -29,7 +28,28 @@ export const PUBLIC_ROUTES: Routes = [
             (module) => module.ServicesComponent,
           ),
       },
-      { path: 'portfolio', component: RoutePlaceholder, data: { titleKey: 'portfolio' } },
+      {
+        path: 'portfolio/:category/:clientId',
+        loadComponent: () =>
+          import('../../features/portfolio/pages/portfolio-detail/portfolio-detail.component').then(
+            (m) => m.PortfolioDetailComponent,
+          ),
+      },
+      {
+        path: 'portfolio/:category',
+        loadComponent: () =>
+          import('../../features/portfolio/pages/portfolio-detail/portfolio-detail.component').then(
+            (m) => m.PortfolioDetailComponent,
+          ),
+      },
+      {
+        path: 'portfolio',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('../../features/portfolio/pages/portfolio/portfolio.component').then(
+            (m) => m.PortfolioComponent,
+          ),
+      },
       {
         path: 'blogs',
         loadComponent: () =>

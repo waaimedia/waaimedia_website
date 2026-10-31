@@ -1,0 +1,231 @@
+.portfolio-page {
+  padding-block: 4rem 5rem;
+}
+
+.portfolio__header {
+  margin: 0 auto 30px;
+  max-width: 980px;
+  text-align: center;
+
+  h1 {
+    margin: 0 0 14px;
+    color: #351b27;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: #795967;
+    font-size: 20px;
+    line-height: 1.45;
+  }
+}
+
+.portfolio__tabs {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 42px;
+
+  button {
+    padding: 11px 25px;
+    color: #795967;
+    background: #fbe7ec;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1;
+    transition: background-color 160ms ease, color 160ms ease;
+    white-space: nowrap;
+
+    &.is-active,
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      background: #e43e54;
+      outline: 0;
+    }
+  }
+}
+
+.portfolio__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 48px 22px;
+}
+
+.portfolio-card {
+  min-width: 0;
+
+  &__media {
+    position: relative;
+    aspect-ratio: 1.72;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #d7dadd;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &--social { background: linear-gradient(135deg, #381d2c, #a3425c 48%, #ed8995); }
+    &--production { background: linear-gradient(135deg, #171d28, #70515c 49%, #d6a8a4); }
+    &--pr { background: linear-gradient(135deg, #231751, #245aa2 57%, #8b3bbb); }
+    &--events { background: #1e2635; }
+    &--opening { background: linear-gradient(135deg, #443233, #d9a11a 52%, #f8db75); }
+    &--web { background: linear-gradient(135deg, #192d39, #245368 55%, #79bbc5); }
+  }
+
+  &__category {
+    margin: 14px 0 3px;
+    color: #8b8a8e;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  h2 {
+    margin: 0;
+    color: #3c2831;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+}
+
+.portfolio-clients {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 26px;
+  align-items: start;
+  padding-top: 2px;
+}
+
+.portfolio-client {
+  flex: 0 1 160px;
+  min-width: 0;
+  text-align: center;
+
+  &__logo {
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    span {
+      display: grid;
+      width: 54%;
+      aspect-ratio: 1;
+      place-items: center;
+      color: #fff;
+      background: #e43e54;
+      border-radius: 50%;
+      font-size: 1.9rem;
+      font-weight: 700;
+    }
+  }
+
+  p {
+    margin: 14px 0 3px;
+    color: #8b8a8e;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  h2 {
+    margin: 0;
+    color: #3c2831;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  &--loading {
+    span,
+    i {
+      display: block;
+      margin-inline: auto;
+      background: linear-gradient(90deg, #fff2f4 25%, #ffe3e8 37%, #fff2f4 63%);
+      background-size: 400% 100%;
+      animation: portfolio-placeholder 1.4s ease infinite;
+    }
+
+    span {
+      width: min(100%, 132px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+    }
+
+    i {
+      width: 72%;
+      height: 0.9rem;
+      margin-top: 18px;
+      border-radius: 99px;
+    }
+  }
+}
+
+.portfolio-clients__empty {
+  flex-basis: 100%;
+  margin: 2rem 0;
+  color: #795967;
+  text-align: center;
+}
+
+@keyframes portfolio-placeholder {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (max-width: 1080px) {
+  .portfolio__tabs { flex-wrap: wrap; }
+}
+
+@media (max-width: 860px) {
+  .portfolio-page { padding: 48px 22px; }
+  .portfolio__header p { font-size: 18px; }
+  .portfolio__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .portfolio-page { padding: 38px 16px; }
+
+  .portfolio__header {
+    margin-bottom: 24px;
+
+    h1 { font-size: 27px; }
+    p { font-size: 16px; }
+  }
+
+  .portfolio__tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin-right: -16px;
+    margin-left: -16px;
+    padding: 0 16px 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .portfolio__grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .portfolio-clients { gap: 28px 20px; }
+}

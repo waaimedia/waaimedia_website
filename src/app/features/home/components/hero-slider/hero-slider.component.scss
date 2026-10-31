@@ -45,7 +45,8 @@
 }
 
 .hero-slider__veil {
-  background: rgb(255 255 255 / 28%);
+      background: #000;
+    opacity: .35;
 }
 
 .hero-slider__content {
@@ -61,12 +62,14 @@
 
 .hero-slider h1 {
   margin-bottom: 0.65rem;
+  color: #fff;
   font-size: clamp(1.35rem, 2.05vw, 2.1rem);
 }
 
 .hero-slider p {
   max-width: 50rem;
   margin: 0 0 1.25rem;
+  color: rgb(255 255 255 / 92%);
   font-size: clamp(0.85rem, 1.2vw, 1.2rem);
   line-height: 1.45;
 }
