@@ -7,7 +7,7 @@
 <app-home-trusted-brands />
 
 @defer (on viewport; hydrate on viewport) {
-  <app-home-events-section />
+  <app-home-events-section [perPage]="6" />
 } @placeholder {
   <div class="home-defer-placeholder home-defer-placeholder--events" aria-hidden="true"></div>
 }
