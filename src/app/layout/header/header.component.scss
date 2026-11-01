@@ -250,6 +250,13 @@
 
   .site-header__news-menu.is-open .site-header__news-dropdown {
     display: grid;
+    row-gap: 0.65rem;
+  }
+
+  .site-header__news-dropdown a {
+    display: block;
+    padding-block: 0.35rem;
+    border-block-end: 0;
   }
 
   .site-header__subcategory-arrow {
@@ -259,6 +266,9 @@
   .site-header__subcategories {
     position: static;
     display: grid;
+    row-gap: 0.5rem;
+    margin-block-start: 0.25rem;
+    padding-inline-start: 0.85rem;
     box-shadow: none;
   }
 

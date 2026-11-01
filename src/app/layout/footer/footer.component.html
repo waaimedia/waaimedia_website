@@ -71,11 +71,74 @@
       </summary>
       <div class="site-footer__group-links">
         @for (link of menuLinks(); track link.path) {
-          <a [routerLink]="link.url">{{ i18n.translations()[link.key] }}</a>
+          @if (link.path === 'news') {
+            <div class="accordion accordion-flush site-footer__news-accordion">
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button
+                    class="accordion-button"
+                    type="button"
+                    [class.collapsed]="!newsMenuOpen()"
+                    [attr.aria-expanded]="newsMenuOpen()"
+                    aria-controls="footer-news-categories"
+                    (click)="toggleNewsMenu()"
+                  >
+                    {{ i18n.translations()[link.key] }}
+                  </button>
+                </h3>
+                <div
+                  id="footer-news-categories"
+                  class="accordion-collapse collapse"
+                  [class.show]="newsMenuOpen()"
+                >
+                  @if (newsCategories().length) {
+                    <div class="accordion-body site-footer__news-categories">
+                      @for (category of newsCategories(); track category.id) {
+                        <div class="site-footer__news-category">
+                          <a [routerLink]="['/', i18n.locale(), 'news', 'category', category.slug]">
+                            {{ category.name }}
+                          </a>
+                          @if (category.children?.length) {
+                            <div class="site-footer__news-subcategories">
+                              @for (subcategory of category.children; track subcategory.id) {
+                                <a [routerLink]="['/', i18n.locale(), 'news', 'category', subcategory.slug]">
+                                  {{ subcategory.name }}
+                                </a>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          } @else {
+            <a [routerLink]="link.url">{{ i18n.translations()[link.key] }}</a>
+          }
         }
       </div>
     </details>
   </div>
+  @if (appStoreLinks().length > 0) {
+    <nav class="site-footer__app-links container" [attr.aria-label]="i18n.translations().mobileAppDownloads">
+      @for (appStore of appStoreLinks(); track appStore.href) {
+        <a
+          [href]="appStore.href"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="i18n.translations()[appStore.labelKey]"
+        >
+          <img [src]="appStore.iconSrc" width="24" height="28" alt="" />
+          <span class="site-footer__app-link-copy">
+            <span class="site-footer__app-link-prompt">{{ i18n.translations()[appStore.promptKey] }}</span>
+            <span class="site-footer__app-link-store">{{ i18n.translations()[appStore.storeNameKey] }}</span>
+          </span>
+        </a>
+      }
+    </nav>
+  }
   <div class="site-footer__whatsapp container">
     <app-whatsapp-action/>
   </div>

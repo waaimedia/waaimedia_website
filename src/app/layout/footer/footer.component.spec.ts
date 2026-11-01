@@ -1,12 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { CategoriesService } from '../../core/api/categories.service';
 import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FooterComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: CategoriesService, useValue: { news: () => of({ data: [] }) } },
+      ],
     }).compileComponents();
   });
 

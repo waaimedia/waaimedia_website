@@ -1,7 +1,11 @@
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AppLinksService } from '../../core/api/app-links.service';
+import { CategoriesService, PublicCategory } from '../../core/api/categories.service';
 import { ContactInfoService } from '../../core/api/contact-info.service';
+import { Locale } from '../../core/i18n/locale';
 import { SocialIconComponent } from '../../shared/social-icon/social-icon.component';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { TranslationKey } from '../../core/i18n/translations';
@@ -11,6 +15,14 @@ import { WhatsAppActionComponent } from '../whatsapp-action/whatsapp-action.comp
 interface FooterLink {
   readonly key: TranslationKey;
   readonly path: string;
+}
+
+interface AppStoreLink {
+  readonly href: string;
+  readonly iconSrc: string;
+  readonly labelKey: 'downloadOnAppStore' | 'getItOnGooglePlay';
+  readonly promptKey: 'downloadOn' | 'getItOn';
+  readonly storeNameKey: 'appStore' | 'googlePlay';
 }
 
 const FOOTER_MENU: readonly FooterLink[] = [
@@ -36,11 +48,17 @@ const FOOTER_PORTFOLIO: readonly FooterLink[] = [
   imports: [NgOptimizedImage, RouterLink, SocialIconComponent, WhatsAppActionComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
+  host: {
+    '(window:resize)': 'updateViewport()',
+  },
 })
-export class FooterComponent {
+export class FooterComponent implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly localeService = inject(LocaleService);
   private readonly contactInfoService = inject(ContactInfoService);
+  private readonly appLinksService = inject(AppLinksService);
+  private readonly categoriesService = inject(CategoriesService);
+  private categoriesRequest?: Subscription;
 
   protected readonly i18n = this.localeService;
   protected readonly brandLogoSrc = INVERSE_LOGO_SRC;
@@ -50,6 +68,33 @@ export class FooterComponent {
       ...link,
       href: contactInfo?.[link.platform]?.trim() || link.href,
     }));
+  });
+  protected readonly appStoreLinks = computed<readonly AppStoreLink[]>(() => {
+    const appLinks = this.appLinksService.appLinks();
+    if (!appLinks) return [];
+
+    const storeLinks: Array<AppStoreLink | null> = [
+      appLinks.apple_app_store_link
+        ? {
+            href: appLinks.apple_app_store_link,
+            iconSrc: '/images/icons/app-store.svg',
+            labelKey: 'downloadOnAppStore' as const,
+            promptKey: 'downloadOn' as const,
+            storeNameKey: 'appStore' as const,
+          }
+        : null,
+      appLinks.google_app_link
+        ? {
+            href: appLinks.google_app_link,
+            iconSrc: '/images/icons/google-play.svg',
+            labelKey: 'getItOnGooglePlay' as const,
+            promptKey: 'getItOn' as const,
+            storeNameKey: 'googlePlay' as const,
+          }
+        : null,
+    ];
+
+    return storeLinks.filter((link): link is AppStoreLink => link !== null);
   });
   protected readonly contactAddress = computed(
     () => this.contactInfoService.contactInfo()?.complete_address ?? this.i18n.translations().footerContactAddress,
@@ -62,9 +107,18 @@ export class FooterComponent {
   );
   protected readonly isMobile = signal(false);
   protected readonly expandedGroups = signal<ReadonlySet<string>>(new Set());
+  protected readonly newsCategories = signal<readonly PublicCategory[]>([]);
+  protected readonly newsMenuOpen = signal(false);
 
   constructor() {
     this.contactInfoService.load();
+    this.appLinksService.load();
+    this.updateViewport();
+    effect(() => this.loadNewsCategories(this.localeService.locale()));
+  }
+
+  ngOnDestroy(): void {
+    this.categoriesRequest?.unsubscribe();
   }
   protected readonly menuLinks = computed(() =>
     FOOTER_MENU.map((link) => ({
@@ -105,6 +159,22 @@ export class FooterComponent {
         next.delete(group);
       }
       return next;
+    });
+  }
+
+  protected updateViewport(): void {
+    this.isMobile.set((this.document.defaultView?.innerWidth ?? Number.POSITIVE_INFINITY) <= 767.98);
+  }
+
+  protected toggleNewsMenu(): void {
+    this.newsMenuOpen.update((isOpen) => !isOpen);
+  }
+
+  private loadNewsCategories(locale: Locale): void {
+    this.categoriesRequest?.unsubscribe();
+    this.categoriesRequest = this.categoriesService.news(locale).subscribe({
+      next: ({ data }) => this.newsCategories.set(data),
+      error: () => this.newsCategories.set([]),
     });
   }
 }
