@@ -33,6 +33,15 @@
           <article class="portfolio-detail__gallery-item">
             @if (media.image_url) {
               <img [src]="media.image_url" [alt]="sourceItem.title" loading="lazy">
+              @if (sourceItem.kind === 'images') {
+                <div class="portfolio-detail__client-logo">
+                  @if (sourceItem.client.logo_url) {
+                    <img [src]="sourceItem.client.logo_url" [alt]="sourceItem.client.name" loading="lazy">
+                  } @else {
+                    <span aria-hidden="true">{{ sourceItem.client.name.slice(0, 1) }}</span>
+                  }
+                </div>
+              }
               @if (sourceItem.kind === 'web_design') {
                 <div class="portfolio-detail__web-links" [class.portfolio-detail__web-links--rtl]="i18n.locale() === 'ar'" [attr.aria-label]="sourceItem.title">
                   @for (link of [sourceItem.link_1, sourceItem.link_2, sourceItem.link_3]; track $index) {

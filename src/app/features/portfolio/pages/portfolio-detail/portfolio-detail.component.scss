@@ -175,8 +175,8 @@
 .portfolio-detail__client-logo {
   position: absolute;
   z-index: 2;
-  bottom: 14px;
-  left: 14px;
+  inset-block-end: 14px;
+  inset-inline-start: 14px;
   display: grid;
   width: 54px;
   aspect-ratio: 1;
