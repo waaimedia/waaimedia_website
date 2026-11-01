@@ -211,6 +211,12 @@
   text-align: center;
 }
 
+.portfolio-detail__group-loading {
+  margin: 3rem 0;
+  color: #795967;
+  text-align: center;
+}
+
 @media (max-width: 860px) {
   .portfolio-detail-page { padding: 48px 22px; }
   .portfolio-detail__header p { font-size: 18px; }

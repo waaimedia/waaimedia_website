@@ -7,24 +7,35 @@
         <p>{{ portfolioItem.client.name }}</p>
       </header>
 
-      @if (portfolioItem.client_category_items.length > 1) {
+      @if (subcategoryGroups().length > 1) {
         <div class="portfolio-detail__tabs" role="tablist" [attr.aria-label]="portfolioItem.client.name">
-          @for (sibling of portfolioItem.client_category_items; track sibling.id) {
-            <button type="button" role="tab" [class.is-active]="sibling.is_current" [attr.aria-selected]="sibling.is_current" (click)="selectItem(sibling.slug || sibling.id)">
-              {{ sibling.subcategory?.name || sibling.title }}
+          @for (group of subcategoryGroups(); track group.id) {
+            <button
+              type="button"
+              role="tab"
+              [class.is-active]="activeSubcategoryId() === group.id"
+              [attr.aria-selected]="activeSubcategoryId() === group.id"
+              (click)="selectSubcategoryGroup(group)"
+            >
+              {{ group.name }}
             </button>
           }
         </div>
       }
 
+      @if (groupLoading()) {
+        <p class="portfolio-detail__group-loading" aria-live="polite">Loading portfolio work…</p>
+      } @else {
       <div class="portfolio-detail__gallery" [attr.aria-label]="portfolioItem.title">
-        @for (media of portfolioItem.media; track media.id) {
+        @for (groupedMedia of groupMedia(); track groupedMedia.key) {
+          @let media = groupedMedia.media;
+          @let sourceItem = groupedMedia.item;
           <article class="portfolio-detail__gallery-item">
             @if (media.image_url) {
-              <img [src]="media.image_url" [alt]="portfolioItem.title" loading="lazy">
-              @if (portfolioItem.kind === 'web_design') {
-                <div class="portfolio-detail__web-links" [class.portfolio-detail__web-links--rtl]="i18n.locale() === 'ar'" [attr.aria-label]="portfolioItem.title">
-                  @for (link of [portfolioItem.link_1, portfolioItem.link_2, portfolioItem.link_3]; track $index) {
+              <img [src]="media.image_url" [alt]="sourceItem.title" loading="lazy">
+              @if (sourceItem.kind === 'web_design') {
+                <div class="portfolio-detail__web-links" [class.portfolio-detail__web-links--rtl]="i18n.locale() === 'ar'" [attr.aria-label]="sourceItem.title">
+                  @for (link of [sourceItem.link_1, sourceItem.link_2, sourceItem.link_3]; track $index) {
                     @if (link) {
                       <a
                         [class]="'portfolio-detail__web-link portfolio-detail__web-link--' + webLinkPlatform(link)"
@@ -54,7 +65,7 @@
                 <iframe
                   class="portfolio-detail__video"
                   [src]="embedVideoUrl(media.url)"
-                  [title]="portfolioItem.title"
+                  [title]="sourceItem.title"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 ></iframe>
@@ -73,6 +84,7 @@
           </article>
         }
       </div>
+      }
 
     } @else if (!loading()) {
       <p class="portfolio-detail__empty">

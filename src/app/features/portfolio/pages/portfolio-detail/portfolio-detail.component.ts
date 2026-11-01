@@ -1,13 +1,30 @@
 import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
 import { CategoriesService } from '../../../../core/api/categories.service';
-import { PortfolioDetails, PortfolioService } from '../../../../core/api/portfolio.service';
+import {
+  PortfolioDetails,
+  PortfolioMedia,
+  PortfolioService,
+  PortfolioSibling,
+} from '../../../../core/api/portfolio.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
 
 type WebLinkPlatform = 'behance' | 'figma' | 'dribbble' | 'website';
+
+interface PortfolioSubcategoryGroup {
+  readonly id: string;
+  readonly name: string;
+  readonly items: readonly PortfolioSibling[];
+}
+
+interface PortfolioGroupMedia {
+  readonly key: string;
+  readonly item: PortfolioDetails;
+  readonly media: PortfolioMedia;
+}
 
 @Component({
   selector: 'app-portfolio-detail',
@@ -19,6 +36,10 @@ export class PortfolioDetailComponent implements OnDestroy {
   protected readonly item = signal<PortfolioDetails | null>(null);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
+  protected readonly groupLoading = signal(false);
+  protected readonly activeSubcategoryId = signal<string | null>(null);
+  protected readonly groupMedia = signal<readonly PortfolioGroupMedia[]>([]);
+  protected readonly subcategoryGroups = signal<readonly PortfolioSubcategoryGroup[]>([]);
 
   private readonly route = inject(ActivatedRoute);
   private readonly categories = inject(CategoriesService);
@@ -30,6 +51,7 @@ export class PortfolioDetailComponent implements OnDestroy {
   private readonly clientId = signal<number | null>(null);
   private routeRequest?: Subscription;
   private detailsRequest?: Subscription;
+  private groupRequest?: Subscription;
   private readonly routeSubscription = this.route.paramMap.subscribe((params) => {
     this.routeIdentifier.set(params.get('identifier'));
     this.categorySlug.set(params.get('category'));
@@ -61,10 +83,13 @@ export class PortfolioDetailComponent implements OnDestroy {
     this.routeSubscription.unsubscribe();
     this.routeRequest?.unsubscribe();
     this.detailsRequest?.unsubscribe();
+    this.groupRequest?.unsubscribe();
   }
 
-  protected selectItem(identifier: number | string): void {
-    this.loadItem(this.i18n.locale(), identifier);
+  protected selectSubcategoryGroup(group: PortfolioSubcategoryGroup): void {
+    if (this.activeSubcategoryId() === group.id && !this.groupLoading()) return;
+    this.activeSubcategoryId.set(group.id);
+    this.loadGroupMedia(this.i18n.locale(), group);
   }
 
   protected videoProvider(url: string | null): 'youtube' | 'vimeo' | 'file' | 'external' {
@@ -170,6 +195,13 @@ export class PortfolioDetailComponent implements OnDestroy {
     this.detailsRequest = this.portfolio.getByIdentifier(locale, identifier).subscribe({
       next: ({ data }) => {
         this.item.set(data);
+        const groups = this.createSubcategoryGroups(data.client_category_items);
+        const currentGroup = groups.find((group) => group.items.some((sibling) => sibling.id === data.id));
+
+        this.subcategoryGroups.set(groups);
+        this.activeSubcategoryId.set(currentGroup?.id ?? null);
+        this.groupMedia.set(this.mediaFromItems([data]));
+        if (currentGroup) this.loadGroupMedia(locale, currentGroup, data);
         this.loading.set(false);
         this.unavailable.set(false);
         this.seo.update({
@@ -186,13 +218,74 @@ export class PortfolioDetailComponent implements OnDestroy {
 
   private startLoading(): void {
     this.item.set(null);
+    this.subcategoryGroups.set([]);
+    this.activeSubcategoryId.set(null);
+    this.groupMedia.set([]);
+    this.groupLoading.set(false);
+    this.groupRequest?.unsubscribe();
     this.loading.set(true);
     this.unavailable.set(false);
   }
 
   private fail(): void {
     this.item.set(null);
+    this.groupMedia.set([]);
+    this.groupLoading.set(false);
     this.loading.set(false);
     this.unavailable.set(true);
+  }
+
+  private createSubcategoryGroups(siblings: readonly PortfolioSibling[]): readonly PortfolioSubcategoryGroup[] {
+    const groups = new Map<string, PortfolioSubcategoryGroup>();
+
+    for (const sibling of siblings) {
+      const id = sibling.subcategory ? `subcategory-${sibling.subcategory.id}` : `item-${sibling.id}`;
+      const name = sibling.subcategory?.name || sibling.title;
+      const existing = groups.get(id);
+
+      groups.set(id, existing ? { ...existing, items: [...existing.items, sibling] } : { id, name, items: [sibling] });
+    }
+
+    return [...groups.values()];
+  }
+
+  private loadGroupMedia(
+    locale: 'en' | 'ar',
+    group: PortfolioSubcategoryGroup,
+    currentItem?: PortfolioDetails,
+  ): void {
+    this.groupRequest?.unsubscribe();
+    this.groupLoading.set(true);
+
+    const itemRequests = group.items.map((sibling) =>
+      currentItem?.id === sibling.id
+        ? of(currentItem)
+        : this.portfolio.getByIdentifier(locale, sibling.slug || sibling.id).pipe(
+            map(({ data }) => data),
+            catchError(() => of(null)),
+          ),
+    );
+
+    this.groupRequest = forkJoin(itemRequests).subscribe({
+      next: (items) => {
+        const groupItems = items.filter((item): item is PortfolioDetails => item !== null);
+        if (groupItems.length) {
+          this.groupMedia.set(this.mediaFromItems(groupItems));
+          if (!currentItem) this.item.set(groupItems[0]);
+        }
+        this.groupLoading.set(false);
+      },
+      error: () => this.groupLoading.set(false),
+    });
+  }
+
+  private mediaFromItems(items: readonly PortfolioDetails[]): readonly PortfolioGroupMedia[] {
+    return items.flatMap((item) =>
+      item.media.map((media) => ({
+        key: `${item.id}-${media.id}`,
+        item,
+        media,
+      })),
+    );
   }
 }
