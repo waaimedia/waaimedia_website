@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import Swiper from 'swiper';
-import { A11y, Keyboard, Navigation } from 'swiper/modules';
+import { A11y, Autoplay, Keyboard, Navigation } from 'swiper/modules';
 import { TeamMember, TeamMembersLoadState, TeamMembersService } from '../../../../core/api/team-members.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 
@@ -80,13 +80,19 @@ export class TeamSectionComponent implements AfterViewInit, OnDestroy {
     }
 
     this.slider = new Swiper(this.swiperElement.nativeElement, {
-      modules: [A11y, Keyboard, Navigation],
+      modules: [A11y, Autoplay, Keyboard, Navigation],
       slidesPerView: 'auto',
       spaceBetween: 18,
-      speed: 550,
-      loop: false,
+      speed: 4200,
+      // Keep navigation continuous: after the last team member, return to the first.
+      loop: true,
       centerInsufficientSlides: true,
-      watchOverflow: true,
+      watchOverflow: false,
+      grabCursor: true,
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+      },
       observer: true,
       observeParents: true,
       resizeObserver: true,
