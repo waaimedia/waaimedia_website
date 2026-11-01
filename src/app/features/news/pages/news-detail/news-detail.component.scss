@@ -169,9 +169,12 @@
 
   img {
     display: block;
-    width: 100%;
+    // Preserve the width chosen in the editor (or the image's natural width).
+    // `width: 100%` made every inline image fill the whole article column.
+    width: auto;
     max-width: 100%;
     height: auto;
+    margin-inline: auto;
     border-radius: 0.6rem;
   }
 
