@@ -18,7 +18,14 @@
         [class.hero-slider__slide--from-right]="transitionFrom() === 'right'"
       >
         @if (slide.featured_image_url) {
-          <img [src]="slide.featured_image_url" [alt]="slide.title" />
+          <img
+            [src]="slide.featured_image_url"
+            [alt]="slide.title"
+            width="1600"
+            height="900"
+            fetchpriority="high"
+            decoding="async"
+          />
         } @else {
           <div class="hero-slider__fallback" aria-hidden="true"></div>
         }
@@ -36,6 +43,12 @@
           </a>
         </div>
       </article>
+    } @else {
+      <div class="hero-slider__fallback" aria-hidden="true"></div>
+      <div class="hero-slider__content container">
+        <h1>{{ i18n.translations().heroTitle }}</h1>
+        <p>{{ i18n.translations().heroDescription }}</p>
+      </div>
     }
   </div>
 

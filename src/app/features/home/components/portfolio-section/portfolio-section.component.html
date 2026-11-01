@@ -10,7 +10,7 @@
           <article [routerLink]="['/', i18n.locale(), 'portfolio', 'item', item.slug]" tabindex="0" role="link">
             <div class="work-media">
               @if (item.cover_image_url) {
-                <img [src]="item.cover_image_url" [alt]="item.title" loading="lazy">
+                <img [src]="item.cover_image_url" [alt]="item.title" loading="lazy" decoding="async" width="640" height="400">
               }
             </div>
             <small>{{ item.subcategory?.name || item.category.name }}</small>

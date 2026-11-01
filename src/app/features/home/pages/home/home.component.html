@@ -1,12 +1,23 @@
-<app-home-video-section />
+@defer (on timer(3s); prefetch on idle) {
+  <app-home-video-section />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--video" aria-hidden="true"></div>
+}
+
 <app-home-hero-slider />
-<app-home-about-section />
+
+@defer (on viewport; prefetch on idle) {
+  <app-home-about-section />
+} @placeholder {
+  <div class="home-defer-placeholder home-defer-placeholder--about" aria-hidden="true"></div>
+}
+
 <app-home-stats-section />
 <app-home-services-section />
 <app-home-portfolio-section />
 <app-home-trusted-brands />
 
-@defer (on viewport; hydrate on viewport) {
+@defer (on viewport) {
   <app-home-events-section [perPage]="6" />
 } @placeholder {
   <div class="home-defer-placeholder home-defer-placeholder--events" aria-hidden="true"></div>
@@ -14,13 +25,13 @@
 
 <app-home-blogs-section />
 
-@defer (on viewport; hydrate on viewport) {
+@defer (on viewport) {
   <app-home-team-section />
 } @placeholder {
   <div class="home-defer-placeholder home-defer-placeholder--team" aria-hidden="true"></div>
 }
 
-@defer (on viewport; hydrate on viewport) {
+@defer (on viewport) {
   <app-home-contact-section />
 } @placeholder {
   <div class="home-defer-placeholder home-defer-placeholder--contact" aria-hidden="true"></div>

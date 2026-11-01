@@ -11,23 +11,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
-    <link
-      id="bootstrap-ltr"
-      rel="stylesheet"
-      href="assets/bootstrap/bootstrap.min.css"
-      data-beasties-skip
-    />
-    <link
-      id="bootstrap-rtl"
-      rel="stylesheet"
-      href="assets/bootstrap/bootstrap.rtl.min.css"
-      media="not all"
-      disabled
-      data-beasties-skip
-    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
   </head>
 <body>
     <app-root></app-root>

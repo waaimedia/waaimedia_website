@@ -28,7 +28,7 @@ export class TrustedBrandsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.isBrowser || !this.brandsSection) return;
+    if (!this.isBrowser || !this.brandsSection || !('IntersectionObserver' in window)) return;
 
     this.observer = new IntersectionObserver(
       ([entry]) => {

@@ -31,14 +31,64 @@ body {
   background-color: $color-background;
 }
 
-// One shared content boundary for every full-width site band. This deliberately
-// uses Bootstrap's `.container` class so TopBar, Header, brand strip, footer,
-// and routed content all share the same responsive gutters and max widths.
+// One shared content boundary for every full-width site band.
 .container {
   width: 100%;
   max-width: 100%;
   margin-inline: auto;
   padding-inline: 0.75rem;
+}
+
+.container-fluid {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 0.75rem;
+}
+
+// Small compatibility layer for the few layout helpers used by the templates.
+// Keeping these local avoids shipping the full Bootstrap stylesheet on every page.
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.gap-3 { gap: 1rem; }
+.mb-0 { margin-bottom: 0; }
+.mb-3 { margin-bottom: 1rem; }
+
+.accordion-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.accordion-button::after {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-start: 0.75rem;
+  border-inline-end: 1px solid currentColor;
+  border-block-end: 1px solid currentColor;
+  content: '';
+  transform: rotate(45deg) translateY(-0.125rem);
+  transition: transform 150ms ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(225deg) translate(-0.125rem, -0.125rem);
+}
+
+.collapse:not(.show) { display: none; }
+.accordion-body { padding: 0.5rem 0; }
+
+@media (min-width: 768px) {
+  .px-md-5 { padding-inline: 3rem; }
+  .mx-md-5 { margin-inline: 3rem; }
 }
 
 @each $breakpoint, $container-max-width in $container-max-widths {

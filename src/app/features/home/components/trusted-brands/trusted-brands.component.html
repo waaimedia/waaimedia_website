@@ -17,7 +17,7 @@
                 <article class="brand-card">
                   <div class="brand-slot" [class.brand-slot--image]="brand.logo_url">
                     @if (brand.logo_url) {
-                      <img [src]="brand.logo_url" [alt]="brand.name" loading="lazy" />
+                      <img [src]="brand.logo_url" [alt]="brand.name" loading="lazy" decoding="async" width="201" height="96" />
                     } @else {
                       <span aria-hidden="true">{{ initials(brand.name) }}</span>
                     }
@@ -33,7 +33,7 @@
                   <article class="brand-card">
                     <div class="brand-slot">
                       @if (brand.logo_url) {
-                        <img [src]="brand.logo_url" alt="" loading="lazy" />
+                        <img [src]="brand.logo_url" alt="" loading="lazy" decoding="async" width="201" height="96" />
                       } @else {
                         <span>{{ initials(brand.name) }}</span>
                       }

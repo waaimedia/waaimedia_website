@@ -9,6 +9,15 @@
   width: 100%;
 }
 
+.home-defer-placeholder--video {
+  height: min(56.25vw, 10.625rem);
+  background: #050505;
+}
+
+.home-defer-placeholder--about {
+  min-height: 24rem;
+}
+
 .home-defer-placeholder--brands {
   min-height: 22rem;
 }
@@ -26,6 +35,10 @@
 }
 
 @media (max-width: 767.98px) {
+  .home-defer-placeholder--about {
+    min-height: 31rem;
+  }
+
   .home-defer-placeholder--brands {
     min-height: 18rem;
   }

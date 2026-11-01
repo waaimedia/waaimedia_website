@@ -4,11 +4,6 @@ import { Meta, Title } from '@angular/platform-browser';
 import { Locale, directionFor } from './locale';
 import { staticTranslations, TranslationKey } from './translations';
 
-const BOOTSTRAP_STYLESHEETS = {
-  ltr: { id: 'bootstrap-ltr', href: 'assets/bootstrap/bootstrap.min.css' },
-  rtl: { id: 'bootstrap-rtl', href: 'assets/bootstrap/bootstrap.rtl.min.css' },
-} as const;
-
 @Injectable({ providedIn: 'root' })
 export class LocaleService {
   private readonly document = inject(DOCUMENT);
@@ -29,8 +24,6 @@ export class LocaleService {
     this.currentLocale.set(locale);
     this.document.documentElement.lang = locale;
     this.document.documentElement.dir = direction;
-    this.setStylesheetEnabled(BOOTSTRAP_STYLESHEETS.ltr, direction === 'ltr');
-    this.setStylesheetEnabled(BOOTSTRAP_STYLESHEETS.rtl, direction === 'rtl');
     this.title.setTitle(staticTranslations[locale].brandName);
     this.meta.updateTag({
       name: 'description',
@@ -38,23 +31,4 @@ export class LocaleService {
     });
   }
 
-  private setStylesheetEnabled(
-    config: (typeof BOOTSTRAP_STYLESHEETS)[keyof typeof BOOTSTRAP_STYLESHEETS],
-    enabled: boolean,
-  ): void {
-    const stylesheet = this.document.getElementById(config.id);
-
-    if (!stylesheet) {
-      return;
-    }
-
-    stylesheet.setAttribute('media', enabled ? 'all' : 'not all');
-    if (enabled) {
-      stylesheet.setAttribute('href', config.href);
-      stylesheet.removeAttribute('disabled');
-    } else {
-      stylesheet.removeAttribute('href');
-      stylesheet.setAttribute('disabled', '');
-    }
-  }
 }
