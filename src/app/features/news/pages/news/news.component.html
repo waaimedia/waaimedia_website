@@ -72,7 +72,13 @@
         }
       </div>
     } @else if (!loading()) {
-      <p class="news__empty">{{ unavailable() ? 'Unable to load news right now.' : 'No news articles have been published yet.' }}</p>
+      <div class="news__empty" role="status">
+        <span class="news__empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M10 8h21l7 7v25H10z"/><path d="M31 8v8h7M17 24h14M17 31h14"/></svg>
+        </span>
+        <h2>{{ unavailable() ? i18n.translations().contentUnavailableTitle : isCategoryPage() ? i18n.translations().emptyNewsCategoryTitle : i18n.translations().emptyNewsTitle }}</h2>
+        <p>{{ unavailable() ? i18n.translations().contentUnavailableDescription : isCategoryPage() ? i18n.translations().emptyNewsCategoryDescription : i18n.translations().emptyNewsDescription }}</p>
+      </div>
     }
   </section>
 </main>

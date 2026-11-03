@@ -184,9 +184,30 @@
 
 .portfolio-clients__empty {
   flex-basis: 100%;
-  margin: 2rem 0;
+  max-width: 42rem;
+  margin: 2rem auto;
+  padding: 2.25rem 1.5rem;
   color: #795967;
+  background: #fff7f8;
+  border: 1px solid #f3d8de;
+  border-radius: 0.75rem;
   text-align: center;
+
+  h2 { margin: 0 0 0.5rem; color: #351b27; font-size: 1.2rem; font-weight: 600; }
+  p { margin: 0; line-height: 1.5; }
+}
+
+.portfolio-clients__empty-icon {
+  display: grid;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  margin: 0 auto 1rem;
+  color: #e43e54;
+  background: #fbe7ec;
+  border-radius: 50%;
+
+  svg { width: 1.9rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 }
 
 .portfolio__load-more {

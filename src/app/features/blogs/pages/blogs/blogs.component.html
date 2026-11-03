@@ -77,7 +77,13 @@
         }
       </div>
     } @else if (!loading()) {
-      <p class="blogs__empty">{{ unavailable() ? 'Unable to load blogs right now.' : 'No blog posts have been published yet.' }}</p>
+      <div class="blogs__empty" role="status">
+        <span class="blogs__empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M10 8h21l7 7v25H10z"/><path d="M31 8v8h7M17 24h14M17 31h14"/></svg>
+        </span>
+        <h2>{{ unavailable() ? i18n.translations().contentUnavailableTitle : activeTab() === 'latest' ? i18n.translations().emptyBlogTitle : i18n.translations().emptyBlogCategoryTitle }}</h2>
+        <p>{{ unavailable() ? i18n.translations().contentUnavailableDescription : activeTab() === 'latest' ? i18n.translations().emptyBlogDescription : i18n.translations().emptyBlogCategoryDescription }}</p>
+      </div>
     }
   </section>
 </main>

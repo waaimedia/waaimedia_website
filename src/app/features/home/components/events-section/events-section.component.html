@@ -2,17 +2,20 @@
   <div class="container events-wrap">
     <div class="events-heading">
       <h2>{{ i18n.translations().eventsTitle }}</h2>
-      <div class="events-controls">
-        <button #previousButton type="button" aria-label="Previous events">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
-        </button>
-        <button #nextButton type="button" aria-label="Next events">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
-        </button>
-      </div>
+      @if (events().length) {
+        <div class="events-controls">
+          <button #previousButton type="button" aria-label="Previous events">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
+          </button>
+          <button #nextButton type="button" aria-label="Next events">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
+          </button>
+        </div>
+      }
     </div>
-    <div #eventsSwiper class="swiper events-carousel">
-      <div class="swiper-wrapper">
+    @if (events().length) {
+      <div #eventsSwiper class="swiper events-carousel">
+        <div class="swiper-wrapper">
         @for (event of events(); track event.id) {
           <article class="swiper-slide event-card" [routerLink]="eventUrl(event.slug)" role="link" tabindex="0">
             <div
@@ -28,7 +31,18 @@
             </div>
           </article>
         }
+        </div>
       </div>
-    </div>
+    } @else if (!loading()) {
+      <div class="events-empty" [class.events-empty--calendar]="emptyVariant() === 'calendar'" role="status">
+        <span class="events-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><rect x="7" y="10" width="34" height="31" rx="5"/><path d="M15 6v8M33 6v8M7 19h34M16 27h16M16 33h10"/></svg>
+        </span>
+        <div>
+          <h3>{{ unavailable() ? i18n.translations().contentUnavailableTitle : i18n.translations().emptyEventsTitle }}</h3>
+          <p>{{ unavailable() ? i18n.translations().contentUnavailableDescription : i18n.translations().emptyEventsDescription }}</p>
+        </div>
+      </div>
+    }
   </div>
 </section>

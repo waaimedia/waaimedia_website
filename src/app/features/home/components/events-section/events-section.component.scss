@@ -58,6 +58,33 @@ h2 {
   margin-top: clamp(2.25rem, 3.5vw, 3.5rem);
   overflow: hidden;
 }
+.events-empty {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: center;
+  max-width: 42rem;
+  margin: clamp(2.25rem, 3.5vw, 3.5rem) auto 0;
+  padding: 1.5rem;
+  color: #795967;
+  background: #fff7f8;
+  border: 1px solid #f3d8de;
+  border-radius: 0.75rem;
+  text-align: start;
+}
+.events-empty--calendar { min-height: 10rem; }
+.events-empty__icon {
+  display: grid;
+  width: 3.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  color: #e43e54;
+  background: #fbe7ec;
+  border-radius: 50%;
+}
+.events-empty__icon svg { width: 1.8rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.events-empty h3 { margin: 0 0 0.3rem; color: #351b27; font-size: 1.1rem; }
+.events-empty p { margin: 0; font-size: 0.95rem; }
 .events-carousel .swiper-wrapper {
   align-items: stretch;
 }
@@ -165,6 +192,8 @@ p {
   }
 }
 @media (max-width: 575.98px) {
+  .events-empty { grid-template-columns: 1fr; text-align: center; }
+  .events-empty__icon { margin-inline: auto; }
   .event-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;

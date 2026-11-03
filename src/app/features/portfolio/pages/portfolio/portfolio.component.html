@@ -47,9 +47,13 @@
         }
       </div>
     } @else if (!loading()) {
-      <p class="portfolio-clients__empty">
-        {{ unavailable() ? 'Unable to load portfolio items right now.' : 'No portfolio work has been published yet.' }}
-      </p>
+      <div class="portfolio-clients__empty" role="status">
+        <span class="portfolio-clients__empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><rect x="7" y="11" width="34" height="27" rx="4"/><path d="m7 32 10-9 7 6 6-5 11 8M17 18h.01"/></svg>
+        </span>
+        <h2>{{ unavailable() ? i18n.translations().contentUnavailableTitle : i18n.translations().emptyPortfolioTitle }}</h2>
+        <p>{{ unavailable() ? i18n.translations().contentUnavailableDescription : i18n.translations().emptyPortfolioDescription }}</p>
+      </div>
     }
 
     @if (loading()) {

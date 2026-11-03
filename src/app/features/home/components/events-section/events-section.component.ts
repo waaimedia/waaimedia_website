@@ -33,6 +33,9 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   protected readonly events = signal<CalendarEvent[]>([]);
   readonly perPage = input(3);
   readonly timeline = input<EventTimeline>('upcoming');
+  readonly emptyVariant = input<'home' | 'calendar'>('home');
+  protected readonly loading = signal(true);
+  protected readonly unavailable = signal(false);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly eventsService = inject(EventsService);
   private slider?: Swiper;
@@ -54,6 +57,11 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.initializeSlider();
+  }
+
+  private initializeSlider(): void {
+    if (this.slider) return;
     if (!this.isBrowser || !this.swiperElement || !this.previousButton || !this.nextButton) return;
 
     this.slider = new Swiper(this.swiperElement.nativeElement, {
@@ -105,15 +113,30 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   private loadEvents(): void {
     const locale = this.i18n.locale();
     this.eventsRequest?.unsubscribe();
+    this.loading.set(true);
+    this.unavailable.set(false);
     this.eventsRequest = this.eventsService.list(locale, {
       timeline: this.timeline(),
       perPage: this.perPage(),
     }).subscribe({
       next: ({ data }) => {
+        if (!data.length) this.destroySlider();
         this.events.set(data);
+        this.loading.set(false);
+        setTimeout(() => this.initializeSlider());
         setTimeout(() => this.slider?.update());
       },
-      error: () => this.events.set([]),
+      error: () => {
+        this.destroySlider();
+        this.events.set([]);
+        this.loading.set(false);
+        this.unavailable.set(true);
+      },
     });
+  }
+
+  private destroySlider(): void {
+    this.slider?.destroy(true, true);
+    this.slider = undefined;
   }
 }

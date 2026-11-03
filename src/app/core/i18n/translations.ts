@@ -76,10 +76,18 @@ const english = {
     blogTabToolsAndTech: 'Tools & Tech',
     blogTabBehindTheScenes: 'Behind the Scenes',
     blogReadMore: 'Read More',
+    emptyBlogTitle: 'Nothing published yet',
+    emptyBlogDescription: 'We are working on new insights. Please check back soon.',
+    emptyBlogCategoryTitle: 'No posts in this category yet',
+    emptyBlogCategoryDescription: 'Try another category or check back soon.',
     newsHeading: 'News',
     newsHeroDescription:
       'Stay updated with our latest events, launches, and special moments that bring our community together.',
     newsReadMore: 'Read More',
+    emptyNewsTitle: 'No news published yet',
+    emptyNewsDescription: 'Check back soon for our latest updates and announcements.',
+    emptyNewsCategoryTitle: 'No news in this category yet',
+    emptyNewsCategoryDescription: 'Try another category or check back soon.',
     newsTitle: 'News',
     newsPageDescription:
       'Stay updated with Waai Media news, events, launches, and special moments.',
@@ -92,6 +100,8 @@ const english = {
   eventsCalendarTitle: 'Events Calendar',
   eventsCalendarPageDescription:
     'Explore our upcoming events, activations, exhibitions, and marketing experiences.',
+  emptyEventsTitle: 'No events scheduled yet',
+  emptyEventsDescription: 'New events and experiences will be announced here soon.',
   aboutDescription:
     'We are a full service marketing agency driven by strategy, powered by creativity, and obsessed with results. From branding, content creation, and social media management to performance advertising,',
   aboutPageDescription:
@@ -113,6 +123,10 @@ const english = {
   servicesDescription: 'Comprehensive digital marketing solutions tailored to your business needs',
   portfolioTitle: 'Our Portfolio',
   portfolioDescription: 'Showcasing our successful digital marketing campaigns',
+  emptyPortfolioTitle: 'Our next success story is on its way',
+  emptyPortfolioDescription: 'Check back soon to explore our latest work.',
+  contentUnavailableTitle: 'We could not load this content',
+  contentUnavailableDescription: 'Please refresh the page or try again shortly.',
   trustedTitle: 'Trusted by Leading Brands',
   eventsTitle: 'Events Calendar',
   blogsTitle: 'Our Blogs',
@@ -137,6 +151,20 @@ type StaticTranslationKey = keyof typeof english;
 
 const arabic: Record<StaticTranslationKey, string> = {
   ...english,
+  emptyBlogTitle: 'لا توجد مقالات منشورة حتى الآن',
+  emptyBlogDescription: 'نعمل على إضافة محتوى جديد. يرجى العودة قريبًا.',
+  emptyBlogCategoryTitle: 'لا توجد مقالات في هذه الفئة',
+  emptyBlogCategoryDescription: 'جرب فئة أخرى أو عد قريبًا.',
+  emptyNewsTitle: 'لا توجد أخبار منشورة حتى الآن',
+  emptyNewsDescription: 'عد قريبًا لمتابعة آخر تحديثاتنا وإعلاناتنا.',
+  emptyNewsCategoryTitle: 'لا توجد أخبار في هذه الفئة',
+  emptyNewsCategoryDescription: 'جرب فئة أخرى أو عد قريبًا.',
+  emptyEventsTitle: 'لا توجد فعاليات مجدولة حاليًا',
+  emptyEventsDescription: 'سنعلن عن الفعاليات والتجارب الجديدة هنا قريبًا.',
+  emptyPortfolioTitle: 'قصة نجاحنا القادمة قريبًا',
+  emptyPortfolioDescription: 'عد قريبًا لتستكشف أحدث أعمالنا.',
+  contentUnavailableTitle: 'تعذر تحميل المحتوى',
+  contentUnavailableDescription: 'يرجى تحديث الصفحة أو المحاولة مرة أخرى بعد قليل.',
   aboutPageDescription:
     'نحن وكالة تسويق متكاملة تقودها الاستراتيجية ويدعمها الإبداع وتركز على النتائج. من بناء الهوية وصناعة المحتوى وإدارة وسائل التواصل إلى الإعلانات الموجهة وإنتاج الوسائط وتفعيل الفعاليات، نقدم حلولًا متكاملة تدفع العلامات التجارية إلى الأمام.',
   aboutDifferenceLead: 'ما ',
