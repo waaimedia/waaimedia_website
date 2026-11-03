@@ -26,14 +26,14 @@ describe('HomeComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('h1')).toHaveLength(1);
   });
 
-  it('reserves the deferred video area and renders slider pagination', async () => {
+  it('renders the video immediately and renders slider pagination', async () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [provideRouter([])],
     }).compileComponents();
     const fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.home-defer-placeholder--video')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-home-video-section video')).toBeTruthy();
     const hero = fixture.debugElement.query(By.directive(HeroSliderComponent))
       .componentInstance as HeroSliderComponent;
     hero['slides'].set([

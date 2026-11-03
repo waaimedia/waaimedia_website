@@ -26,7 +26,7 @@ const english = {
   footerPortfolio: 'Portfolio',
   footerDescription:
     'Full service marketing agency fueled by vision, inspired by creativity, and committed to impact.',
-  footerCopyright: 'Copyright © WAAI MEDIA',
+  footerCopyright: 'Copyright © 2025 WAAI MEDIA',
   footerContactAddress: 'World Trade Center\nDowntown Cairo',
   footerContactPhone: '+20 10 24940180',
   footerContactEmail: 'waaimedia@gmail.com',
@@ -261,7 +261,7 @@ const arabic: Record<StaticTranslationKey, string> = {
   footerMenu: 'القائمة',
   footerPortfolio: 'معرض الأعمال',
   footerDescription: 'وكالة تسويق متكاملة برؤية واضحة وإبداع ملهم والتزام بتحقيق أثر ملموس.',
-  footerCopyright: 'حقوق النشر © وعي ميديا',
+  footerCopyright: 'حقوق النشر © 2025 وعي ميديا',
   footerContactAddress: 'مركز التجارة العالمي\nوسط القاهرة',
   footerContactPhone: '+20 10 24940180',
   footerContactEmail: 'waaimedia@gmail.com',

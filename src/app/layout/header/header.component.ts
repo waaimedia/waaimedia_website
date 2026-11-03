@@ -86,11 +86,7 @@ export class HeaderComponent implements OnDestroy {
 
   protected toggleNewsMenu(event: Event): void {
     event.stopPropagation();
-    if (this.newsMenuOpen()) {
-      this.closeMenu();
-      return;
-    }
-    this.newsMenuOpen.set(true);
+    this.newsMenuOpen.update((isOpen) => !isOpen);
   }
 
   protected switchLanguage(): void {
