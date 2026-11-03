@@ -14,7 +14,7 @@
 <app-home-trusted-brands />
 
 @defer (on viewport) {
-  <app-home-events-section [perPage]="6" />
+  <app-home-events-section [perPage]="6" [continuous]="true" />
 } @placeholder {
   <div class="home-defer-placeholder home-defer-placeholder--events" aria-hidden="true"></div>
 }
