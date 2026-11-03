@@ -23,30 +23,21 @@
   }
 }
 
-.portfolio-detail__eyebrow {
-  margin-bottom: 0.5rem !important;
-  color: #e43e54 !important;
-  font-size: 0.9rem !important;
-  font-weight: 600;
-}
-
 .portfolio-detail__tabs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 14px;
-  margin-bottom: 42px;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
 
   button {
-    padding: 11px 25px;
+    padding: 0.7rem 1.55rem;
     color: #795967;
     background: #fbe7ec;
     border: 0;
-    border-radius: 999px;
+    border-radius: 99rem;
     cursor: pointer;
     font: inherit;
-    font-size: 14px;
-    line-height: 1;
 
     &.is-active,
     &:hover,
@@ -57,6 +48,16 @@
     }
   }
 }
+
+.portfolio-detail__project-section--web {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.portfolio-detail__project-section--web .portfolio-detail__gallery { display: block; }
 
 .portfolio-detail__gallery {
   display: grid;
@@ -166,12 +167,6 @@
   }
 }
 
-.portfolio-detail__website-mark {
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1;
-}
-
 .portfolio-detail__client-logo {
   position: absolute;
   z-index: 2;
@@ -190,7 +185,7 @@
     width: 100%;
     height: 100%;
     padding: 4px;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   span {
@@ -221,18 +216,13 @@
   .portfolio-detail-page { padding: 48px 22px; }
   .portfolio-detail__header p { font-size: 18px; }
   .portfolio-detail__gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .portfolio-detail__project-section--web { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 600px) {
   .portfolio-detail-page { padding: 38px 16px; }
   .portfolio-detail__header h1 { font-size: 27px; }
   .portfolio-detail__header p { font-size: 16px; }
-  .portfolio-detail__tabs {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    margin-inline: -16px;
-    padding: 0 16px 8px;
-    overflow-x: auto;
-  }
+  .portfolio-detail__project-section--web { grid-template-columns: 1fr; gap: 2rem; }
   .portfolio-detail__gallery { grid-template-columns: 1fr; gap: 24px; }
 }

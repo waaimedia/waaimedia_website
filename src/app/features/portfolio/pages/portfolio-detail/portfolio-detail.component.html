@@ -1,15 +1,14 @@
 <main class="portfolio-detail-page container">
   <section class="portfolio-detail" aria-labelledby="portfolio-detail-title">
-    @if (item(); as portfolioItem) {
+    @if (item()) {
       <header class="portfolio-detail__header">
-        <p class="portfolio-detail__eyebrow">{{ portfolioItem.subcategory?.name || portfolioItem.category.name }}</p>
-        <h1 id="portfolio-detail-title">{{ portfolioItem.title }}</h1>
-        <p>{{ portfolioItem.client.name }}</p>
+        <h1 id="portfolio-detail-title">{{ i18n.translations().portfolioTitle }}</h1>
+        <p>{{ i18n.translations().portfolioDescription }}</p>
       </header>
 
-      @if (subcategoryGroups().length > 1) {
-        <div class="portfolio-detail__tabs" role="tablist" [attr.aria-label]="portfolioItem.client.name">
-          @for (group of subcategoryGroups(); track group.id) {
+      @if (tabGroups().length > 1) {
+        <div class="portfolio-detail__tabs" role="tablist" [attr.aria-label]="i18n.translations().portfolioTitle">
+          @for (group of tabGroups(); track group.id) {
             <button
               type="button"
               role="tab"
@@ -26,75 +25,106 @@
       @if (groupLoading()) {
         <p class="portfolio-detail__group-loading" aria-live="polite">Loading portfolio work…</p>
       } @else {
-      <div class="portfolio-detail__gallery" [attr.aria-label]="portfolioItem.title">
-        @for (groupedMedia of groupMedia(); track groupedMedia.key) {
-          @let media = groupedMedia.media;
-          @let sourceItem = groupedMedia.item;
-          <article class="portfolio-detail__gallery-item">
-            @if (media.image_url) {
-              <img [src]="media.image_url" [alt]="sourceItem.title" loading="lazy">
-              @if (sourceItem.kind === 'images') {
-                <div class="portfolio-detail__client-logo">
-                  @if (sourceItem.client.logo_url) {
-                    <img [src]="sourceItem.client.logo_url" [alt]="sourceItem.client.name" loading="lazy">
-                  } @else {
-                    <span aria-hidden="true">{{ sourceItem.client.name.slice(0, 1) }}</span>
-                  }
-                </div>
-              }
-              @if (sourceItem.kind === 'web_design') {
-                <div class="portfolio-detail__web-links" [class.portfolio-detail__web-links--rtl]="i18n.locale() === 'ar'" [attr.aria-label]="sourceItem.title">
-                  @for (link of [sourceItem.link_1, sourceItem.link_2, sourceItem.link_3]; track $index) {
-                    @if (link) {
-                      <a
-                        [class]="'portfolio-detail__web-link portfolio-detail__web-link--' + webLinkPlatform(link)"
-                        [href]="link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        [attr.aria-label]="webLinkLabel(link)"
-                        [attr.title]="webLinkLabel(link)"
-                      >
-                        @switch (webLinkPlatform(link)) {
-                          @case ('behance') { <img src="/images/icons/behance.svg" alt="" aria-hidden="true"> }
-                          @case ('figma') { <img src="/images/icons/figma.svg" alt="" aria-hidden="true"> }
-                          @case ('dribbble') { <img src="/images/icons/dribbble.svg" alt="" aria-hidden="true"> }
-                          @default { <span class="portfolio-detail__website-mark" aria-hidden="true">↗</span> }
-                        }
-                      </a>
-                    }
-                  }
-                </div>
-              }
-            } @else if (media.url) {
-              @if (videoProvider(media.url) === 'file') {
-                <video class="portfolio-detail__video" [src]="media.url" controls preload="metadata">
-                  {{ i18n.locale() === 'ar' ? 'المتصفح لا يدعم تشغيل الفيديو.' : 'Your browser does not support video playback.' }}
-                </video>
-              } @else if (videoProvider(media.url) === 'youtube' || videoProvider(media.url) === 'vimeo') {
-                <iframe
-                  class="portfolio-detail__video"
-                  [src]="embedVideoUrl(media.url)"
-                  [title]="sourceItem.title"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              } @else {
-                <a class="portfolio-detail__video-link" [href]="media.url" target="_blank" rel="noopener noreferrer">
-                  <span aria-hidden="true">▶</span>
-                  {{ i18n.locale() === 'ar' ? 'مشاهدة الفيديو' : 'Watch video' }}
-                </a>
-              }
+        @for (section of projectSections(); track section.id) {
+          <section
+          style="margin-bottom: 24px;"
+            class="portfolio-detail__project-section"
+            [class.portfolio-detail__project-section--web]="webDesignPortfolio()"
+            [attr.aria-labelledby]="section.showTitle ? 'portfolio-section-' + section.id : null"
+            [attr.aria-label]="section.showTitle ? null : section.title"
+          >
+            @if (section.showTitle) {
+              <header class="portfolio-detail__section-header">
+                <h2 [id]="'portfolio-section-' + section.id">{{ section.title }}</h2>
+              </header>
             }
-            @if (media.image_url && media.url) {
-              <a class="portfolio-detail__source-link" [href]="media.url" target="_blank" rel="noopener noreferrer">
-                {{ i18n.locale() === 'ar' ? 'عرض التغطية' : 'View coverage' }}
-              </a>
-            }
-          </article>
-        }
-      </div>
-      }
 
+            @for (sourceItem of section.items; track sourceItem.id) {
+              <article
+                class="portfolio-detail__project"
+                [attr.aria-labelledby]="webDesignPortfolio() ? 'portfolio-project-' + sourceItem.id : null"
+                [attr.aria-label]="webDesignPortfolio() ? null : sourceItem.title"
+              >
+                <div class="portfolio-detail__gallery" [attr.aria-label]="sourceItem.title">
+                  @for (media of sourceItem.media; track media.id) {
+                    <article class="portfolio-detail__gallery-item">
+                      @if (media.image_url) {
+                        <img [src]="media.image_url" [alt]="sourceItem.title" loading="lazy">
+                        @if (sourceItem.kind === 'images') {
+                          <div class="portfolio-detail__client-logo">
+                            @if (sourceItem.client.logo_url) {
+                              <img [src]="sourceItem.client.logo_url" [alt]="sourceItem.client.name" loading="lazy">
+                            } @else {
+                              <span aria-hidden="true">{{ sourceItem.client.name.slice(0, 1) }}</span>
+                            }
+                          </div>
+                        }
+                        @if (sourceItem.kind === 'web_design') {
+                          <div class="portfolio-detail__web-links" [class.portfolio-detail__web-links--rtl]="i18n.locale() === 'ar'" [attr.aria-label]="sourceItem.title">
+                            @for (link of [sourceItem.link_1, sourceItem.link_2, sourceItem.link_3]; track $index) {
+                              @if (link) {
+                                <a
+                                  [class]="'portfolio-detail__web-link portfolio-detail__web-link--' + webLinkPlatform(link)"
+                                  [href]="link"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  [attr.aria-label]="webLinkLabel(link)"
+                                  [attr.title]="webLinkLabel(link)"
+                                >
+                                  @switch (webLinkPlatform(link)) {
+                                    @case ('behance') { <img src="/images/icons/behance.svg" alt="" aria-hidden="true"> }
+                                    @case ('figma') { <img src="/images/icons/figma.svg" alt="" aria-hidden="true"> }
+                                    @case ('dribbble') { <img src="/images/icons/dribbble.svg" alt="" aria-hidden="true"> }
+                                    @default {
+                                      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="9"></circle>
+                                        <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+                                      </svg>
+                                    }
+                                  }
+                                </a>
+                              }
+                            }
+                          </div>
+                        }
+                      } @else if (media.url) {
+                        @if (videoProvider(media.url) === 'file') {
+                          <video class="portfolio-detail__video" [src]="media.url" controls preload="metadata">
+                            {{ i18n.locale() === 'ar' ? 'المتصفح لا يدعم تشغيل الفيديو.' : 'Your browser does not support video playback.' }}
+                          </video>
+                        } @else if (videoProvider(media.url) === 'youtube' || videoProvider(media.url) === 'vimeo') {
+                          <iframe
+                            class="portfolio-detail__video"
+                            [src]="embedVideoUrl(media.url)"
+                            [title]="sourceItem.title"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                          ></iframe>
+                        } @else {
+                          <a class="portfolio-detail__video-link" [href]="media.url" target="_blank" rel="noopener noreferrer">
+                            <span aria-hidden="true">▶</span>
+                            {{ i18n.locale() === 'ar' ? 'مشاهدة الفيديو' : 'Watch video' }}
+                          </a>
+                        }
+                      }
+                      @if (media.image_url && media.url) {
+                        <a class="portfolio-detail__source-link" [href]="media.url" target="_blank" rel="noopener noreferrer">
+                          {{ i18n.locale() === 'ar' ? 'عرض التغطية' : 'View coverage' }}
+                        </a>
+                      }
+                    </article>
+                  }
+                </div>
+                @if (webDesignPortfolio()) {
+                  <h3 class="portfolio-detail__web-project-title" [id]="'portfolio-project-' + sourceItem.id">{{ sourceItem.title }}</h3>
+                }
+              </article>
+            }
+          </section>
+        } @empty {
+          <p class="portfolio-detail__empty">No portfolio work has been published yet.</p>
+        }
+      }
     } @else if (!loading()) {
       <p class="portfolio-detail__empty">
         {{ unavailable() ? 'This portfolio work is unavailable.' : 'No portfolio work has been published yet.' }}

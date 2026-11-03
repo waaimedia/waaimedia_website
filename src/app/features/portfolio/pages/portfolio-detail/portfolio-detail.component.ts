@@ -1,11 +1,10 @@
-import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
 import { CategoriesService } from '../../../../core/api/categories.service';
 import {
   PortfolioDetails,
-  PortfolioMedia,
   PortfolioService,
   PortfolioSibling,
 } from '../../../../core/api/portfolio.service';
@@ -17,13 +16,15 @@ type WebLinkPlatform = 'behance' | 'figma' | 'dribbble' | 'website';
 interface PortfolioSubcategoryGroup {
   readonly id: string;
   readonly name: string;
+  readonly isSubcategoryGroup: boolean;
   readonly items: readonly PortfolioSibling[];
 }
 
-interface PortfolioGroupMedia {
-  readonly key: string;
-  readonly item: PortfolioDetails;
-  readonly media: PortfolioMedia;
+interface PortfolioProjectSection {
+  readonly id: string;
+  readonly title: string;
+  readonly showTitle: boolean;
+  readonly items: readonly PortfolioDetails[];
 }
 
 @Component({
@@ -38,8 +39,12 @@ export class PortfolioDetailComponent implements OnDestroy {
   protected readonly unavailable = signal(false);
   protected readonly groupLoading = signal(false);
   protected readonly activeSubcategoryId = signal<string | null>(null);
-  protected readonly groupMedia = signal<readonly PortfolioGroupMedia[]>([]);
+  protected readonly projectSections = signal<readonly PortfolioProjectSection[]>([]);
   protected readonly subcategoryGroups = signal<readonly PortfolioSubcategoryGroup[]>([]);
+  protected readonly webDesignPortfolio = computed(() => this.item()?.kind === 'web_design');
+  protected readonly tabGroups = computed(() =>
+    this.subcategoryGroups().filter((group) => group.isSubcategoryGroup),
+  );
 
   private readonly route = inject(ActivatedRoute);
   private readonly categories = inject(CategoriesService);
@@ -87,9 +92,9 @@ export class PortfolioDetailComponent implements OnDestroy {
   }
 
   protected selectSubcategoryGroup(group: PortfolioSubcategoryGroup): void {
-    if (this.activeSubcategoryId() === group.id && !this.groupLoading()) return;
+    if (this.activeSubcategoryId() === group.id || this.groupLoading()) return;
     this.activeSubcategoryId.set(group.id);
-    this.loadGroupMedia(this.i18n.locale(), group);
+    this.loadProjectSections(this.i18n.locale(), group, this.item());
   }
 
   protected videoProvider(url: string | null): 'youtube' | 'vimeo' | 'file' | 'external' {
@@ -195,13 +200,22 @@ export class PortfolioDetailComponent implements OnDestroy {
     this.detailsRequest = this.portfolio.getByIdentifier(locale, identifier).subscribe({
       next: ({ data }) => {
         this.item.set(data);
-        const groups = this.createSubcategoryGroups(data.client_category_items);
+        const groups = this.createSubcategoryGroups(data.client_category_items, data);
         const currentGroup = groups.find((group) => group.items.some((sibling) => sibling.id === data.id));
+        const hasSubcategories = groups.some((group) => group.isSubcategoryGroup);
+        const initialGroup = hasSubcategories
+          ? currentGroup ?? groups[0]
+          : {
+              id: 'all-projects',
+              name: data.category.name,
+              isSubcategoryGroup: false,
+              items: groups.flatMap((group) => group.items),
+            };
 
         this.subcategoryGroups.set(groups);
-        this.activeSubcategoryId.set(currentGroup?.id ?? null);
-        this.groupMedia.set(this.mediaFromItems([data]));
-        if (currentGroup) this.loadGroupMedia(locale, currentGroup, data);
+        this.activeSubcategoryId.set(initialGroup?.id ?? null);
+        this.projectSections.set([]);
+        if (initialGroup) this.loadProjectSections(locale, initialGroup, data);
         this.loading.set(false);
         this.unavailable.set(false);
         this.seo.update({
@@ -220,7 +234,7 @@ export class PortfolioDetailComponent implements OnDestroy {
     this.item.set(null);
     this.subcategoryGroups.set([]);
     this.activeSubcategoryId.set(null);
-    this.groupMedia.set([]);
+    this.projectSections.set([]);
     this.groupLoading.set(false);
     this.groupRequest?.unsubscribe();
     this.loading.set(true);
@@ -229,36 +243,61 @@ export class PortfolioDetailComponent implements OnDestroy {
 
   private fail(): void {
     this.item.set(null);
-    this.groupMedia.set([]);
+    this.subcategoryGroups.set([]);
+    this.activeSubcategoryId.set(null);
+    this.projectSections.set([]);
     this.groupLoading.set(false);
     this.loading.set(false);
     this.unavailable.set(true);
   }
 
-  private createSubcategoryGroups(siblings: readonly PortfolioSibling[]): readonly PortfolioSubcategoryGroup[] {
+  private createSubcategoryGroups(
+    siblings: readonly PortfolioSibling[],
+    currentItem: PortfolioDetails,
+  ): readonly PortfolioSubcategoryGroup[] {
     const groups = new Map<string, PortfolioSubcategoryGroup>();
 
-    for (const sibling of siblings) {
+    const items = siblings.some((sibling) => sibling.id === currentItem.id)
+      ? siblings
+      : [
+          ...siblings,
+          {
+            id: currentItem.id,
+            slug: currentItem.slug,
+            title: currentItem.title,
+            cover_image_url: currentItem.cover_image_url,
+            subcategory: currentItem.subcategory,
+            is_current: true,
+          },
+        ];
+
+    for (const sibling of items) {
       const id = sibling.subcategory ? `subcategory-${sibling.subcategory.id}` : `item-${sibling.id}`;
       const name = sibling.subcategory?.name || sibling.title;
       const existing = groups.get(id);
 
-      groups.set(id, existing ? { ...existing, items: [...existing.items, sibling] } : { id, name, items: [sibling] });
+      groups.set(
+        id,
+        existing
+          ? { ...existing, items: [...existing.items, sibling] }
+          : { id, name, isSubcategoryGroup: Boolean(sibling.subcategory), items: [sibling] },
+      );
     }
 
     return [...groups.values()];
   }
 
-  private loadGroupMedia(
+  private loadProjectSections(
     locale: 'en' | 'ar',
     group: PortfolioSubcategoryGroup,
-    currentItem?: PortfolioDetails,
+    currentItem: PortfolioDetails | null,
   ): void {
+    if (!currentItem) return;
     this.groupRequest?.unsubscribe();
     this.groupLoading.set(true);
 
     const itemRequests = group.items.map((sibling) =>
-      currentItem?.id === sibling.id
+      currentItem.id === sibling.id
         ? of(currentItem)
         : this.portfolio.getByIdentifier(locale, sibling.slug || sibling.id).pipe(
             map(({ data }) => data),
@@ -268,24 +307,26 @@ export class PortfolioDetailComponent implements OnDestroy {
 
     this.groupRequest = forkJoin(itemRequests).subscribe({
       next: (items) => {
-        const groupItems = items.filter((item): item is PortfolioDetails => item !== null);
-        if (groupItems.length) {
-          this.groupMedia.set(this.mediaFromItems(groupItems));
-          if (!currentItem) this.item.set(groupItems[0]);
-        }
+        const publishedItems = items.filter((item): item is PortfolioDetails => item !== null);
+        const splitProjects = group.isSubcategoryGroup && publishedItems.length > 1;
+        this.projectSections.set(
+          splitProjects
+            ? publishedItems.map((item) => ({
+                id: `item-${item.id}`,
+                title: item.title,
+                showTitle: true,
+                items: [item],
+              }))
+            : [{
+                id: group.id,
+                title: publishedItems.length === 1 ? publishedItems[0].title : group.name,
+                showTitle: currentItem.kind !== 'web_design' && publishedItems.length > 0,
+                items: publishedItems,
+              }],
+        );
         this.groupLoading.set(false);
       },
       error: () => this.groupLoading.set(false),
     });
-  }
-
-  private mediaFromItems(items: readonly PortfolioDetails[]): readonly PortfolioGroupMedia[] {
-    return items.flatMap((item) =>
-      item.media.map((media) => ({
-        key: `${item.id}-${media.id}`,
-        item,
-        media,
-      })),
-    );
   }
 }

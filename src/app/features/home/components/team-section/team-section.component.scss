@@ -153,10 +153,13 @@ header p {
 }
 @media (max-width: 575.98px) {
   .team__carousel {
-    grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
-    gap: 0.6rem;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100vw;
+    margin-inline-start: calc(50% - 50vw);
     margin-top: 2.25rem;
   }
+  .team__arrow { display: none; }
+  .team__swiper { padding-inline: 1rem; }
   .team h3 {
     margin-top: 0.75rem;
   }
