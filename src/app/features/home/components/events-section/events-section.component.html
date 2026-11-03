@@ -14,7 +14,7 @@
       }
     </div>
     @if (events().length) {
-      <div #eventsSwiper class="swiper events-carousel">
+      <div #eventsSwiper class="swiper events-carousel" [class.events-carousel--continuous]="continuous()">
         <div class="swiper-wrapper">
         @for (event of events(); track event.id) {
           <article class="swiper-slide event-card" [routerLink]="eventUrl(event.slug)" role="link" tabindex="0">

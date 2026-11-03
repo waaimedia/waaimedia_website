@@ -88,6 +88,12 @@ h2 {
 .events-carousel .swiper-wrapper {
   align-items: stretch;
 }
+.events-carousel .swiper-wrapper {
+  transition-timing-function: ease;
+}
+.events-carousel--continuous .swiper-wrapper {
+  transition-timing-function: linear;
+}
 .events-carousel .swiper-slide {
   height: auto;
 }

@@ -14,7 +14,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Swiper from 'swiper';
-import { A11y, Keyboard, Navigation } from 'swiper/modules';
+import { A11y, Autoplay, Keyboard, Navigation } from 'swiper/modules';
 import { CalendarEvent, EventsService, EventTimeline } from '../../../../core/api/events.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 
@@ -34,6 +34,7 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   readonly perPage = input(3);
   readonly timeline = input<EventTimeline>('upcoming');
   readonly emptyVariant = input<'home' | 'calendar'>('home');
+  readonly continuous = input(false);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -63,12 +64,29 @@ export class EventsSectionComponent implements AfterViewInit, OnDestroy {
   private initializeSlider(): void {
     if (this.slider) return;
     if (!this.isBrowser || !this.swiperElement || !this.previousButton || !this.nextButton) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isContinuous = this.continuous();
 
     this.slider = new Swiper(this.swiperElement.nativeElement, {
-      modules: [A11y, Keyboard, Navigation],
+      modules: [A11y, Autoplay, Keyboard, Navigation],
       slidesPerView: 1.08,
       spaceBetween: 16,
-      speed: 550,
+      // Match the Team section's slow, uninterrupted marquee on the full calendar.
+      speed: isContinuous ? 5200 : 700,
+      loop: this.events().length > 1,
+      loopPreventsSliding: false,
+      autoplay: reduceMotion || this.events().length < 2
+        ? false
+        : isContinuous
+          ? {
+              delay: 0,
+              disableOnInteraction: false,
+            }
+          : {
+              delay: 3400,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            },
       observer: true,
       observeParents: true,
       resizeObserver: true,

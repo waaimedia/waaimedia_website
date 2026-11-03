@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { Component, computed, effect, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CategoriesService, PublicCategory } from '../../core/api/categories.service';
@@ -32,12 +32,14 @@ const NAVIGATION_LINKS: readonly NavigationLink[] = [
   styleUrl: './header.component.scss',
   host: {
     '(keydown.escape)': 'closeMenu()',
-    '(window:resize)': 'closeMenu()',
+    '(window:resize)': 'handleWindowResize()',
   },
 })
 export class HeaderComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly categoriesService = inject(CategoriesService);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private viewportWidth = this.isBrowser ? window.innerWidth : 0;
   private categoriesRequest?: Subscription;
 
   protected readonly localeService = inject(LocaleService);
@@ -69,6 +71,17 @@ export class HeaderComponent implements OnDestroy {
   protected closeMenu(): void {
     this.menuOpen.set(false);
     this.newsMenuOpen.set(false);
+  }
+
+  protected handleWindowResize(): void {
+    if (!this.isBrowser) return;
+
+    const width = window.innerWidth;
+    // Mobile browsers emit resize events when their address bar collapses while
+    // scrolling. Only close the menu when the actual viewport width changes.
+    if (width === this.viewportWidth) return;
+    this.viewportWidth = width;
+    this.closeMenu();
   }
 
   protected toggleNewsMenu(event: Event): void {
