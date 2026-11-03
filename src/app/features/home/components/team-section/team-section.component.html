@@ -18,7 +18,7 @@
         </div>
       } @else {
         <div class="team__carousel" aria-label="Team members carousel">
-          <button #previousButton class="team__arrow team__arrow--previous" type="button" aria-label="Previous team members">
+          <button class="team__arrow team__arrow--previous" type="button" aria-label="Move team members left" (click)="moveNext()">
             <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
           </button>
 
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <button #nextButton class="team__arrow team__arrow--next" type="button" aria-label="Next team members">
+          <button class="team__arrow team__arrow--next" type="button" aria-label="Move team members right" (click)="movePrevious()">
             <img src="/images/icons/next-arrow.svg" alt="" aria-hidden="true" />
           </button>
         </div>

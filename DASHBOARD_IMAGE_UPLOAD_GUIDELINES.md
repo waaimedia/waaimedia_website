@@ -20,7 +20,7 @@ Use this document to add image-upload hints and validation in the dashboard. It 
 | `portfolio.cover_image_url` | Portfolio list and Home portfolio section | **1600 × 1000 px** (8:5), minimum 1280 × 800 | `Recommended: 1600×1000 (8:5). Used in 1.72:1 and 1.52:1 cards; keep the main work centered to allow light cropping.` |
 | `portfolio.media[].image_url` | Portfolio detail gallery (images and images-with-link) | **1520 × 1000 px** (1.52:1), minimum 1216 × 800 | `Recommended: 1520×1000 (1.52:1). This is the exact portfolio-gallery ratio; use one image per gallery item.` |
 | `team_members.photo_url` | Home team carousel and About page team carousel | **800 × 800 px** (1:1), minimum 512 × 512 | `Square portrait. Recommended: 800×800. The image is displayed as a circle, so keep the face centered with safe space around it.` |
-| `clients.logo_url` | Trusted Brands carousel and Portfolio client logo | **1000 × 1000 px** (1:1), minimum 512 × 512 | `Square PNG/WebP. Keep the logo centered with generous transparent or white padding; this single image is reused in both the circular portfolio logo and horizontal brand card.` |
+| `clients.logo_url` | Trusted Brands carousel and Portfolio client logo | **512 × 512 px** (1:1) | `Square PNG/WebP. Keep the logo centered with generous transparent or white padding; this single image is reused in both the circular portfolio logo and horizontal brand card.` |
 | Rich-text content images inside `news.content` / `blogs.content` | News and Blog article body | **1600 px max width**; any aspect ratio is allowed | `Inline article image. Max recommended width: 1600px. It keeps its natural aspect ratio and must be optimized for web.` |
 
 ## One client-logo field (important)
@@ -30,14 +30,14 @@ The current API deliberately exposes one field: `clients.logo_url`. The public w
 | Placement | Current rendered shape | Ideal source image |
 | --- | --- | --- |
 | Portfolio client logo | Circular / square (`1:1`) | Square source, centered logo |
-| Trusted Brands carousel | Horizontal card (`201 × 96`, ratio `2.09:1`) | The central area of the same square source is visible |
+| Trusted Brands carousel | Horizontal card (`201 × 96`, ratio `2.09:1`) | The complete square logo is centered and contained without cropping |
 
 ### Required dashboard rule
 
-Keep **one** upload input mapped to `clients.logo_url` and require a square logo source:
+Keep **one** upload input mapped to `clients.logo_url` and require a 512 × 512 square logo source:
 
 ```text
-Hint: “Upload a square logo: 1000×1000 px recommended (minimum 512×512).
+Hint: “Upload a square logo: 512×512 px.
 Keep the logo centered with at least 15–20% transparent or white padding on every side.”
 ```
 

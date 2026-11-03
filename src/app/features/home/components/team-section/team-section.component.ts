@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import Swiper from 'swiper';
-import { A11y, Autoplay, Keyboard, Navigation } from 'swiper/modules';
+import { A11y, Autoplay, Keyboard } from 'swiper/modules';
 import { TeamMember, TeamMembersLoadState, TeamMembersService } from '../../../../core/api/team-members.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 
@@ -21,8 +21,6 @@ import { LocaleService } from '../../../../core/i18n/locale.service';
 })
 export class TeamSectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('teamSwiper') private readonly swiperElement?: ElementRef<HTMLElement>;
-  @ViewChild('previousButton') private readonly previousButton?: ElementRef<HTMLButtonElement>;
-  @ViewChild('nextButton') private readonly nextButton?: ElementRef<HTMLButtonElement>;
 
   protected readonly i18n = inject(LocaleService);
   protected readonly members: () => readonly TeamMember[];
@@ -66,13 +64,45 @@ export class TeamSectionComponent implements AfterViewInit, OnDestroy {
     return name.trim().slice(0, 1);
   }
 
+  protected movePrevious(): void {
+    this.moveByOne('previous');
+  }
+
+  protected moveNext(): void {
+    this.moveByOne('next');
+  }
+
+  private moveByOne(direction: 'previous' | 'next'): void {
+    const slider = this.slider;
+    if (!slider || slider.destroyed) return;
+
+    // Freeze the marquee at its visible position before navigating. Otherwise a
+    // click targets the slide where the long autoplay transition will end, which
+    // can look like a backwards movement instead of a one-card step.
+    slider.autoplay.stop();
+    slider.setTransition(0);
+    slider.setTranslate(slider.getTranslate());
+    slider.updateActiveIndex();
+    slider.updateSlidesClasses();
+
+    if (direction === 'previous') {
+      slider.slidePrev(500);
+    } else {
+      slider.slideNext(500);
+    }
+
+    slider.once('transitionEnd', () => {
+      if (!slider.destroyed) slider.autoplay.start();
+    });
+  }
+
   private scheduleSliderSync(): void {
     if (this.updateTimer) clearTimeout(this.updateTimer);
     this.updateTimer = setTimeout(() => this.createOrUpdateSlider());
   }
 
   private createOrUpdateSlider(): void {
-    if (!this.isBrowser || !this.swiperElement || !this.previousButton || !this.nextButton) return;
+    if (!this.isBrowser || !this.swiperElement) return;
 
     if (this.slider) {
       this.slider.update();
@@ -80,12 +110,16 @@ export class TeamSectionComponent implements AfterViewInit, OnDestroy {
     }
 
     this.slider = new Swiper(this.swiperElement.nativeElement, {
-      modules: [A11y, Autoplay, Keyboard, Navigation],
+      modules: [A11y, Autoplay, Keyboard],
       slidesPerView: 'auto',
       spaceBetween: 18,
+      // A zero autoplay delay with a long transition creates a continuous ticker.
       speed: 4200,
       // Keep navigation continuous: after the last team member, return to the first.
       loop: true,
+      // The continuous autoplay is always mid-transition. Allow the arrow controls
+      // to interrupt that transition instead of ignoring their clicks.
+      loopPreventsSliding: false,
       centerInsufficientSlides: true,
       watchOverflow: false,
       grabCursor: true,
@@ -97,14 +131,6 @@ export class TeamSectionComponent implements AfterViewInit, OnDestroy {
       observeParents: true,
       resizeObserver: true,
       keyboard: { enabled: true },
-      navigation: {
-        prevEl: this.previousButton.nativeElement,
-        nextEl: this.nextButton.nativeElement,
-      },
-      a11y: {
-        prevSlideMessage: 'Previous team members',
-        nextSlideMessage: 'Next team members',
-      },
       breakpoints: {
         576: { spaceBetween: 24 },
         768: { spaceBetween: 28 },
