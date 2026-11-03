@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://waaimedia.com/en</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waaimedia.com/en" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/about" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/about" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/services" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/services" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/portfolio</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/portfolio" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/portfolio" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/portfolio</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/portfolio" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/portfolio" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/blogs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/blogs" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/blogs" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/blogs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/blogs" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/blogs" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/news</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/news" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/news" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/news</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/news" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/news" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/events</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/events" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/events" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/events</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/events" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/events" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/contact" />
+  </url>
+  <url>
+    <loc>https://waaimedia.com/ar/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waaimedia.com/en/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waaimedia.com/ar/contact" />
+  </url>
+</urlset>

@@ -49,6 +49,7 @@ export class SeoService {
     for (const locale of LOCALES) {
       this.setAlternateLink(locale, this.absoluteUrl(page.alternatePaths[locale]));
     }
+    this.setAlternateLink('x-default', this.absoluteUrl(page.alternatePaths.en));
   }
 
   private absoluteUrl(path: string): string {
@@ -67,7 +68,7 @@ export class SeoService {
     link.href = href;
   }
 
-  private setAlternateLink(locale: Locale, href: string): void {
+  private setAlternateLink(locale: Locale | 'x-default', href: string): void {
     const selector = `link[rel="alternate"][hreflang="${locale}"]`;
     let link = this.document.head.querySelector<HTMLLinkElement>(selector);
 

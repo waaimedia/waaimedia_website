@@ -5,5 +5,5 @@ export const environment: {
 } = {
   production: false,
   apiUrl: 'https://api.waaimedia.com',
-  siteUrl: 'https://www.example.com',
+  siteUrl: 'https://waaimedia.com',
 };
