@@ -14,6 +14,14 @@ export interface HomeCard {
   imageUrl: string | null;
   tone: string;
 }
+
+export interface HomeService {
+  title: string;
+  titleAr: string;
+  description: string;
+  descriptionAr: string;
+  icon: string;
+}
 export interface HomeTeamMember {
   id: string;
   name: LocalizedText;

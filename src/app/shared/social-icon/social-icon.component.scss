@@ -17,3 +17,9 @@ svg {
   fill: currentColor;
   stroke: none;
 }
+
+/* The TikTok path has a slightly wider visual weight on its right side. */
+.social-icon__tiktok {
+  transform: translateX(-0.8px) scale(1.15);
+  transform-origin: center;
+}

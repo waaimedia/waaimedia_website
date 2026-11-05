@@ -5,13 +5,11 @@
       <p>{{ i18n.translations().servicesDescription }}</p>
     </header>
     <div class="services-grid">
-      @for (service of services; track service.id) {
+      @for (service of services; track service.title) {
         <article class="service-card">
-          @if (service.imageUrl) {
-            <img class="service-card__icon" [src]="service.imageUrl" alt="" aria-hidden="true" />
-          }
-          <h3>{{ service.title[i18n.locale()] }}</h3>
-          <p>{{ service.description?.[i18n.locale()] }}</p>
+          <img class="service-card__icon" [src]="service.icon" alt="" aria-hidden="true" />
+          <h3>{{ i18n.locale() === 'ar' ? service.titleAr : service.title }}</h3>
+          <p>{{ i18n.locale() === 'ar' ? service.descriptionAr : service.description }}</p>
         </article>
       }
     </div>

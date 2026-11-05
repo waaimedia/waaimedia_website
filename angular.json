@@ -32,7 +32,14 @@
             "styles": [
               "src/styles.scss"
             ],
-            "outputMode": "static"
+            "outputMode": "static",
+            "server": "src/main.server.ts",
+            "security": {
+              "allowedHosts": []
+            },
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {

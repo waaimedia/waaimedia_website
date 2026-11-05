@@ -2,6 +2,7 @@ import {
   HomeCard,
   HomeContactInfo,
   HomeHeroSlide,
+  HomeService,
   HomeStat,
   HomeTeamMember,
 } from '../models/home.models';
@@ -51,67 +52,49 @@ export const HOME_STATS: readonly HomeStat[] = [
   { id: 'influencers', value: '18+', label: both('Influencers Covered', 'مؤثرًا') },
   { id: 'events', value: '10+', label: both('Marketing Events', 'فعالية') },
 ];
-export const HOME_SERVICES: readonly HomeCard[] = [
-  {
-    id: 'strategy',
-    title: both('Digital Marketing Strategy', 'استراتيجية التسويق الرقمي'),
-    description: both(
-      'Tailored strategy built around business goals and a clear market position.',
-      'استراتيجية مخصصة حول أهداف عملك وموقعك في السوق.',
-    ),
-    imageUrl: '/images/icons/strategy.svg',
-    tone: 'sun',
-  },
-  {
-    id: 'social',
-    title: both('Social Media Management', 'إدارة وسائل التواصل'),
-    description: both(
-      'Content and community management that grows your brand presence.',
-      'محتوى وإدارة مجتمع تعزز حضور علامتك.',
-    ),
-    imageUrl: '/images/icons/users-cog.svg',
-    tone: 'chat',
-  },
-  {
-    id: 'content',
-    title: both('Content Creation', 'صناعة المحتوى'),
-    description: both(
-      'Creative visuals, video and copy that make your voice recognizable.',
-      'مرئيات وفيديو ونصوص تجعل صوت علامتك واضحًا.',
-    ),
-    imageUrl: '/images/icons/file-check.svg',
-    tone: 'play',
-  },
-  {
-    id: 'performance',
-    title: both('Performance Marketing', 'التسويق الأدائي'),
-    description: both(
-      'Data-led paid campaigns designed to turn attention into action.',
-      'حملات مدفوعة مبنية على البيانات لتحويل الاهتمام إلى نتائج.',
-    ),
-    imageUrl: '/images/icons/target.svg',
-    tone: 'target',
-  },
-  {
-    id: 'branding',
-    title: both('Branding & Identity', 'العلامة والهوية'),
-    description: both(
-      'A cohesive visual identity people remember and trust.',
-      'هوية بصرية متماسكة يتذكرها الناس ويثقون بها.',
-    ),
-    imageUrl: '/images/icons/identity.svg',
-    tone: 'grid',
-  },
-  {
-    id: 'web',
-    title: both('Web Design & Development', 'تصميم وتطوير المواقع'),
-    description: both(
-      'Responsive digital experiences built to support growth.',
-      'تجارب رقمية متجاوبة تدعم النمو.',
-    ),
-    imageUrl: '/images/icons/code-xml.svg',
-    tone: 'code',
-  },
+export const HOME_SERVICES: readonly HomeService[] = [
+      {
+      title: 'Digital Marketing Strategy',
+      titleAr: 'استراتيجية التسويق الرقمي',
+      description: 'We craft tailored strategies that fit your business goals, analyze your market, and help you stand out from the competition.',
+      descriptionAr: 'نصمم استراتيجيات مخصصة حول أهداف عملك، ونحلل السوق، ونساعدك على التميز عن المنافسين.',
+      icon: '/images/icons/strategy.svg',
+    },
+    {
+      title: 'Social Media Management',
+      titleAr: 'إدارة وسائل التواصل الاجتماعي',
+      description: 'From content creation to community engagement, we handle your social platforms to grow your brand presence and connect with your audience.',
+      descriptionAr: 'من صناعة المحتوى إلى التفاعل مع الجمهور، ندير منصاتك لتعزيز حضور علامتك وبناء مجتمع متفاعل.',
+      icon: '/images/icons/users-cog.svg',
+    },
+    {
+      title: 'Content Creation',
+      titleAr: 'صناعة المحتوى',
+      description: 'Creative visuals, engaging videos, and compelling copy that speak your brand’s voice and capture attention.',
+      descriptionAr: 'مرئيات إبداعية، وفيديوهات جذابة، وكتابة مؤثرة تعبّر عن صوت علامتك.',
+      icon: '/images/icons/file-check.svg',
+    },
+    {
+      title: 'Performance Marketing (Paid Ads)',
+      titleAr: 'التسويق بالأداء (الإعلانات الممولة)',
+      description: 'Maximize ROI with data driven campaigns on Facebook, Instagram, Google & more designed to convert clicks into customers.',
+      descriptionAr: 'نعظم العائد من خلال حملات مدفوعة مدعومة بالبيانات على فيسبوك، إنستجرام، جوجل وغيرها لتحويل التفاعل إلى عملاء.',
+      icon: '/images/icons/target.svg',
+    },
+    {
+      title: 'Branding & Identity',
+      titleAr: 'العلامة التجارية والهوية البصرية',
+      description: 'We build brands that people love from logos and color palettes to full visual identities.',
+      descriptionAr: 'نصنع علامات تجارية يحبها الجمهور من الشعار والألوان إلى هوية بصرية متكاملة.',
+      icon: '/images/icons/identity.svg',
+    },
+    {
+      title: 'Web Design & Development',
+      titleAr: 'تصميم وتطوير المواقع الإلكترونية',
+      description: 'Modern, responsive websites designed to showcase your brand, generate leads, and drive growth.',
+      descriptionAr: 'مواقع حديثة ومتجاوبة تظهر علامتك باحترافية، وتولد العملاء المحتملين، وتدفع عجلة النمو.',
+      icon: '/images/icons/code-xml.svg',
+    },
 ];
 export const HOME_PORTFOLIO: readonly HomeCard[] = [
   {

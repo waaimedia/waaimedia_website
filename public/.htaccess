@@ -6,6 +6,7 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Let Angular handle all application routes.
-  RewriteRule ^ index.html [L]
+  # Serve dynamic detail pages with Angular's client-rendered fallback. Static
+  # SSG pages have their own directories and are handled by the rules above.
+  RewriteRule ^ index.csr.html [L]
 </IfModule>

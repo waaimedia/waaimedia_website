@@ -25,7 +25,7 @@ export type SocialPlatform = 'facebook' | 'instagram' | 'tiktok' | 'youtube' | '
         }
         @case ('tiktok') {
           <path
-            class="social-icon__filled"
+            class="social-icon__filled social-icon__tiktok"
             d="M15 3v10.4a4.1 4.1 0 1 1-3.2-4V13a1.1 1.1 0 1 0 .8 1.1V3h3.2c.2 2.2 1.3 3.5 3.2 4v3.1A8 8 0 0 1 15 8.6Z"
           />
         }

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { localeUrlMatcher } from './core/i18n/locale-url-matcher';
+import { localeCanMatch } from './core/i18n/locale-url-matcher';
 import { LocaleShell } from './layout/locale-shell/locale-shell';
 
 export const routes: Routes = [
@@ -9,7 +9,8 @@ export const routes: Routes = [
     redirectTo: 'en',
   },
   {
-    matcher: localeUrlMatcher,
+    path: ':locale',
+    canMatch: [localeCanMatch],
     component: LocaleShell,
     children: [
       {
