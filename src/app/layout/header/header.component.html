@@ -5,10 +5,10 @@
       [routerLink]="homeUrl()"
       [attr.aria-label]="i18n.translations().brandName"
     >
-      <img
+      <img   
         [ngSrc]="brandLogoSrc"
-        width="100"
-        height="87"
+        width="76"
+        height="66"
         priority
         [alt]="i18n.translations().brandName"
       />
@@ -50,12 +50,23 @@
                         {{ category.name }}
                       </a>
                       @if (category.children?.length) {
-                        <span class="site-header__subcategory-arrow" aria-hidden="true">&rsaquo;</span>
-                        <div class="site-header__news-dropdown site-header__subcategories" role="menu">
+                        <span class="site-header__subcategory-arrow" aria-hidden="true"
+                          >&rsaquo;</span
+                        >
+                        <div
+                          class="site-header__news-dropdown site-header__subcategories"
+                          role="menu"
+                        >
                           @for (subcategory of category.children; track subcategory.id) {
                             <a
                               role="menuitem"
-                              [routerLink]="['/', i18n.locale(), 'news', 'category', subcategory.slug]"
+                              [routerLink]="[
+                                '/',
+                                i18n.locale(),
+                                'news',
+                                'category',
+                                subcategory.slug,
+                              ]"
                               routerLinkActive="is-active"
                               (click)="closeMenu()"
                             >
