@@ -149,32 +149,32 @@
 .site-footer__social a,
 .site-footer__social-unavailable {
   display: inline-grid;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
   place-items: center;
-  background: var(--color-background);
-  border-radius: 50%;
 }
 
 .site-footer__social a {
-  color: var(--color-primary);
+  color: var(--color-background);
 }
 
-.site-footer__social app-social-icon {
+.site-footer__social img {
+  display: block;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-  padding: 0.25rem;
-  cursor: pointer;
+}
+
+.site-footer__social a:hover {
+  opacity: 0.78;
+  text-decoration: none;
 }
 
 .site-footer__social-unavailable {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
-  background: var(--color-background);
-  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
 }
 
 .site-footer a:focus-visible {

@@ -3,13 +3,11 @@ import { Component, computed, inject, PLATFORM_ID } from '@angular/core';
 import { makeStateKey, TransferState } from '@angular/core';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { SocialLinkConfig, SOCIAL_LINKS } from '../public-site.config';
-import { SocialIconComponent } from '../../shared/social-icon/social-icon.component';
 
 const SERVER_DATE_KEY = makeStateKey<string>('waai-public-layout-date');
 
 @Component({
   selector: 'app-top-bar',
-  imports: [SocialIconComponent],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss',
 })

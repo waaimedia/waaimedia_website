@@ -6,7 +6,6 @@ import { AppLinksService } from '../../core/api/app-links.service';
 import { CategoriesService, PublicCategory } from '../../core/api/categories.service';
 import { ContactInfoService } from '../../core/api/contact-info.service';
 import { Locale } from '../../core/i18n/locale';
-import { SocialIconComponent } from '../../shared/social-icon/social-icon.component';
 import { LocaleService } from '../../core/i18n/locale.service';
 import { TranslationKey } from '../../core/i18n/translations';
 import { INVERSE_LOGO_SRC, SOCIAL_LINKS } from '../public-site.config';
@@ -45,7 +44,7 @@ const FOOTER_PORTFOLIO: readonly FooterLink[] = [
 
 @Component({
   selector: 'app-footer',
-  imports: [NgOptimizedImage, RouterLink, SocialIconComponent, WhatsAppActionComponent],
+  imports: [NgOptimizedImage, RouterLink, WhatsAppActionComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
   host: {
