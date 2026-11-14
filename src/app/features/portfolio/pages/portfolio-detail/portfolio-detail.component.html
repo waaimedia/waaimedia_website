@@ -101,9 +101,28 @@
                             allowfullscreen
                           ></iframe>
                         } @else {
-                          <a class="portfolio-detail__video-link" [href]="media.url" target="_blank" rel="noopener noreferrer">
-                            <span aria-hidden="true">▶</span>
+                          <a
+                            class="portfolio-detail__video-link"
+                            [class.portfolio-detail__video-link--with-cover]="sourceItem.cover_image_url"
+                            [href]="media.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            @if (sourceItem.cover_image_url) {
+                              <img
+                                class="portfolio-detail__video-link-cover"
+                                [src]="sourceItem.cover_image_url"
+                                alt=""
+                                aria-hidden="true"
+                                loading="lazy"
+                              >
+                            }
+                            <span class="portfolio-detail__video-link-content">
+                              <span class="portfolio-detail__video-link-play" aria-hidden="true">▶</span>
+                              <span class="portfolio-detail__video-link-label">
                             {{ i18n.locale() === 'ar' ? 'مشاهدة الفيديو' : 'Watch video' }}
+                              </span>
+                            </span>
                           </a>
                         }
                       }

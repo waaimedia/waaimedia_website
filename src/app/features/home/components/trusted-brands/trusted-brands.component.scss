@@ -27,7 +27,7 @@
   block-size: var(--brand-card-height);
   place-items: center;
   justify-content: center;
-  padding: 0.6rem 1rem;
+  padding: 0;
   background: #fff;
   border-radius: 1.65rem 0 1.65rem 0;
   box-shadow: 0 0.25rem 1.5rem rgb(81 26 43 / 5%);
@@ -39,7 +39,7 @@
   block-size: 100%;
   max-inline-size: 100%;
   max-block-size: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 .brand-slot span {
