@@ -76,12 +76,11 @@ export class BlogDetailComponent implements OnDestroy {
   protected shareOptions(article: BlogArticle): readonly ShareOption[] {
     const url = this.articleUrl(article);
     const encodedUrl = encodeURIComponent(url);
-    const encodedText = encodeURIComponent(`${article.title} ${url}`);
 
     return [
       { label: 'Facebook', icon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
       { label: 'LinkedIn', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
-      { label: 'WhatsApp', icon: 'whatsapp', href: `https://wa.me/?text=${encodedText}` },
+      { label: 'WhatsApp', icon: 'whatsapp', href: `https://wa.me/?text=${encodedUrl}` },
     ];
   }
 

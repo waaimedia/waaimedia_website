@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node dist/media-news-company/server/server.mjs",
+    "start:dev": "ng serve",
+    "build": "ng build && node scripts/copy-hostinger-entry.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:media-news-company": "node dist/media-news-company/server/server.mjs"
