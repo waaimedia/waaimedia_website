@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { BlogArticle, BlogsService } from '../../../../core/api/blogs.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
+import { preserveRichTextColors } from '../../../../shared/rich-content';
 import { SocialIconComponent } from '../../../../shared/social-icon/social-icon.component';
 
 interface ShareOption {
@@ -91,7 +92,7 @@ export class BlogDetailComponent implements OnDestroy {
 
     this.request = this.blogsService.getByIdentifier(locale, identifier).subscribe({
       next: ({ data }) => {
-        this.blog.set(data);
+        this.blog.set({ ...data, content: preserveRichTextColors(data.content) });
         this.seo.update({
           title: `${data.title} | ${this.i18n.translations().brandName}`,
           description: data.short_description || this.i18n.translations().blogPageDescription,

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { NewsArticle, NewsService } from '../../../../core/api/news.service';
 import { LocaleService } from '../../../../core/i18n/locale.service';
 import { SeoService } from '../../../../core/seo/seo.service';
+import { preserveRichTextColors } from '../../../../shared/rich-content';
 import { SocialIconComponent } from '../../../../shared/social-icon/social-icon.component';
 
 interface ShareOption {
@@ -91,7 +92,7 @@ export class NewsDetailComponent implements OnDestroy {
 
     this.request = this.newsService.getByIdentifier(locale, identifier).subscribe({
       next: ({ data }) => {
-        this.news.set(data);
+        this.news.set({ ...data, content: preserveRichTextColors(data.content) });
         this.seo.update({
           title: `${data.title} | ${this.i18n.translations().brandName}`,
           description: data.short_description || this.i18n.translations().newsPageDescription,
