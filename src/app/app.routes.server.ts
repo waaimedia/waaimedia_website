@@ -33,6 +33,10 @@ function localizedPrerender(path: string): ServerRoute {
 export const serverRoutes: ServerRoute[] = [
   { path: '', renderMode: RenderMode.Prerender },
   ...localizedStaticRoutes.map(localizedPrerender),
-  // Freshly published dynamic content is handled by the hydrated Angular app.
+  // Social networks do not run the Angular application. Render article pages on
+  // the server so their crawlers receive the article's Open Graph metadata.
+  { path: ':locale/news/:slug', renderMode: RenderMode.Server },
+  // Freshly published dynamic content other than news is handled by the
+  // hydrated Angular app.
   { path: '**', renderMode: RenderMode.Client },
 ];

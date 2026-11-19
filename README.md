@@ -24,7 +24,7 @@ npm test
 
 Production builds replace `src/environments/environment.ts` with `src/environments/environment.production.ts`. Both files currently use placeholder `apiUrl` and `siteUrl` values. Configure both before connecting an API or deploying.
 
-`npm run build` produces a static CSR bundle in `dist/media-news-company/browser`. Deploy that directory to static hosting. The Vercel configuration routes deep links to `index.html`, allowing Angular Router to resolve them in the browser.
+`npm run build` produces both browser assets and a Node SSR server. Run the SSR server with `npm run serve:ssr:media-news-company` (or deploy to a platform with Angular SSR support). This is required for article links: WhatsApp, Facebook, and other crawlers must receive each article's Open Graph image in the initial HTML response. Static-only hosting cannot generate per-article social previews.
 
 `/` redirects to `/en`; `/en` and `/ar` set the document language and direction. Routes render in the browser after the JavaScript bundle loads.
 

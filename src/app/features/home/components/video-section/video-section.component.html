@@ -1,6 +1,17 @@
 <section class="home-video" [attr.aria-label]="i18n.translations().brandName + ' video'">
   @if (videoUrl) {
     <video
+      class="home-video__backdrop"
+      [src]="videoUrl"
+      preload="auto"
+      playsinline
+      autoplay
+      [muted]="true"
+      loop
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+    <video
       class="home-video__media"
       [src]="videoUrl"
       [attr.poster]="posterUrl"

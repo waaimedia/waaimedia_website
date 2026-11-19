@@ -11,6 +11,7 @@ export interface PageSeo {
   canonicalPath: string;
   alternatePaths: Record<Locale, string>;
   imageUrl?: string;
+  type?: 'website' | 'article';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,6 +25,9 @@ export class SeoService {
     this.meta.updateTag({ name: 'description', content: page.description });
     this.meta.updateTag({ property: 'og:title', content: page.title });
     this.meta.updateTag({ property: 'og:description', content: page.description });
+    this.meta.updateTag({ property: 'og:type', content: page.type ?? 'website' });
+    this.meta.updateTag({ property: 'og:url', content: this.absoluteUrl(page.canonicalPath) });
+    this.meta.updateTag({ property: 'og:site_name', content: 'WAAI MEDIA' });
     this.meta.updateTag({ name: 'twitter:title', content: page.title });
     this.meta.updateTag({ name: 'twitter:description', content: page.description });
     this.meta.updateTag({

@@ -103,6 +103,7 @@ export class NewsDetailComponent implements OnDestroy {
             ar: `/ar/news/${data.slug || data.id}`,
           },
           imageUrl: data.featured_image_url || undefined,
+          type: 'article',
         });
       },
       error: () => {

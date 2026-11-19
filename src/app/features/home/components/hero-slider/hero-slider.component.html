@@ -32,7 +32,6 @@
         <div class="hero-slider__veil"></div>
         <div class="hero-slider__content container">
           <h1>{{ slide.title }}</h1>
-          @if (slide.short_description) { <p>{{ slide.short_description }}</p> }
           <a
             class="hero-slider__cta"
             [href]="'/' + i18n.locale() + '/news/' + (slide.slug || slide.id)"

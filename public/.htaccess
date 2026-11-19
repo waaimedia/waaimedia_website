@@ -1,12 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-
-  # Serve existing files and directories normally.
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-
-  # Serve dynamic detail pages with Angular's client-rendered fallback. Static
-  # SSG pages have their own directories and are handled by the rules above.
-  RewriteRule ^ index.csr.html [L]
+  RewriteRule ^ index.html [L]
 </IfModule>

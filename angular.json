@@ -32,10 +32,14 @@
             "styles": [
               "src/styles.scss"
             ],
-            "outputMode": "static",
+            "outputMode": "server",
             "server": "src/main.server.ts",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": [
+                "waaimedia.com",
+                "www.waaimedia.com",
+                "localhost"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"
