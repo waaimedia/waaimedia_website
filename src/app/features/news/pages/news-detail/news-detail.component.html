@@ -35,7 +35,7 @@
         <h1>{{ item.title }}</h1>
         @if (item.author_name) { <p class="news-detail__author">{{ item.author_name }}</p> }
         @if (item.published_at) { <p class="news-detail__date">{{ formatDate(item) }}</p> }
-        @if (item.short_description) { <p class="news-detail__summary">{{ item.short_description }}</p> }
+        <!-- @if (item.short_description) { <p class="news-detail__summary">{{ item.short_description }}</p> } -->
         @if (item.content) { <div class="news-detail__body" [innerHTML]="item.content"></div> }
       </div>
     </article>

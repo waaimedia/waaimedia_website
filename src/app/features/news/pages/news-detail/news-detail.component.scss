@@ -100,10 +100,6 @@
     padding-top: 34px;
   }
 
-  strong {
-    overflow-wrap: break-word;
-  }
-
   h1 {
     color: #351b27;
     font-size: 27px;
@@ -158,6 +154,10 @@
   p {
     margin: 0 0 1rem;
     color:initial !important;
+  }
+
+  .rich-content__phone-number {
+    white-space: nowrap;
   }
 
   a {

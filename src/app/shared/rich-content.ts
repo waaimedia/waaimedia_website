@@ -7,7 +7,7 @@
 export function preserveRichTextColors(html: string | null): string {
   if (!html) return '';
 
-  return html.replace(
+  const contentWithPreservedColors = html.replace(
     /<(strong|span)\b([^>]*?)\sstyle\s*=\s*(["'])(.*?)\3([^>]*)>([\s\S]*?)<\/\1\s*>/gi,
     (element, tag: string, before: string, _quote: string, style: string, after: string, content: string) => {
       const color = colorFromStyle(style);
@@ -18,6 +18,35 @@ export function preserveRichTextColors(html: string | null): string {
       return `<font color="${color}"><${tag}${before}${after}>${content}</${tag}></font>`;
     },
   );
+
+  return normalizeRichTextSpacing(markPhoneNumbers(contentWithPreservedColors));
+}
+
+/**
+ * The CMS frequently saves every space as a non-breaking space. That makes a
+ * paragraph one long unbreakable run: `overflow-wrap` then splits words, while
+ * disabling it makes the page scroll horizontally. Keep indentation at the
+ * start of a text node, but turn the other spaces back into normal spaces so
+ * the browser can wrap naturally between words.
+ */
+function normalizeRichTextSpacing(html: string): string {
+  return html.replace(/(<[^>]*>)|([^<]+)/g, (segment, tag: string | undefined, text: string | undefined) => {
+    if (tag) return tag;
+
+    const leadingSpaces = text?.match(/^(?:(?:&nbsp;)|\u00a0)+/i)?.[0] ?? '';
+    const remainingText = text?.slice(leadingSpaces.length) ?? '';
+    return `${leadingSpaces}${remainingText.replace(/&nbsp;|\u00a0/gi, ' ')}`;
+  });
+}
+
+/** Marks numeric <strong> content so its phone number remains together. */
+function markPhoneNumbers(html: string): string {
+  return html.replace(/<strong\b([^>]*)>([\s\S]*?)<\/strong\s*>/gi, (element, attributes: string, content: string) => {
+    const text = content.replace(/<[^>]+>/g, '').replace(/&nbsp;|\u00a0/gi, ' ').trim();
+    if (!/^[+\d\s().-]{7,}$/.test(text)) return element;
+
+    return `<strong${attributes}><span class="rich-content__phone-number">${content}</span></strong>`;
+  });
 }
 
 function colorFromStyle(style: string): string | null {
